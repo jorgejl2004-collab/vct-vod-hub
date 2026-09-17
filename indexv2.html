@@ -1,0 +1,3081 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCT VOD HUB V2</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+:root{
+    --bg:#07090d;
+    --panel:#10141b;
+    --panel2:#0c1016;
+    --border:#252c37;
+    --border2:#303846;
+    --text:#f5f7fa;
+    --muted:#8993a3;
+    --red:#ff4655;
+    --green:#63d68b;
+    --blue:#5da9ff;
+}
+
+body{
+    font-family:Segoe UI,Arial,sans-serif;
+    background:
+        radial-gradient(circle at 50% -10%,rgba(255,70,85,.08),transparent 35%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+button,
+input,
+select{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(7,9,13,.94);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+}
+
+.header-content{
+    max-width:1550px;
+    margin:auto;
+    padding:20px 28px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.logo{
+    font-size:27px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.logo span{
+    color:var(--red);
+}
+
+.subtitle{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.header-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    border:0;
+    border-radius:7px;
+    padding:10px 14px;
+    font-weight:800;
+    font-size:12px;
+    transition:.18s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-primary{
+    background:var(--red);
+    color:#fff;
+}
+
+.btn-secondary{
+    background:#252c36;
+    color:#fff;
+}
+
+.btn-edit{
+    background:#1c2430;
+    color:#fff;
+}
+
+.btn-danger{
+    background:#32161b;
+    color:#ff8792;
+}
+
+.btn-login{
+    background:#202733;
+    color:#fff;
+}
+
+.btn-logout{
+    background:#35171b;
+    color:#ff8792;
+}
+
+.admin-status{
+    display:none;
+    background:#13231a;
+    border:1px solid #31543c;
+    color:#8ee09d;
+    border-radius:6px;
+    padding:8px 10px;
+    font-size:11px;
+    font-weight:800;
+}
+
+main{
+    max-width:1550px;
+    margin:auto;
+    padding:28px;
+}
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-bottom:22px;
+}
+
+.stat{
+    background:linear-gradient(145deg,#121720,#0e1219);
+    border:1px solid var(--border);
+    border-radius:11px;
+    padding:18px;
+}
+
+.stat-title{
+    color:var(--muted);
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.6px;
+}
+
+.stat-value{
+    margin-top:5px;
+    font-size:28px;
+    font-weight:900;
+}
+
+/* FILTERS */
+
+.toolbar{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:11px;
+    padding:15px;
+    margin-bottom:22px;
+}
+
+.filters{
+    display:grid;
+    grid-template-columns:2fr repeat(4,1fr);
+    gap:9px;
+}
+
+input,
+select{
+    width:100%;
+    background:#090c11;
+    color:#fff;
+    border:1px solid var(--border2);
+    border-radius:7px;
+    padding:11px 12px;
+    outline:none;
+}
+
+input:focus,
+select:focus{
+    border-color:var(--red);
+}
+
+/* GRID */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:18px;
+}
+
+.card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:11px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    min-width:0;
+    transition:.2s;
+}
+
+.card:hover{
+    transform:translateY(-2px);
+    border-color:#3c4655;
+    box-shadow:0 12px 35px rgba(0,0,0,.25);
+}
+
+.thumbnail{
+    position:relative;
+    height:190px;
+    background:#030406;
+    overflow:hidden;
+    flex-shrink:0;
+}
+
+.thumbnail img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.thumbnail::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top,rgba(0,0,0,.65),transparent 55%);
+    pointer-events:none;
+}
+
+.agent-badge,
+.start-badge{
+    position:absolute;
+    z-index:2;
+    background:rgba(0,0,0,.84);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:5px;
+    padding:6px 9px;
+    font-size:10px;
+    font-weight:900;
+}
+
+.agent-badge{
+    top:10px;
+    left:10px;
+    color:#fff;
+    background:var(--red);
+}
+
+.start-badge{
+    right:10px;
+    bottom:10px;
+    color:#fff;
+}
+
+.card-body{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+    min-height:295px;
+    padding:16px;
+}
+
+.card-title{
+    font-size:17px;
+    font-weight:900;
+    text-transform:uppercase;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.matchup{
+    margin-top:4px;
+    color:#aab3c0;
+    font-size:12px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.vod-info{
+    margin-top:15px;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.vod-opponent{
+    font-size:14px;
+    font-weight:900;
+    text-transform:uppercase;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.vod-tournament{
+    height:32px;
+    display:flex;
+    align-items:center;
+    color:#8f9bad;
+    font-size:10px;
+    font-weight:700;
+    text-transform:uppercase;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+.vod-stats{
+    display:grid;
+    grid-template-columns:1.35fr 1fr 1fr 1fr;
+    gap:6px;
+}
+
+.vod-stat{
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(255,255,255,.055);
+    border-radius:6px;
+    padding:7px 4px;
+    text-align:center;
+    min-width:0;
+}
+
+.vod-stat-label{
+    display:block;
+    color:#778293;
+    font-size:8px;
+    font-weight:800;
+    letter-spacing:.4px;
+    margin-bottom:3px;
+}
+
+.vod-stat-value{
+    display:block;
+    color:#fff;
+    font-size:13px;
+    font-weight:900;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.vod-details{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+}
+
+.vod-detail{
+    height:30px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:0 8px;
+    background:rgba(255,255,255,.025);
+    border:1px solid rgba(255,255,255,.05);
+    border-radius:6px;
+    color:#aeb7c5;
+    font-size:9px;
+    font-weight:800;
+    text-transform:uppercase;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.card-footer{
+    margin-top:auto;
+    padding-top:15px;
+    display:flex;
+    gap:7px;
+}
+
+.card-footer button{
+    flex:1;
+    font-size:11px;
+}
+
+/* EMPTY / LOADING */
+
+.loading,
+.empty{
+    grid-column:1/-1;
+    text-align:center;
+    padding:70px 20px;
+    color:var(--muted);
+}
+
+.loading-spinner{
+    width:32px;
+    height:32px;
+    border:3px solid #292f39;
+    border-top-color:var(--red);
+    border-radius:50%;
+    margin:0 auto 15px;
+    animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
+
+/* MODALS */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background:rgba(0,0,0,.86);
+    padding:25px;
+    overflow:auto;
+}
+
+.modal.active{
+    display:block;
+}
+
+.modal-box{
+    max-width:1100px;
+    margin:auto;
+    background:#10141b;
+    border:1px solid var(--border2);
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.modal-header{
+    min-height:62px;
+    padding:16px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.modal-header h2{
+    font-size:17px;
+}
+
+.close{
+    background:none;
+    border:0;
+    color:#aaa;
+    font-size:28px;
+}
+
+.player{
+    aspect-ratio:16/9;
+    background:#000;
+}
+
+.player iframe{
+    width:100%;
+    height:100%;
+    border:0;
+}
+
+.modal-info{
+    padding:20px;
+}
+
+.modal-info-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+}
+
+.info-box{
+    background:#090c11;
+    border:1px solid #202630;
+    border-radius:7px;
+    padding:11px;
+    min-width:0;
+}
+
+.info-box span{
+    display:block;
+    color:#778293;
+    font-size:9px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.info-box strong{
+    display:block;
+    font-size:12px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+/* FORM */
+
+.form-modal .modal-box{
+    max-width:1050px;
+}
+
+.form{
+    padding:22px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    color:#aeb5c0;
+    font-size:11px;
+    font-weight:800;
+}
+
+.section-title{
+    grid-column:1/-1;
+    color:var(--red);
+    font-size:13px;
+    font-weight:900;
+    padding-top:5px;
+}
+
+.help{
+    color:#727c8b;
+    font-size:10px;
+    line-height:1.4;
+}
+
+.detected{
+    background:#090c11;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:9px;
+    color:#8993a3;
+    font-size:11px;
+}
+
+.detected strong{
+    color:#fff;
+}
+
+.thumbnail-editor{
+    background:#090c11;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:13px;
+}
+
+.thumbnail-preview{
+    width:100%;
+    max-width:520px;
+    height:220px;
+    margin-top:10px;
+    border:1px solid var(--border2);
+    border-radius:7px;
+    background:#030406;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.thumbnail-preview img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.thumbnail-preview-placeholder{
+    color:#646e7c;
+    font-size:12px;
+    text-align:center;
+    padding:20px;
+}
+
+.thumbnail-actions{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    margin-top:10px;
+}
+
+.thumbnail-file{
+    color:#fff;
+    width:100%;
+    padding:8px;
+}
+
+.thumbnail-file::file-selector-button{
+    background:#252c36;
+    color:#fff;
+    border:0;
+    border-radius:5px;
+    padding:7px 11px;
+    margin-right:9px;
+    cursor:pointer;
+}
+
+.upload-status{
+    display:none;
+    margin-top:9px;
+    color:#8d95a3;
+    font-size:11px;
+}
+
+.upload-status.active{
+    display:block;
+}
+
+.form-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:9px;
+    margin-top:20px;
+    padding-top:17px;
+    border-top:1px solid var(--border);
+}
+
+/* LOGIN */
+
+.login-box{
+    max-width:430px;
+}
+
+.login-form{
+    padding:23px;
+}
+
+.login-form .form-group{
+    margin-bottom:14px;
+}
+
+.login-error{
+    display:none;
+    background:#35171b;
+    border:1px solid #71313a;
+    color:#ff929c;
+    padding:10px;
+    border-radius:6px;
+    font-size:11px;
+    margin-bottom:14px;
+}
+
+.login-info{
+    color:#777f8b;
+    font-size:10px;
+    line-height:1.5;
+    margin-top:14px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+
+    .grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .filters{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .form-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .modal-info-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:650px){
+
+    .header-content{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .header-actions{
+        width:100%;
+    }
+
+    .grid,
+    .filters,
+    .stats,
+    .form-grid,
+    .modal-info-grid{
+        grid-template-columns:1fr;
+    }
+
+    main{
+        padding:15px;
+    }
+
+    header{
+        position:relative;
+    }
+
+    .modal{
+        padding:10px;
+    }
+
+    .thumbnail{
+        height:200px;
+    }
+
+    .vod-stats{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .vod-stat-value{
+        font-size:11px;
+    }
+
+    .vod-stat-label{
+        font-size:7px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-content">
+
+        <div>
+            <div class="logo">
+                VCT <span>VOD HUB</span>
+            </div>
+
+            <div class="subtitle">
+                Biblioteca de VODs competitivos de VALORANT
+            </div>
+        </div>
+
+        <div class="header-actions">
+
+            <div id="adminStatus" class="admin-status">
+                ● ADMINISTRADOR
+            </div>
+
+            <button
+                id="loginButton"
+                class="btn btn-login"
+                onclick="abrirLogin()">
+                🔐 ADMIN
+            </button>
+
+            <button
+                id="logoutButton"
+                class="btn btn-logout"
+                onclick="cerrarSesion()"
+                style="display:none;">
+                🚪 CERRAR SESIÓN
+            </button>
+
+            <button
+                id="addButton"
+                class="btn btn-primary"
+                onclick="abrirFormulario()"
+                style="display:none;">
+                + AGREGAR VOD
+            </button>
+
+        </div>
+    </div>
+</header>
+
+<main>
+
+    <section class="stats">
+
+        <div class="stat">
+            <div class="stat-title">VODS</div>
+            <div class="stat-value" id="statVods">0</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-title">JUGADORES</div>
+            <div class="stat-value" id="statPlayers">0</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-title">AGENTES</div>
+            <div class="stat-value" id="statAgents">0</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-title">MAPAS</div>
+            <div class="stat-value" id="statMaps">0</div>
+        </div>
+
+    </section>
+
+    <section class="toolbar">
+
+        <div class="filters">
+
+            <input
+                id="search"
+                type="text"
+                placeholder="🔎 Buscar jugador, equipo, rival, torneo..."
+                oninput="render()">
+
+            <select id="filterAgent" onchange="render()">
+                <option value="">Todos los agentes</option>
+            </select>
+
+            <select id="filterMap" onchange="render()">
+                <option value="">Todos los mapas</option>
+            </select>
+
+            <select id="filterRegion" onchange="render()">
+                <option value="">Todas las regiones</option>
+            </select>
+
+            <select id="sortBy" onchange="render()">
+                <option value="recent">Más recientes</option>
+                <option value="rating">Rating</option>
+                <option value="acs">ACS</option>
+                <option value="kills">Kills</option>
+            </select>
+
+        </div>
+
+    </section>
+
+    <section id="vodGrid" class="grid">
+
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            Cargando VODs...
+        </div>
+
+    </section>
+
+</main>
+
+<!-- PLAYER -->
+
+<div id="vodModal" class="modal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <h2 id="modalTitle">VOD</h2>
+
+            <button
+                class="close"
+                onclick="cerrarModal('vodModal')">
+                ×
+            </button>
+        </div>
+
+        <div class="player">
+
+            <iframe
+                id="youtubePlayer"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+                referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
+
+        </div>
+
+        <div class="modal-info">
+
+            <div class="modal-info-grid">
+
+                <div class="info-box">
+                    <span>JUGADOR</span>
+                    <strong id="infoPlayer">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>EQUIPO</span>
+                    <strong id="infoTeam">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>RIVAL</span>
+                    <strong id="infoOpponent">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>REGIÓN</span>
+                    <strong id="infoRegion">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>AGENTE</span>
+                    <strong id="infoAgent">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>MAPA</span>
+                    <strong id="infoMap">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>TORNEO</span>
+                    <strong id="infoTournament">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>INICIO DEL MAPA</span>
+                    <strong id="infoStart">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>FECHA</span>
+                    <strong id="infoDate">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>K / D / A</span>
+                    <strong id="infoKda">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>ACS</span>
+                    <strong id="infoAcs">-</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>RATING</span>
+                    <strong id="infoRating">-</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- LOGIN -->
+
+<div id="loginModal" class="modal">
+
+    <div class="modal-box login-box">
+
+        <div class="modal-header">
+
+            <h2>Acceso administrador</h2>
+
+            <button
+                class="close"
+                onclick="cerrarModal('loginModal')">
+                ×
+            </button>
+
+        </div>
+
+        <div class="login-form">
+
+            <div id="loginError" class="login-error"></div>
+
+            <div class="form-group">
+
+                <label>Correo</label>
+
+                <input
+                    id="loginEmail"
+                    type="email"
+                    autocomplete="username"
+                    placeholder="Correo">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Contraseña</label>
+
+                <input
+                    id="loginPassword"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="Contraseña"
+                    onkeydown="if(event.key==='Enter') iniciarSesion()">
+
+            </div>
+
+            <button
+                class="btn btn-primary"
+                style="width:100%;"
+                onclick="iniciarSesion()">
+                INICIAR SESIÓN
+            </button>
+
+            <div class="login-info">
+                El acceso administrativo está restringido al usuario autorizado.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- FORMULARIO -->
+
+<div id="formModal" class="modal form-modal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2 id="formTitle">Agregar VOD</h2>
+
+            <button
+                class="close"
+                onclick="cerrarModal('formModal')">
+                ×
+            </button>
+
+        </div>
+
+        <form
+            id="vodForm"
+            class="form"
+            onsubmit="guardarFormulario(event)">
+
+            <input
+                id="editId"
+                type="hidden">
+
+            <div class="form-grid">
+
+                <div class="section-title">
+                    INFORMACIÓN DEL VOD
+                </div>
+
+                <div class="form-group full">
+
+                    <label>URL de YouTube</label>
+
+                    <input
+                        id="url"
+                        type="url"
+                        required
+                        placeholder="https://www.youtube.com/watch?v=..."
+                        oninput="detectarTiempo()">
+
+                    <div class="help">
+                        Puedes utilizar enlaces normales, youtu.be, Shorts, Embed o Live.
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Tiempo detectado</label>
+
+                    <div id="detectedTime" class="detected">
+                        <strong>-</strong>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Jugador</label>
+
+                    <input
+                        id="player"
+                        required
+                        placeholder="Nombre del jugador">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Equipo</label>
+
+                    <input
+                        id="team"
+                        placeholder="Equipo">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Rival</label>
+
+                    <input
+                        id="opponent"
+                        placeholder="Equipo rival">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Región</label>
+
+                    <input
+                        id="region"
+                        placeholder="AMERICAS / EMEA / PACIFIC / CHINA">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Agente</label>
+
+                    <select id="agent" required></select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Mapa</label>
+
+                    <select id="map" required></select>
+
+                </div>
+
+                <div class="form-group full">
+
+                    <label>Torneo / Etapa / Ronda</label>
+
+                    <input
+                        id="tournament"
+                        placeholder="VCT 2026: AMERICAS STAGE 2 | PLAY-INS LOWER ROUND 2">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Fecha</label>
+
+                    <input
+                        id="date"
+                        type="date">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Inicio del mapa</label>
+
+                    <input
+                        id="startTime"
+                        type="text"
+                        placeholder="00:00">
+
+                </div>
+
+                <div class="section-title">
+                    ESTADÍSTICAS DEL MAPA
+                </div>
+
+                <div class="form-group">
+
+                    <label>Kills</label>
+
+                    <input
+                        id="kills"
+                        type="number"
+                        min="0"
+                        placeholder="0">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Deaths</label>
+
+                    <input
+                        id="deaths"
+                        type="number"
+                        min="0"
+                        placeholder="0">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Assists</label>
+
+                    <input
+                        id="assists"
+                        type="number"
+                        min="0"
+                        placeholder="0">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>ACS</label>
+
+                    <input
+                        id="acs"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        placeholder="0">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Rating</label>
+
+                    <input
+                        id="rating"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="0.00">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>KAST</label>
+
+                    <input
+                        id="kast"
+                        type="text"
+                        placeholder="0%">
+
+                </div>
+
+                <div class="section-title">
+                    MINIATURA
+                </div>
+
+                <div class="form-group full">
+
+                    <div class="thumbnail-editor">
+
+                        <input
+                            id="thumbnailFile"
+                            class="thumbnail-file"
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp,image/gif"
+                            onchange="previsualizarMiniatura(event)">
+
+                        <div class="thumbnail-preview">
+
+                            <div
+                                id="thumbnailPlaceholder"
+                                class="thumbnail-preview-placeholder">
+                                Selecciona una imagen personalizada o utiliza la miniatura de YouTube.
+                            </div>
+
+                            <img
+                                id="thumbnailPreview"
+                                style="display:none;"
+                                alt="Vista previa">
+
+                        </div>
+
+                        <div class="thumbnail-actions">
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                onclick="usarMiniaturaYoutube()">
+                                USAR YOUTUBE
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-danger"
+                                onclick="quitarMiniaturaPersonalizada()">
+                                QUITAR
+                            </button>
+
+                        </div>
+
+                        <div
+                            id="uploadStatus"
+                            class="upload-status">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="cerrarModal('formModal')">
+                    CANCELAR
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+                    GUARDAR VOD
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+    "https://czjxjnbxnxbpesnolffo.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_KA61VPthbWlSrsB3sXzQQ_2RFPQa9T";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+const THUMBNAIL_BUCKET =
+    "vod-thumbnails";
+
+const ADMIN_UID =
+    "73c614eb-585f-47b6-88ed-cbf2e95d66fe";
+
+/* =========================================================
+   DATOS
+========================================================= */
+
+const AGENTS = [
+    "Astra",
+    "Breach",
+    "Brimstone",
+    "Chamber",
+    "Clove",
+    "Cypher",
+    "Deadlock",
+    "Fade",
+    "Gekko",
+    "Harbor",
+    "Jett",
+    "KAY/O",
+    "Killjoy",
+    "Neon",
+    "Omen",
+    "Phoenix",
+    "Raze",
+    "Reyna",
+    "Sage",
+    "Skye",
+    "Sova",
+    "Tejo",
+    "Viper",
+    "Vyse",
+    "Waylay",
+    "Yoru"
+];
+
+const MAPS = [
+    "Abyss",
+    "Ascent",
+    "Bind",
+    "Breeze",
+    "Corrode",
+    "Fracture",
+    "Haven",
+    "Icebox",
+    "Lotus",
+    "Pearl",
+    "Split",
+    "Sunset"
+];
+
+let vods = [];
+let usuarioActual = null;
+let thumbnailUrlActual = "";
+let eliminarMiniaturaActual = false;
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+window.addEventListener("DOMContentLoaded", async () => {
+
+    llenarSelectsFormulario();
+
+    await comprobarSesion();
+
+    await cargarVods();
+
+});
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+function esAdministrador(){
+
+    return !!usuarioActual &&
+        usuarioActual.id === ADMIN_UID;
+
+}
+
+function actualizarInterfazAdmin(){
+
+    const admin =
+        esAdministrador();
+
+    document.getElementById("loginButton").style.display =
+        admin ? "none" : "inline-block";
+
+    document.getElementById("logoutButton").style.display =
+        admin ? "inline-block" : "none";
+
+    document.getElementById("addButton").style.display =
+        admin ? "inline-block" : "none";
+
+    document.getElementById("adminStatus").style.display =
+        admin ? "block" : "none";
+
+}
+
+/* =========================================================
+   SESIÓN
+========================================================= */
+
+async function comprobarSesion(){
+
+    const {
+        data
+    } = await supabaseClient.auth.getSession();
+
+    usuarioActual =
+        data.session
+            ? data.session.user
+            : null;
+
+    actualizarInterfazAdmin();
+
+    supabaseClient.auth.onAuthStateChange(
+        (_event, session) => {
+
+            usuarioActual =
+                session
+                    ? session.user
+                    : null;
+
+            actualizarInterfazAdmin();
+
+            render();
+
+        }
+    );
+
+}
+
+function abrirLogin(){
+
+    document.getElementById("loginError").style.display =
+        "none";
+
+    document.getElementById("loginModal")
+        .classList.add("active");
+
+}
+
+async function iniciarSesion(){
+
+    const email =
+        document.getElementById("loginEmail")
+        .value
+        .trim();
+
+    const password =
+        document.getElementById("loginPassword")
+        .value;
+
+    const error =
+        document.getElementById("loginError");
+
+    error.style.display = "none";
+
+    if(!email || !password){
+
+        error.textContent =
+            "Ingresa correo y contraseña.";
+
+        error.style.display =
+            "block";
+
+        return;
+
+    }
+
+    const {
+        data,
+        error:loginError
+    } =
+        await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
+
+    if(loginError){
+
+        error.textContent =
+            loginError.message;
+
+        error.style.display =
+            "block";
+
+        return;
+
+    }
+
+    if(!data.user ||
+       data.user.id !== ADMIN_UID){
+
+        await supabaseClient.auth.signOut();
+
+        error.textContent =
+            "Este usuario no tiene permisos de administrador.";
+
+        error.style.display =
+            "block";
+
+        return;
+
+    }
+
+    cerrarModal("loginModal");
+
+    actualizarInterfazAdmin();
+
+}
+
+async function cerrarSesion(){
+
+    await supabaseClient.auth.signOut();
+
+    usuarioActual = null;
+
+    actualizarInterfazAdmin();
+
+}
+
+/* =========================================================
+   CARGAR VODS
+========================================================= */
+
+async function cargarVods(){
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("vods")
+            .select("*")
+            .order("created_at", {
+                ascending:false
+            });
+
+    if(error){
+
+        console.error(error);
+
+        document.getElementById("vodGrid").innerHTML =
+            `<div class="empty">
+                Error cargando los VODs.
+            </div>`;
+
+        return;
+
+    }
+
+    vods =
+        (data || []).map(convertirVod);
+
+    actualizarFiltros();
+
+    actualizarEstadisticas();
+
+    render();
+
+}
+
+/* =========================================================
+   CONVERSIÓN
+========================================================= */
+
+function convertirVod(v){
+
+    return {
+
+        id:v.id,
+
+        url:v.url || "",
+
+        youtubeId:v.youtube_id || "",
+
+        startSeconds:Number(v.start_seconds) || 0,
+
+        startTime:v.start_time || "00:00",
+
+        player:v.player || "",
+
+        team:v.team || "",
+
+        opponent:v.opponent || "",
+
+        region:v.region || "",
+
+        agent:v.agent || "",
+
+        map:v.map || "",
+
+        tournament:v.tournament || "",
+
+        date:v.date || "",
+
+        thumbnailUrl:v.thumbnail_url || "",
+
+        kills:Number(v.kills) || 0,
+
+        deaths:Number(v.deaths) || 0,
+
+        assists:Number(v.assists) || 0,
+
+        acs:Number(v.acs) || 0,
+
+        rating:Number(v.rating) || 0,
+
+        kast:v.kast || "",
+
+        createdAt:v.created_at || ""
+
+    };
+
+}
+
+/* =========================================================
+   YOUTUBE
+========================================================= */
+
+function analizarYoutube(url){
+
+    try{
+
+        const parsed =
+            new URL(url);
+
+        let id = "";
+
+        if(
+            parsed.hostname.includes("youtu.be")
+        ){
+
+            id =
+                parsed.pathname
+                    .replace("/","")
+                    .trim();
+
+        }
+
+        else if(
+            parsed.hostname.includes("youtube.com")
+        ){
+
+            if(parsed.searchParams.get("v")){
+
+                id =
+                    parsed.searchParams.get("v");
+
+            }
+
+            else if(
+                parsed.pathname.startsWith("/shorts/")
+            ){
+
+                id =
+                    parsed.pathname
+                        .split("/")[2];
+
+            }
+
+            else if(
+                parsed.pathname.startsWith("/embed/")
+            ){
+
+                id =
+                    parsed.pathname
+                        .split("/")[2];
+
+            }
+
+            else if(
+                parsed.pathname.startsWith("/live/")
+            ){
+
+                id =
+                    parsed.pathname
+                        .split("/")[2];
+
+            }
+
+        }
+
+        let tiempo =
+            parsed.searchParams.get("t");
+
+        let segundos =
+            convertirTiempoYoutube(tiempo);
+
+        return {
+
+            id:id || "",
+
+            segundos:segundos,
+
+            tiempo:segundosATiempo(segundos)
+
+        };
+
+    }
+    catch(e){
+
+        return {
+            id:"",
+            segundos:0,
+            tiempo:"00:00"
+        };
+
+    }
+
+}
+
+function convertirTiempoYoutube(valor){
+
+    if(!valor) return 0;
+
+    valor =
+        String(valor)
+            .trim()
+            .toLowerCase();
+
+    if(/^\d+$/.test(valor)){
+
+        return Number(valor);
+
+    }
+
+    let total = 0;
+
+    const h =
+        valor.match(/(\d+)h/);
+
+    const m =
+        valor.match(/(\d+)m/);
+
+    const s =
+        valor.match(/(\d+)s/);
+
+    if(h) total += Number(h[1]) * 3600;
+
+    if(m) total += Number(m[1]) * 60;
+
+    if(s) total += Number(s[1]);
+
+    if(total > 0) return total;
+
+    if(valor.includes(":")){
+
+        const parts =
+            valor.split(":").map(Number);
+
+        if(parts.length === 2){
+
+            return (
+                parts[0] * 60 +
+                parts[1]
+            );
+
+        }
+
+        if(parts.length === 3){
+
+            return (
+                parts[0] * 3600 +
+                parts[1] * 60 +
+                parts[2]
+            );
+
+        }
+
+    }
+
+    return 0;
+
+}
+
+function segundosATiempo(segundos){
+
+    segundos =
+        Math.max(0,Number(segundos) || 0);
+
+    const h =
+        Math.floor(segundos / 3600);
+
+    const m =
+        Math.floor((segundos % 3600) / 60);
+
+    const s =
+        Math.floor(segundos % 60);
+
+    if(h > 0){
+
+        return (
+            String(h).padStart(2,"0") +
+            ":" +
+            String(m).padStart(2,"0") +
+            ":" +
+            String(s).padStart(2,"0")
+        );
+
+    }
+
+    return (
+        String(m).padStart(2,"0") +
+        ":" +
+        String(s).padStart(2,"0")
+    );
+
+}
+
+function tiempoASegundos(valor){
+
+    if(!valor) return 0;
+
+    return convertirTiempoYoutube(valor);
+
+}
+
+function detectarTiempo(){
+
+    const url =
+        document.getElementById("url")
+            .value
+            .trim();
+
+    const analisis =
+        analizarYoutube(url);
+
+    document.getElementById("detectedTime")
+        .innerHTML =
+        `<strong>${escapeHtml(
+            analisis.tiempo
+        )}</strong>`;
+
+    if(
+        !document.getElementById("startTime").value
+        && analisis.id
+    ){
+
+        document.getElementById("startTime").value =
+            analisis.tiempo;
+
+    }
+
+    if(
+        !thumbnailUrlActual &&
+        analisis.id
+    ){
+
+        mostrarMiniatura(
+            obtenerMiniaturaYoutube()
+        );
+
+    }
+
+}
+
+/* =========================================================
+   MINIATURAS
+========================================================= */
+
+function obtenerMiniaturaYoutube(){
+
+    const url =
+        document.getElementById("url")
+            .value
+            .trim();
+
+    const analisis =
+        analizarYoutube(url);
+
+    if(!analisis.id) return "";
+
+    return (
+        "https://img.youtube.com/vi/" +
+        encodeURIComponent(analisis.id) +
+        "/hqdefault.jpg"
+    );
+
+}
+
+function mostrarMiniatura(url){
+
+    const img =
+        document.getElementById("thumbnailPreview");
+
+    const placeholder =
+        document.getElementById("thumbnailPlaceholder");
+
+    if(!url){
+
+        img.style.display =
+            "none";
+
+        placeholder.style.display =
+            "block";
+
+        return;
+
+    }
+
+    img.src = url;
+
+    img.style.display =
+        "block";
+
+    placeholder.style.display =
+        "none";
+
+}
+
+function previsualizarMiniatura(event){
+
+    if(!esAdministrador()) return;
+
+    const file =
+        event.target.files[0];
+
+    if(!file) return;
+
+    const permitidos = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/gif"
+    ];
+
+    if(!permitidos.includes(file.type)){
+
+        alert(
+            "Formato no permitido. Usa JPG, PNG, WEBP o GIF."
+        );
+
+        event.target.value = "";
+
+        return;
+
+    }
+
+    if(file.size > 5 * 1024 * 1024){
+
+        alert(
+            "La imagen no puede superar 5 MB."
+        );
+
+        event.target.value = "";
+
+        return;
+
+    }
+
+    eliminarMiniaturaActual = false;
+
+    const reader =
+        new FileReader();
+
+    reader.onload = e => {
+
+        mostrarMiniatura(
+            e.target.result
+        );
+
+    };
+
+    reader.readAsDataURL(file);
+
+}
+
+function usarMiniaturaYoutube(){
+
+    if(!esAdministrador()) return;
+
+    const url =
+        obtenerMiniaturaYoutube();
+
+    if(!url){
+
+        alert(
+            "Primero introduce una URL válida de YouTube."
+        );
+
+        return;
+
+    }
+
+    thumbnailUrlActual =
+        url;
+
+    eliminarMiniaturaActual =
+        false;
+
+    mostrarMiniatura(url);
+
+}
+
+function quitarMiniaturaPersonalizada(){
+
+    if(!esAdministrador()) return;
+
+    thumbnailUrlActual = "";
+
+    eliminarMiniaturaActual = true;
+
+    document.getElementById("thumbnailFile")
+        .value = "";
+
+    mostrarMiniatura("");
+
+}
+
+/* =========================================================
+   SELECTS
+========================================================= */
+
+function llenarSelectsFormulario(){
+
+    const agent =
+        document.getElementById("agent");
+
+    const map =
+        document.getElementById("map");
+
+    agent.innerHTML =
+        `<option value="">Seleccionar agente</option>` +
+        AGENTS.map(a =>
+            `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`
+        ).join("");
+
+    map.innerHTML =
+        `<option value="">Seleccionar mapa</option>` +
+        MAPS.map(m =>
+            `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`
+        ).join("");
+
+}
+
+/* =========================================================
+   FORMULARIO
+========================================================= */
+
+function abrirFormulario(){
+
+    if(!esAdministrador()){
+
+        alert("Acceso de administrador requerido.");
+
+        return;
+
+    }
+
+    limpiarFormulario();
+
+    document.getElementById("formTitle")
+        .textContent =
+        "Agregar VOD";
+
+    document.getElementById("formModal")
+        .classList.add("active");
+
+}
+
+function limpiarFormulario(){
+
+    document.getElementById("vodForm").reset();
+
+    document.getElementById("editId").value = "";
+
+    document.getElementById("detectedTime")
+        .innerHTML =
+        "<strong>-</strong>";
+
+    thumbnailUrlActual = "";
+
+    eliminarMiniaturaActual = false;
+
+    mostrarMiniatura("");
+
+    document.getElementById("uploadStatus")
+        .textContent = "";
+
+    document.getElementById("uploadStatus")
+        .classList.remove("active");
+
+}
+
+function editarVod(id){
+
+    if(!esAdministrador()){
+
+        alert("Acceso de administrador requerido.");
+
+        return;
+
+    }
+
+    const vod =
+        vods.find(v =>
+            String(v.id) === String(id)
+        );
+
+    if(!vod) return;
+
+    document.getElementById("editId").value =
+        vod.id;
+
+    document.getElementById("url").value =
+        vod.url;
+
+    document.getElementById("player").value =
+        vod.player;
+
+    document.getElementById("team").value =
+        vod.team;
+
+    document.getElementById("opponent").value =
+        vod.opponent;
+
+    document.getElementById("region").value =
+        vod.region;
+
+    document.getElementById("agent").value =
+        vod.agent;
+
+    document.getElementById("map").value =
+        vod.map;
+
+    document.getElementById("tournament").value =
+        vod.tournament;
+
+    document.getElementById("date").value =
+        vod.date;
+
+    document.getElementById("startTime").value =
+        vod.startTime;
+
+    document.getElementById("kills").value =
+        vod.kills;
+
+    document.getElementById("deaths").value =
+        vod.deaths;
+
+    document.getElementById("assists").value =
+        vod.assists;
+
+    document.getElementById("acs").value =
+        vod.acs;
+
+    document.getElementById("rating").value =
+        vod.rating;
+
+    document.getElementById("kast").value =
+        vod.kast;
+
+    thumbnailUrlActual =
+        vod.thumbnailUrl || "";
+
+    eliminarMiniaturaActual = false;
+
+    mostrarMiniatura(
+        thumbnailUrlActual ||
+        obtenerMiniaturaYoutube()
+    );
+
+    const analisis =
+        analizarYoutube(vod.url);
+
+    document.getElementById("detectedTime")
+        .innerHTML =
+        `<strong>${escapeHtml(
+            analisis.tiempo
+        )}</strong>`;
+
+    document.getElementById("formTitle")
+        .textContent =
+        "Editar VOD";
+
+    document.getElementById("formModal")
+        .classList.add("active");
+
+}
+
+async function guardarFormulario(event){
+
+    event.preventDefault();
+
+    if(!esAdministrador()){
+
+        alert("Acceso de administrador requerido.");
+
+        return;
+
+    }
+
+    const id =
+        document.getElementById("editId").value;
+
+    const url =
+        document.getElementById("url")
+            .value
+            .trim();
+
+    const analisis =
+        analizarYoutube(url);
+
+    if(!analisis.id){
+
+        alert(
+            "La URL de YouTube no es válida."
+        );
+
+        return;
+
+    }
+
+    const startTime =
+        document.getElementById("startTime")
+            .value
+            .trim() ||
+        analisis.tiempo;
+
+    const startSeconds =
+        tiempoASegundos(startTime);
+
+    const datos = {
+
+        url:url,
+
+        youtube_id:analisis.id,
+
+        start_seconds:startSeconds,
+
+        start_time:startTime,
+
+        player:
+            document.getElementById("player")
+                .value.trim(),
+
+        team:
+            document.getElementById("team")
+                .value.trim(),
+
+        opponent:
+            document.getElementById("opponent")
+                .value.trim(),
+
+        region:
+            document.getElementById("region")
+                .value.trim(),
+
+        agent:
+            document.getElementById("agent")
+                .value,
+
+        map:
+            document.getElementById("map")
+                .value,
+
+        tournament:
+            document.getElementById("tournament")
+                .value.trim(),
+
+        date:
+            document.getElementById("date")
+                .value || null,
+
+        kills:
+            Number(document.getElementById("kills").value) || 0,
+
+        deaths:
+            Number(document.getElementById("deaths").value) || 0,
+
+        assists:
+            Number(document.getElementById("assists").value) || 0,
+
+        acs:
+            Number(document.getElementById("acs").value) || 0,
+
+        rating:
+            Number(document.getElementById("rating").value) || 0,
+
+        kast:
+            document.getElementById("kast")
+                .value.trim(),
+
+        thumbnail_url:
+            thumbnailUrlActual || null
+
+    };
+
+    try{
+
+        const file =
+            document.getElementById("thumbnailFile")
+                .files[0];
+
+        if(file){
+
+            datos.thumbnail_url =
+                await subirMiniatura(file);
+
+        }
+
+        if(eliminarMiniaturaActual){
+
+            datos.thumbnail_url =
+                null;
+
+        }
+
+        let result;
+
+        if(id){
+
+            result =
+                await supabaseClient
+                    .from("vods")
+                    .update(datos)
+                    .eq("id",id);
+
+        }
+        else{
+
+            result =
+                await supabaseClient
+                    .from("vods")
+                    .insert([datos]);
+
+        }
+
+        if(result.error){
+
+            console.error(result.error);
+
+            if(result.error.code === "42501"){
+
+                alert(
+                    "Supabase rechazó la operación por permisos."
+                );
+
+            }
+            else{
+
+                alert(
+                    result.error.message
+                );
+
+            }
+
+            return;
+
+        }
+
+        cerrarModal("formModal");
+
+        await cargarVods();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Ocurrió un error guardando el VOD."
+        );
+
+    }
+
+}
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+async function subirMiniatura(file){
+
+    const extension =
+        file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+    const nombre =
+        "vods/" +
+        Date.now() +
+        "-" +
+        Math.random()
+            .toString(36)
+            .slice(2) +
+        "." +
+        extension;
+
+    const {
+        error
+    } =
+        await supabaseClient.storage
+            .from(THUMBNAIL_BUCKET)
+            .upload(
+                nombre,
+                file,
+                {
+                    cacheControl:"3600",
+                    upsert:false
+                }
+            );
+
+    if(error){
+
+        throw error;
+
+    }
+
+    const {
+        data
+    } =
+        supabaseClient.storage
+            .from(THUMBNAIL_BUCKET)
+            .getPublicUrl(nombre);
+
+    return data.publicUrl;
+
+}
+
+/* =========================================================
+   ELIMINAR
+========================================================= */
+
+async function eliminarVod(id){
+
+    if(!esAdministrador()){
+
+        alert("Acceso de administrador requerido.");
+
+        return;
+
+    }
+
+    const confirmar =
+        confirm(
+            "¿Seguro que quieres eliminar este VOD?"
+        );
+
+    if(!confirmar) return;
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("vods")
+            .delete()
+            .eq("id",id);
+
+    if(error){
+
+        console.error(error);
+
+        alert(
+            error.code === "42501"
+                ? "No tienes permisos para eliminar este VOD."
+                : error.message
+        );
+
+        return;
+
+    }
+
+    await cargarVods();
+
+}
+
+/* =========================================================
+   REPRODUCTOR
+========================================================= */
+
+function reproducirVod(id){
+
+    const vod =
+        vods.find(v =>
+            String(v.id) === String(id)
+        );
+
+    if(!vod) return;
+
+    const segundos =
+        Number(vod.startSeconds) || 0;
+
+    const origin =
+        window.location.origin;
+
+    const iframe =
+        document.getElementById("youtubePlayer");
+
+    iframe.src =
+        "https://www.youtube.com/embed/" +
+        encodeURIComponent(vod.youtubeId) +
+        "?autoplay=1" +
+        "&rel=0" +
+        "&start=" +
+        segundos +
+        "&enablejsapi=1" +
+        "&origin=" +
+        encodeURIComponent(origin);
+
+    document.getElementById("modalTitle")
+        .textContent =
+        (vod.player || "VOD") +
+        " · " +
+        (vod.map || "");
+
+    document.getElementById("infoPlayer")
+        .textContent =
+        vod.player || "-";
+
+    document.getElementById("infoTeam")
+        .textContent =
+        vod.team || "-";
+
+    document.getElementById("infoOpponent")
+        .textContent =
+        vod.opponent || "-";
+
+    document.getElementById("infoRegion")
+        .textContent =
+        vod.region || "-";
+
+    document.getElementById("infoAgent")
+        .textContent =
+        vod.agent || "-";
+
+    document.getElementById("infoMap")
+        .textContent =
+        vod.map || "-";
+
+    document.getElementById("infoTournament")
+        .textContent =
+        vod.tournament || "-";
+
+    document.getElementById("infoStart")
+        .textContent =
+        vod.startTime || "00:00";
+
+    document.getElementById("infoDate")
+        .textContent =
+        vod.date || "-";
+
+    document.getElementById("infoKda")
+        .textContent =
+        `${vod.kills} / ${vod.deaths} / ${vod.assists}`;
+
+    document.getElementById("infoAcs")
+        .textContent =
+        vod.acs || "-";
+
+    document.getElementById("infoRating")
+        .textContent =
+        vod.rating || "-";
+
+    document.getElementById("vodModal")
+        .classList.add("active");
+
+}
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render(){
+
+    const grid =
+        document.getElementById("vodGrid");
+
+    const search =
+        document.getElementById("search")
+            .value
+            .trim()
+            .toLowerCase();
+
+    const agent =
+        document.getElementById("filterAgent").value;
+
+    const map =
+        document.getElementById("filterMap").value;
+
+    const region =
+        document.getElementById("filterRegion").value;
+
+    const sort =
+        document.getElementById("sortBy").value;
+
+    let lista =
+        vods.filter(v => {
+
+            const texto = [
+
+                v.player,
+                v.team,
+                v.opponent,
+                v.region,
+                v.agent,
+                v.map,
+                v.tournament
+
+            ]
+            .join(" ")
+            .toLowerCase();
+
+            return (
+
+                (!search || texto.includes(search)) &&
+
+                (!agent || v.agent === agent) &&
+
+                (!map || v.map === map) &&
+
+                (!region || v.region === region)
+
+            );
+
+        });
+
+    lista.sort((a,b) => {
+
+        if(sort === "rating")
+            return b.rating - a.rating;
+
+        if(sort === "acs")
+            return b.acs - a.acs;
+
+        if(sort === "kills")
+            return b.kills - a.kills;
+
+        return new Date(b.createdAt) -
+               new Date(a.createdAt);
+
+    });
+
+    if(!lista.length){
+
+        grid.innerHTML =
+            `<div class="empty">
+                No se encontraron VODs con esos filtros.
+            </div>`;
+
+        return;
+
+    }
+
+    grid.innerHTML =
+        lista.map(crearCard).join("");
+
+}
+
+function crearCard(vod){
+
+    const thumbnail =
+        vod.thumbnailUrl ||
+        (
+            vod.youtubeId
+                ? "https://img.youtube.com/vi/" +
+                  encodeURIComponent(vod.youtubeId) +
+                  "/hqdefault.jpg"
+                : ""
+        );
+
+    const admin =
+        esAdministrador();
+
+    return `
+
+        <article class="card">
+
+            <div class="thumbnail">
+
+                ${
+                    thumbnail
+                    ?
+                    `<img
+                        src="${escapeHtml(thumbnail)}"
+                        alt="${escapeHtml(vod.player)}"
+                        loading="lazy">`
+                    :
+                    `<div style="
+                        width:100%;
+                        height:100%;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        color:#555;
+                    ">
+                        SIN MINIATURA
+                    </div>`
+                }
+
+                <div class="agent-badge">
+                    ${escapeHtml(vod.agent || "AGENTE")}
+                </div>
+
+                <div class="start-badge">
+                    ▶ ${escapeHtml(vod.startTime || "00:00")}
+                </div>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="card-title">
+                    ${escapeHtml(vod.map || "MAPA")}
+                </div>
+
+                <div class="matchup">
+                    ${escapeHtml(vod.player || "-")}
+                    ${vod.team ? " · " + escapeHtml(vod.team) : ""}
+                </div>
+
+                <div class="vod-info">
+
+                    <div
+                        class="vod-opponent"
+                        title="${escapeHtml(vod.opponent || "")}">
+                        VS ${escapeHtml(vod.opponent || "RIVAL")}
+                    </div>
+
+                    <div
+                        class="vod-tournament"
+                        title="${escapeHtml(
+                            [vod.region, vod.tournament]
+                            .filter(Boolean)
+                            .join(" · ")
+                        )}">
+                        ${escapeHtml(
+                            [vod.region, vod.tournament]
+                            .filter(Boolean)
+                            .join(" · ") ||
+                            "TORNEO NO ESPECIFICADO"
+                        )}
+                    </div>
+
+                    <div class="vod-stats">
+
+                        <div class="vod-stat">
+                            <span class="vod-stat-label">
+                                K/D/A
+                            </span>
+                            <span class="vod-stat-value">
+                                ${vod.kills}/${vod.deaths}/${vod.assists}
+                            </span>
+                        </div>
+
+                        <div class="vod-stat">
+                            <span class="vod-stat-label">
+                                ACS
+                            </span>
+                            <span class="vod-stat-value">
+                                ${vod.acs || "-"}
+                            </span>
+                        </div>
+
+                        <div class="vod-stat">
+                            <span class="vod-stat-label">
+                                RATING
+                            </span>
+                            <span class="vod-stat-value">
+                                ${vod.rating || "-"}
+                            </span>
+                        </div>
+
+                        <div class="vod-stat">
+                            <span class="vod-stat-label">
+                                KAST
+                            </span>
+                            <span class="vod-stat-value">
+                                ${escapeHtml(vod.kast || "-")}
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="vod-details">
+
+                        <div class="vod-detail">
+                            🎯 ${escapeHtml(vod.agent || "-")}
+                        </div>
+
+                        <div class="vod-detail">
+                            🗺️ ${escapeHtml(vod.map || "-")}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card-footer">
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="reproducirVod('${escapeHtml(vod.id)}')">
+                        ▶ VER VOD
+                    </button>
+
+                    ${
+                        admin
+                        ?
+                        `
+                        <button
+                            class="btn btn-edit"
+                            onclick="editarVod('${escapeHtml(vod.id)}')">
+                            EDITAR
+                        </button>
+
+                        <button
+                            class="btn btn-danger"
+                            onclick="eliminarVod('${escapeHtml(vod.id)}')">
+                            ELIMINAR
+                        </button>
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
+
+            </div>
+
+        </article>
+
+    `;
+
+}
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+function llenarFiltro(id, valores, textoInicial){
+
+    const select =
+        document.getElementById(id);
+
+    const actual =
+        select.value;
+
+    const unicos =
+        [...new Set(
+            valores
+                .filter(Boolean)
+                .sort((a,b) =>
+                    String(a).localeCompare(String(b))
+                )
+        )];
+
+    select.innerHTML =
+        `<option value="">${textoInicial}</option>` +
+        unicos.map(v =>
+            `<option value="${escapeHtml(v)}">
+                ${escapeHtml(v)}
+            </option>`
+        ).join("");
+
+    if(unicos.includes(actual)){
+
+        select.value =
+            actual;
+
+    }
+
+}
+
+function actualizarFiltros(){
+
+    llenarFiltro(
+        "filterAgent",
+        vods.map(v => v.agent),
+        "Todos los agentes"
+    );
+
+    llenarFiltro(
+        "filterMap",
+        vods.map(v => v.map),
+        "Todos los mapas"
+    );
+
+    llenarFiltro(
+        "filterRegion",
+        vods.map(v => v.region),
+        "Todas las regiones"
+    );
+
+}
+
+/* =========================================================
+   ESTADÍSTICAS
+========================================================= */
+
+function actualizarEstadisticas(){
+
+    document.getElementById("statVods")
+        .textContent =
+        vods.length;
+
+    document.getElementById("statPlayers")
+        .textContent =
+        new Set(
+            vods
+                .map(v => v.player)
+                .filter(Boolean)
+        ).size;
+
+    document.getElementById("statAgents")
+        .textContent =
+        new Set(
+            vods
+                .map(v => v.agent)
+                .filter(Boolean)
+        ).size;
+
+    document.getElementById("statMaps")
+        .textContent =
+        new Set(
+            vods
+                .map(v => v.map)
+                .filter(Boolean)
+        ).size;
+
+}
+
+/* =========================================================
+   MODALES
+========================================================= */
+
+function cerrarModal(id){
+
+    const modal =
+        document.getElementById(id);
+
+    if(modal){
+
+        modal.classList.remove("active");
+
+    }
+
+    if(id === "vodModal"){
+
+        document.getElementById("youtubePlayer")
+            .src = "";
+
+    }
+
+}
+
+document.querySelectorAll(".modal")
+    .forEach(modal => {
+
+        modal.addEventListener(
+            "click",
+            event => {
+
+                if(event.target === modal){
+
+                    cerrarModal(modal.id);
+
+                }
+
+            }
+        );
+
+    });
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(event.key === "Escape"){
+
+            document
+                .querySelectorAll(".modal.active")
+                .forEach(modal =>
+                    cerrarModal(modal.id)
+                );
+
+        }
+
+    }
+);
+
+/* =========================================================
+   SEGURIDAD VISUAL
+========================================================= */
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+</script>
+
+</body>
+</html>
