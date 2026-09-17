@@ -644,6 +644,138 @@ select:focus{
     }
 }
 
+/* =========================================================
+   INFORMACIÓN ESTÉTICA DE CADA VOD
+   ========================================================= */
+
+.vod-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Rival */
+.vod-opponent {
+    height: 24px;
+    line-height: 24px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Torneo / etapa / ronda */
+.vod-tournament {
+    height: 20px;
+    line-height: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #8f9bad;
+    text-transform: uppercase;
+    letter-spacing: .35px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Línea de estadísticas */
+.vod-stats {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+/* Cada estadística */
+.vod-stat {
+    min-width: 0;
+    text-align: center;
+    padding: 7px 4px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 6px;
+}
+
+/* Nombre de la estadística */
+.vod-stat-label {
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    color: #7f8a9a;
+    letter-spacing: .5px;
+    margin-bottom: 3px;
+}
+
+/* Valor */
+.vod-stat-value {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Agente y mapa */
+.vod-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.vod-detail {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    border-radius: 6px;
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.05);
+    color: #aeb7c5;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Evita que tarjetas diferentes tengan alturas distintas */
+.vod-card {
+    height: 100%;
+}
+
+.vod-card .vod-content {
+    min-height: 210px;
+}
+
+/* En pantallas pequeñas */
+@media (max-width: 600px) {
+
+    .vod-stats {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+    }
+
+    .vod-stat {
+        padding: 6px 2px;
+    }
+
+    .vod-stat-value {
+        font-size: 11px;
+    }
+
+    .vod-stat-label {
+        font-size: 8px;
+    }
+
+}
 </style>
 
 </head>
@@ -3681,39 +3813,100 @@ function render(){
                     </div>
 
 
-                    <div class="meta">
+                    <div class="vod-info">
 
-                        ${
-                            vod.opponent
-                            ? `<span class="tag">
-                                VS ${escapeHtml(
-                                    vod.opponent
-                                )}
-                               </span>`
-                            : ""
-                        }
+    <div
+        class="vod-opponent"
+        title="VS ${escapeHtml(vod.opponent || "RIVAL")}"
+    >
+        VS ${escapeHtml(vod.opponent || "RIVAL")}
+    </div>
 
-                        ${
-                            vod.region
-                            ? `<span class="tag">
-                                ${escapeHtml(
-                                    vod.region
-                                )}
-                               </span>`
-                            : ""
-                        }
+    <div
+        class="vod-tournament"
+        title="${escapeHtml(
+            [
+                vod.region,
+                vod.tournament
+            ]
+            .filter(Boolean)
+            .join(" · ")
+        )}"
+    >
+        ${escapeHtml(
+            [
+                vod.region,
+                vod.tournament
+            ]
+            .filter(Boolean)
+            .join(" · ")
+            || "VCT 2026"
+        )}
+    </div>
 
-                        ${
-                            vod.tournament
-                            ? `<span class="tag">
-                                ${escapeHtml(
-                                    vod.tournament
-                                )}
-                               </span>`
-                            : ""
-                        }
+    <div class="vod-stats">
 
-                    </div>
+        <div class="vod-stat">
+            <span class="vod-stat-label">
+                K/D/A
+            </span>
+
+            <span class="vod-stat-value">
+                ${vod.kills || 0}/${vod.deaths || 0}/${vod.assists || 0}
+            </span>
+        </div>
+
+        <div class="vod-stat">
+            <span class="vod-stat-label">
+                ACS
+            </span>
+
+            <span class="vod-stat-value">
+                ${vod.acs || "—"}
+            </span>
+        </div>
+
+        <div class="vod-stat">
+            <span class="vod-stat-label">
+                RATING
+            </span>
+
+            <span class="vod-stat-value">
+                ${vod.rating || "—"}
+            </span>
+        </div>
+
+        <div class="vod-stat">
+            <span class="vod-stat-label">
+                KAST
+            </span>
+
+            <span class="vod-stat-value">
+                ${vod.kast ? vod.kast + "%" : "—"}
+            </span>
+        </div>
+
+    </div>
+
+    <div class="vod-details">
+
+        <div
+            class="vod-detail"
+            title="${escapeHtml(vod.agent || "")}"
+        >
+            🎯 ${escapeHtml(vod.agent || "—")}
+        </div>
+
+        <div
+            class="vod-detail"
+            title="${escapeHtml(vod.map || "")}"
+        >
+            🗺️ ${escapeHtml(vod.map || "—")}
+        </div>
+
+    </div>
+
+</div>
 
 
                     <div class="stats-row">
