@@ -7,6 +7,7 @@
 <title>VCT VOD HUB</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -447,6 +448,75 @@ select:focus{
     color:#fff;
 }
 
+/* MINIATURA PERSONALIZADA */
+
+.thumbnail-editor{
+    background:#0b0e14;
+    border:1px solid #252b35;
+    border-radius:8px;
+    padding:14px;
+}
+
+.thumbnail-preview{
+    width:100%;
+    max-width:500px;
+    height:220px;
+    margin-top:10px;
+    background:#050609;
+    border:1px solid #303744;
+    border-radius:7px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.thumbnail-preview img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.thumbnail-preview-placeholder{
+    color:#666f7c;
+    font-size:13px;
+    text-align:center;
+    padding:20px;
+}
+
+.thumbnail-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:10px;
+}
+
+.thumbnail-file{
+    padding:9px;
+    cursor:pointer;
+}
+
+.thumbnail-file::file-selector-button{
+    background:#252b35;
+    color:#fff;
+    border:0;
+    border-radius:5px;
+    padding:8px 12px;
+    margin-right:10px;
+    cursor:pointer;
+}
+
+.upload-status{
+    display:none;
+    margin-top:10px;
+    color:#8d95a3;
+    font-size:12px;
+}
+
+.upload-status.active{
+    display:block;
+}
+
 .form-actions{
     display:flex;
     justify-content:flex-end;
@@ -568,7 +638,12 @@ select:focus{
     .modal{
         padding:10px;
     }
+
+    .thumbnail-preview{
+        height:180px;
+    }
 }
+
 </style>
 
 </head>
@@ -580,20 +655,18 @@ select:focus{
 <div class="header-content">
 
 <div>
-    <div class="logo">
-        VCT <span>VOD HUB</span>
-    </div>
 
+<div class="logo">
+    VCT <span>VOD HUB</span>
+</div>
 
 <div class="subtitle">
     Biblioteca de VODs competitivos de VALORANT
 </div>
 
-
 </div>
 
 <div class="header-actions">
-
 
 <div
     id="adminStatus"
@@ -623,7 +696,6 @@ select:focus{
     style="display:none;">
     + AGREGAR VOD
 </button>
-
 
 </div>
 
@@ -665,9 +737,7 @@ select:focus{
 id="search"
 type="text"
 placeholder="🔎 Buscar jugador, equipo, rival, torneo..."
-oninput="render()"
-
->
+oninput="render()">
 
 <select id="filterAgent" onchange="render()">
     <option value="">Todos los agentes</option>
@@ -703,6 +773,7 @@ oninput="render()"
 
 </main>
 
+
 <!-- =====================================
      MODAL REPRODUCTOR
 ===================================== -->
@@ -718,7 +789,8 @@ oninput="render()"
 <button
  class="close"
  onclick="cerrarModal('vodModal')">
-× </button>
+×
+</button>
 
 </div>
 
@@ -785,6 +857,7 @@ oninput="render()"
 
 </div>
 
+
 <!-- =====================================
      MODAL LOGIN
 ===================================== -->
@@ -800,7 +873,8 @@ oninput="render()"
 <button
  class="close"
  onclick="cerrarModal('loginModal')">
-× </button>
+×
+</button>
 
 </div>
 
@@ -841,7 +915,8 @@ oninput="render()"
  type="submit"
  class="btn btn-primary"
  style="width:100%;">
-🔐 INICIAR SESIÓN </button>
+🔐 INICIAR SESIÓN
+</button>
 
 <div class="login-info">
     El acceso está protegido por Supabase Authentication.
@@ -854,6 +929,7 @@ oninput="render()"
 </div>
 
 </div>
+
 
 <!-- =====================================
      MODAL FORMULARIO
@@ -872,7 +948,8 @@ oninput="render()"
 <button
  class="close"
  onclick="cerrarModal('formModal')">
-× </button>
+×
+</button>
 
 </div>
 
@@ -916,6 +993,67 @@ oninput="render()"
     Tiempo detectado:
     <strong>00:00:00</strong>
 </div>
+
+
+<div class="form-group full">
+
+<label>
+    MINIATURA PERSONALIZADA
+</label>
+
+<div class="thumbnail-editor">
+
+<input
+    id="thumbnailFile"
+    class="thumbnail-file"
+    type="file"
+    accept="image/jpeg,image/png,image/webp,image/gif">
+
+<div class="help">
+    Esta imagen aparecerá en la tarjeta del VOD.
+    Si no seleccionas ninguna, se utilizará automáticamente
+    la miniatura de YouTube.
+</div>
+
+<div class="thumbnail-actions">
+
+<button
+    type="button"
+    class="btn btn-secondary"
+    onclick="usarMiniaturaYoutube()">
+    🎬 USAR MINIATURA DE YOUTUBE
+</button>
+
+<button
+    type="button"
+    id="quitarMiniaturaButton"
+    class="btn btn-danger"
+    onclick="quitarMiniaturaPersonalizada()"
+    style="display:none;">
+    🗑️ QUITAR PERSONALIZADA
+</button>
+
+</div>
+
+<div
+    id="thumbnailUploadStatus"
+    class="upload-status">
+</div>
+
+<div
+    id="thumbnailPreview"
+    class="thumbnail-preview">
+
+<div class="thumbnail-preview-placeholder">
+    La miniatura de YouTube aparecerá aquí
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 
 <div class="form-group">
 <label>JUGADOR *</label>
@@ -984,6 +1122,7 @@ oninput="render()"
 </div>
 
 <div class="form-group">
+
 <label>INICIO DETECTADO</label>
 
 <input
@@ -1022,6 +1161,7 @@ oninput="render()"
 </div>
 
 <div class="form-group">
+
 <label>RATING</label>
 
 <input
@@ -1034,6 +1174,7 @@ oninput="render()"
 </div>
 
 <div class="form-group">
+
 <label>KAST %</label>
 
 <input
@@ -1053,12 +1194,15 @@ oninput="render()"
  type="button"
  class="btn btn-secondary"
  onclick="cerrarModal('formModal')">
-CANCELAR </button>
+CANCELAR
+</button>
 
 <button
  type="submit"
+ id="guardarVodButton"
  class="btn btn-primary">
-GUARDAR </button>
+GUARDAR
+</button>
 
 </div>
 
@@ -1067,6 +1211,7 @@ GUARDAR </button>
 </div>
 
 </div>
+
 
 <!-- SUPABASE -->
 
@@ -1089,6 +1234,14 @@ const supabaseClient =
         SUPABASE_URL,
         SUPABASE_KEY
     );
+
+
+/* ==========================================
+   BUCKET MINIATURAS
+========================================== */
+
+const THUMBNAIL_BUCKET =
+    "vod-thumbnails";
 
 
 /* ==========================================
@@ -1147,6 +1300,14 @@ const MAPS = [
 
 let vods = [];
 let usuarioActual = null;
+
+
+/* ==========================================
+   MINIATURA ACTUAL DEL FORMULARIO
+========================================== */
+
+let thumbnailUrlActual = null;
+let eliminarMiniaturaActual = false;
 
 
 /* ==========================================
@@ -1421,6 +1582,7 @@ async function cerrarSesion(){
 
     usuarioActual = null;
 
+
     actualizarInterfazAdmin(
         null
     );
@@ -1552,6 +1714,9 @@ function convertirVod(v){
 
         kast:Number(v.kast) || 0,
 
+        thumbnailUrl:
+            v.thumbnail_url || "",
+
         createdAt:
             v.created_at
                 ? new Date(v.created_at).getTime()
@@ -1614,7 +1779,6 @@ function analizarYoutube(url){
                 .split("/")[0];
 
         }
-
 
         else if(
             parsed.hostname.includes(
@@ -1915,6 +2079,325 @@ function detectarTiempo(){
         <strong>${tiempo}</strong>
         (${analisis.segundos} segundos)`;
 
+
+    actualizarPreviewYoutube();
+
+}
+
+
+/* ==========================================
+   MINIATURA DE YOUTUBE
+========================================== */
+
+function obtenerMiniaturaYoutube(){
+
+    const url =
+        document.getElementById(
+            "url"
+        ).value.trim();
+
+
+    const analisis =
+        analizarYoutube(url);
+
+
+    if(!analisis.id)
+        return "";
+
+
+    return (
+        "https://img.youtube.com/vi/" +
+        encodeURIComponent(
+            analisis.id
+        ) +
+        "/hqdefault.jpg"
+    );
+
+}
+
+
+/* ==========================================
+   ACTUALIZAR PREVISUALIZACIÓN YOUTUBE
+========================================== */
+
+function actualizarPreviewYoutube(){
+
+    if(eliminarMiniaturaActual)
+        return;
+
+
+    const archivo =
+        document.getElementById(
+            "thumbnailFile"
+        );
+
+
+    if(archivo && archivo.files.length)
+        return;
+
+
+    if(thumbnailUrlActual)
+        return;
+
+
+    const url =
+        obtenerMiniaturaYoutube();
+
+
+    mostrarPreviewMiniatura(
+        url
+    );
+
+}
+
+
+/* ==========================================
+   MOSTRAR PREVIEW
+========================================== */
+
+function mostrarPreviewMiniatura(url){
+
+    const preview =
+        document.getElementById(
+            "thumbnailPreview"
+        );
+
+
+    if(!url){
+
+        preview.innerHTML = `
+            <div class="thumbnail-preview-placeholder">
+                No hay miniatura disponible
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    preview.innerHTML = `
+        <img
+            src="${escapeHtml(url)}"
+            alt="Vista previa de miniatura"
+            onerror="this.parentElement.innerHTML='<div class=&quot;thumbnail-preview-placeholder&quot;>No se pudo cargar la imagen</div>'">
+    `;
+
+}
+
+
+/* ==========================================
+   SELECCIONAR IMAGEN
+========================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        const input =
+            document.getElementById(
+                "thumbnailFile"
+            );
+
+
+        if(!input)
+            return;
+
+
+        input.addEventListener(
+            "change",
+            function(){
+
+                if(!usuarioActual){
+
+                    input.value = "";
+
+                    alert(
+                        "Solo el administrador puede cambiar la miniatura."
+                    );
+
+                    return;
+
+                }
+
+
+                const archivo =
+                    input.files[0];
+
+
+                if(!archivo)
+                    return;
+
+
+                const tiposPermitidos = [
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp",
+                    "image/gif"
+                ];
+
+
+                if(
+                    !tiposPermitidos.includes(
+                        archivo.type
+                    )
+                ){
+
+                    alert(
+                        "Solo se permiten imágenes JPG, PNG, WEBP o GIF."
+                    );
+
+                    input.value = "";
+
+                    return;
+
+                }
+
+
+                if(
+                    archivo.size >
+                    5 * 1024 * 1024
+                ){
+
+                    alert(
+                        "La imagen no puede superar los 5 MB."
+                    );
+
+                    input.value = "";
+
+                    return;
+
+                }
+
+
+                eliminarMiniaturaActual =
+                    false;
+
+
+                const lector =
+                    new FileReader();
+
+
+                lector.onload =
+                    function(e){
+
+                        mostrarPreviewMiniatura(
+                            e.target.result
+                        );
+
+                    };
+
+
+                lector.readAsDataURL(
+                    archivo
+                );
+
+
+                document.getElementById(
+                    "quitarMiniaturaButton"
+                ).style.display =
+                    "inline-block";
+
+            }
+        );
+
+    }
+);
+
+
+/* ==========================================
+   USAR MINIATURA YOUTUBE
+========================================== */
+
+function usarMiniaturaYoutube(){
+
+    if(!usuarioActual){
+
+        alert(
+            "Solo el administrador puede cambiar la miniatura."
+        );
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById(
+            "thumbnailFile"
+        );
+
+
+    input.value = "";
+
+
+    thumbnailUrlActual = null;
+
+    eliminarMiniaturaActual = false;
+
+
+    document.getElementById(
+        "quitarMiniaturaButton"
+    ).style.display =
+        "none";
+
+
+    actualizarPreviewYoutube();
+
+}
+
+
+/* ==========================================
+   QUITAR MINIATURA PERSONALIZADA
+========================================== */
+
+function quitarMiniaturaPersonalizada(){
+
+    if(!usuarioActual){
+
+        alert(
+            "Solo el administrador puede cambiar la miniatura."
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Quieres quitar la miniatura personalizada y volver a utilizar la miniatura de YouTube?"
+        );
+
+
+    if(!confirmar)
+        return;
+
+
+    document.getElementById(
+        "thumbnailFile"
+    ).value = "";
+
+
+    thumbnailUrlActual = null;
+
+    eliminarMiniaturaActual = true;
+
+
+    document.getElementById(
+        "quitarMiniaturaButton"
+    ).style.display =
+        "none";
+
+
+    const youtube =
+        obtenerMiniaturaYoutube();
+
+
+    mostrarPreviewMiniatura(
+        youtube
+    );
+
 }
 
 
@@ -2041,6 +2524,39 @@ function limpiarFormulario(){
     document.getElementById(
         "kast"
     ).value = 0;
+
+
+    document.getElementById(
+        "thumbnailFile"
+    ).value = "";
+
+
+    thumbnailUrlActual = null;
+
+    eliminarMiniaturaActual = false;
+
+
+    document.getElementById(
+        "quitarMiniaturaButton"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "thumbnailUploadStatus"
+    ).textContent = "";
+
+
+    document.getElementById(
+        "thumbnailUploadStatus"
+    ).classList.remove(
+        "active"
+    );
+
+
+    mostrarPreviewMiniatura(
+        ""
+    );
 
 
     document.getElementById(
@@ -2189,6 +2705,58 @@ function editarVod(id){
 
 
     document.getElementById(
+        "thumbnailFile"
+    ).value = "";
+
+
+    thumbnailUrlActual =
+        vod.thumbnailUrl || null;
+
+
+    eliminarMiniaturaActual =
+        false;
+
+
+    if(vod.thumbnailUrl){
+
+        mostrarPreviewMiniatura(
+            vod.thumbnailUrl
+        );
+
+
+        document.getElementById(
+            "quitarMiniaturaButton"
+        ).style.display =
+            "inline-block";
+
+    }else{
+
+        mostrarPreviewMiniatura(
+            obtenerMiniaturaYoutube()
+        );
+
+
+        document.getElementById(
+            "quitarMiniaturaButton"
+        ).style.display =
+            "none";
+
+    }
+
+
+    document.getElementById(
+        "thumbnailUploadStatus"
+    ).textContent = "";
+
+
+    document.getElementById(
+        "thumbnailUploadStatus"
+    ).classList.remove(
+        "active"
+    );
+
+
+    document.getElementById(
         "formTitle"
     ).textContent =
         "Editar VOD";
@@ -2197,6 +2765,141 @@ function editarVod(id){
     document.getElementById(
         "formModal"
     ).classList.add("active");
+
+}
+
+
+/* ==========================================
+   SUBIR MINIATURA A SUPABASE STORAGE
+========================================== */
+
+async function subirMiniatura(){
+
+    if(!usuarioActual)
+        return null;
+
+
+    const input =
+        document.getElementById(
+            "thumbnailFile"
+        );
+
+
+    const archivo =
+        input.files[0];
+
+
+    if(!archivo)
+        return null;
+
+
+    const extension =
+        archivo.name
+        .split(".")
+        .pop()
+        .toLowerCase();
+
+
+    const nombreSeguro =
+        archivo.name
+        .replace(
+            /[^a-zA-Z0-9._-]/g,
+            "_"
+        );
+
+
+    const nombreArchivo =
+        Date.now() +
+        "_" +
+        Math.random()
+            .toString(36)
+            .substring(2,8) +
+        "_" +
+        nombreSeguro;
+
+
+    const ruta =
+        "vods/" +
+        nombreArchivo;
+
+
+    const status =
+        document.getElementById(
+            "thumbnailUploadStatus"
+        );
+
+
+    status.textContent =
+        "📤 Subiendo miniatura...";
+
+
+    status.classList.add(
+        "active"
+    );
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .storage
+            .from(
+                THUMBNAIL_BUCKET
+            )
+            .upload(
+                ruta,
+                archivo,
+                {
+                    cacheControl:"3600",
+                    upsert:false,
+                    contentType:
+                        archivo.type
+                }
+            );
+
+
+    if(error){
+
+        console.error(
+            "Error subiendo miniatura:",
+            error
+        );
+
+
+        throw error;
+
+    }
+
+
+    const {
+        data:publicData
+    } =
+        supabaseClient
+            .storage
+            .from(
+                THUMBNAIL_BUCKET
+            )
+            .getPublicUrl(
+                data.path
+            );
+
+
+    if(!publicData ||
+       !publicData.publicUrl){
+
+        throw new Error(
+            "No se pudo obtener la URL pública de la miniatura."
+        );
+
+    }
+
+
+    status.textContent =
+        "✅ Miniatura subida correctamente.";
+
+
+    return publicData.publicUrl;
 
 }
 
@@ -2225,202 +2928,269 @@ async function guardarFormulario(event){
     }
 
 
-    const url =
+    const botonGuardar =
         document.getElementById(
-            "url"
-        ).value.trim();
-
-
-    const analisis =
-        analizarYoutube(url);
-
-
-    if(!analisis.id){
-
-        alert(
-            "El enlace de YouTube no es válido."
-        );
-
-        return;
-
-    }
-
-
-    const objeto = {
-
-        url:url,
-
-        youtube_id:
-            analisis.id,
-
-        start_seconds:
-            analisis.segundos,
-
-        start_time:
-            segundosATiempo(
-                analisis.segundos
-            ),
-
-        player:
-            document.getElementById(
-                "player"
-            ).value.trim(),
-
-        team:
-            document.getElementById(
-                "team"
-            ).value.trim(),
-
-        opponent:
-            document.getElementById(
-                "opponent"
-            ).value.trim(),
-
-        region:
-            document.getElementById(
-                "region"
-            ).value,
-
-        agent:
-            document.getElementById(
-                "agent"
-            ).value,
-
-        map:
-            document.getElementById(
-                "map"
-            ).value,
-
-        tournament:
-            document.getElementById(
-                "tournament"
-            ).value.trim(),
-
-        date:
-            document.getElementById(
-                "date"
-            ).value || null,
-
-        kills:
-            Number(
-                document.getElementById(
-                    "kills"
-                ).value
-            ) || 0,
-
-        deaths:
-            Number(
-                document.getElementById(
-                    "deaths"
-                ).value
-            ) || 0,
-
-        assists:
-            Number(
-                document.getElementById(
-                    "assists"
-                ).value
-            ) || 0,
-
-        acs:
-            Number(
-                document.getElementById(
-                    "acs"
-                ).value
-            ) || 0,
-
-        rating:
-            Number(
-                document.getElementById(
-                    "rating"
-                ).value
-            ) || 0,
-
-        kast:
-            Number(
-                document.getElementById(
-                    "kast"
-                ).value
-            ) || 0
-
-    };
-
-
-    const editId =
-        document.getElementById(
-            "editId"
-        ).value;
-
-
-    let resultado;
-
-
-    if(editId){
-
-        resultado =
-            await supabaseClient
-                .from("vods")
-                .update(objeto)
-                .eq(
-                    "id",
-                    editId
-                );
-
-    }else{
-
-        resultado =
-            await supabaseClient
-                .from("vods")
-                .insert([
-                    objeto
-                ]);
-
-    }
-
-
-    if(resultado.error){
-
-        console.error(
-            "Error guardando VOD:",
-            resultado.error
+            "guardarVodButton"
         );
 
 
-        if(
-            resultado.error.code === "42501"
-        ){
+    botonGuardar.disabled = true;
+
+    botonGuardar.textContent =
+        "GUARDANDO...";
+
+
+    try{
+
+        const url =
+            document.getElementById(
+                "url"
+            ).value.trim();
+
+
+        const analisis =
+            analizarYoutube(url);
+
+
+        if(!analisis.id){
 
             alert(
-                "Supabase rechazó la operación. Revisa las políticas RLS de administrador."
+                "El enlace de YouTube no es válido."
             );
 
-        }else{
-
-            alert(
-                "No se pudo guardar el VOD:\n\n" +
-                resultado.error.message
-            );
+            return;
 
         }
 
-        return;
+
+        const editId =
+            document.getElementById(
+                "editId"
+            ).value;
+
+
+        let thumbnailUrl =
+            thumbnailUrlActual;
+
+
+        const archivo =
+            document.getElementById(
+                "thumbnailFile"
+            ).files[0];
+
+
+        if(archivo){
+
+            thumbnailUrl =
+                await subirMiniatura();
+
+        }
+
+        else if(
+            eliminarMiniaturaActual
+        ){
+
+            thumbnailUrl = null;
+
+        }
+
+
+        const objeto = {
+
+            url:url,
+
+            youtube_id:
+                analisis.id,
+
+            start_seconds:
+                analisis.segundos,
+
+            start_time:
+                segundosATiempo(
+                    analisis.segundos
+                ),
+
+            player:
+                document.getElementById(
+                    "player"
+                ).value.trim(),
+
+            team:
+                document.getElementById(
+                    "team"
+                ).value.trim(),
+
+            opponent:
+                document.getElementById(
+                    "opponent"
+                ).value.trim(),
+
+            region:
+                document.getElementById(
+                    "region"
+                ).value,
+
+            agent:
+                document.getElementById(
+                    "agent"
+                ).value,
+
+            map:
+                document.getElementById(
+                    "map"
+                ).value,
+
+            tournament:
+                document.getElementById(
+                    "tournament"
+                ).value.trim(),
+
+            date:
+                document.getElementById(
+                    "date"
+                ).value || null,
+
+            kills:
+                Number(
+                    document.getElementById(
+                        "kills"
+                    ).value
+                ) || 0,
+
+            deaths:
+                Number(
+                    document.getElementById(
+                        "deaths"
+                    ).value
+                ) || 0,
+
+            assists:
+                Number(
+                    document.getElementById(
+                        "assists"
+                    ).value
+                ) || 0,
+
+            acs:
+                Number(
+                    document.getElementById(
+                        "acs"
+                    ).value
+                ) || 0,
+
+            rating:
+                Number(
+                    document.getElementById(
+                        "rating"
+                    ).value
+                ) || 0,
+
+            kast:
+                Number(
+                    document.getElementById(
+                        "kast"
+                    ).value
+                ) || 0,
+
+            thumbnail_url:
+                thumbnailUrl || null
+
+        };
+
+
+        let resultado;
+
+
+        if(editId){
+
+            resultado =
+                await supabaseClient
+                    .from("vods")
+                    .update(objeto)
+                    .eq(
+                        "id",
+                        editId
+                    );
+
+        }else{
+
+            resultado =
+                await supabaseClient
+                    .from("vods")
+                    .insert([
+                        objeto
+                    ]);
+
+        }
+
+
+        if(resultado.error){
+
+            console.error(
+                "Error guardando VOD:",
+                resultado.error
+            );
+
+
+            if(
+                resultado.error.code === "42501"
+            ){
+
+                alert(
+                    "Supabase rechazó la operación. Revisa las políticas RLS de administrador."
+                );
+
+            }else{
+
+                alert(
+                    "No se pudo guardar el VOD:\n\n" +
+                    resultado.error.message
+                );
+
+            }
+
+            return;
+
+        }
+
+
+        cerrarModal(
+            "formModal"
+        );
+
+
+        await cargarVods();
+
+
+        alert(
+            editId
+                ? "VOD actualizado correctamente."
+                : "VOD agregado correctamente."
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Error durante el guardado:",
+            error
+        );
+
+
+        alert(
+            "No se pudo subir la miniatura.\n\n" +
+            error.message
+        );
+
+
+    }finally{
+
+        botonGuardar.disabled = false;
+
+        botonGuardar.textContent =
+            "GUARDAR";
 
     }
-
-
-    cerrarModal(
-        "formModal"
-    );
-
-
-    await cargarVods();
-
-
-    alert(
-        editId
-            ? "VOD actualizado correctamente."
-            : "VOD agregado correctamente."
-    );
 
 }
 
@@ -2807,9 +3577,13 @@ function render(){
 
 
             const thumbnail =
-                vod.youtubeId
-                    ? `https://img.youtube.com/vi/${encodeURIComponent(vod.youtubeId)}/hqdefault.jpg`
-                    : "";
+                vod.thumbnailUrl
+                    ? vod.thumbnailUrl
+                    : (
+                        vod.youtubeId
+                            ? `https://img.youtube.com/vi/${encodeURIComponent(vod.youtubeId)}/hqdefault.jpg`
+                            : ""
+                    );
 
 
             const inicio =
@@ -2844,11 +3618,16 @@ function render(){
 
                 <div class="thumbnail">
 
-                    <img
-                        src="${thumbnail}"
-                        alt="Miniatura VOD"
-                        onerror="this.style.display='none'"
-                    >
+                    ${
+                        thumbnail
+                        ?
+                        `<img
+                            src="${escapeHtml(thumbnail)}"
+                            alt="Miniatura VOD"
+                            onerror="this.style.display='none'">`
+                        :
+                        ""
+                    }
 
                     <div class="agent-badge">
                         ${escapeHtml(
