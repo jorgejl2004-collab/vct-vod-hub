@@ -1669,6 +1669,7 @@ async function cargarVods(){
 
 function convertirVod(v){
 
+
     return {
 
         id:v.id,
@@ -1701,6 +1702,8 @@ function convertirVod(v){
         tournament:v.tournament || "",
 
         date:v.date || "",
+
+        thumbnailUrl: v.thumbnail_url || "",
 
         kills:Number(v.kills) || 0,
 
@@ -3577,13 +3580,13 @@ function render(){
 
 
             const thumbnail =
-                vod.thumbnailUrl
-                    ? vod.thumbnailUrl
-                    : (
-                        vod.youtubeId
-                            ? `https://img.youtube.com/vi/${encodeURIComponent(vod.youtubeId)}/hqdefault.jpg`
-                            : ""
-                    );
+    vod.thumbnailUrl
+        ? vod.thumbnailUrl
+        : (
+            vod.youtubeId
+                ? `https://img.youtube.com/vi/${encodeURIComponent(vod.youtubeId)}/hqdefault.jpg`
+                : ""
+        );
 
 
             const inicio =
