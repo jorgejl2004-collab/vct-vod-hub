@@ -1,0 +1,2527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCT VOD HUB</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Segoe UI,Arial,sans-serif;
+    background:#080a0f;
+    color:#f5f5f5;
+    min-height:100vh;
+}
+
+header{
+    background:linear-gradient(135deg,#11151d,#080a0f);
+    border-bottom:1px solid #252b35;
+    padding:25px 35px;
+}
+
+.header-content{
+    max-width:1500px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.logo span{
+    color:#ff4655;
+}
+
+.subtitle{
+    color:#8d95a3;
+    margin-top:5px;
+    font-size:14px;
+}
+
+main{
+    max-width:1500px;
+    margin:auto;
+    padding:25px;
+}
+
+.btn{
+    border:0;
+    border-radius:7px;
+    padding:10px 15px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-primary{
+    background:#ff4655;
+    color:#fff;
+}
+
+.btn-secondary{
+    background:#252b35;
+    color:#fff;
+}
+
+.btn-edit{
+    background:#202733;
+    color:#fff;
+}
+
+.btn-danger{
+    background:#35171b;
+    color:#ff7c87;
+}
+
+/* ESTADISTICAS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:#11151d;
+    border:1px solid #252b35;
+    border-radius:10px;
+    padding:20px;
+}
+
+.stat-title{
+    color:#8d95a3;
+    font-size:13px;
+}
+
+.stat-value{
+    font-size:28px;
+    font-weight:900;
+    margin-top:6px;
+}
+
+/* FILTROS */
+
+.toolbar{
+    background:#11151d;
+    border:1px solid #252b35;
+    border-radius:10px;
+    padding:18px;
+    margin-bottom:25px;
+}
+
+.filters{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr 1fr;
+    gap:10px;
+}
+
+input,
+select{
+    width:100%;
+    background:#0b0e14;
+    border:1px solid #303744;
+    color:#fff;
+    border-radius:6px;
+    padding:11px 12px;
+    outline:none;
+}
+
+input:focus,
+select:focus{
+    border-color:#ff4655;
+}
+
+/* TARJETAS */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.card{
+    background:#11151d;
+    border:1px solid #252b35;
+    border-radius:10px;
+    overflow:hidden;
+    transition:.2s;
+}
+
+.card:hover{
+    border-color:#444c59;
+    transform:translateY(-2px);
+}
+
+.thumbnail{
+    position:relative;
+    height:190px;
+    background:#050609;
+}
+
+.thumbnail img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.agent-badge{
+    position:absolute;
+    top:10px;
+    left:10px;
+    background:#ff4655;
+    color:#fff;
+    padding:6px 9px;
+    border-radius:5px;
+    font-size:12px;
+    font-weight:800;
+}
+
+.start-badge{
+    position:absolute;
+    bottom:10px;
+    right:10px;
+    background:rgba(0,0,0,.85);
+    color:#fff;
+    padding:6px 9px;
+    border-radius:5px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.card-body{
+    padding:16px;
+}
+
+.card-title{
+    font-size:18px;
+    font-weight:800;
+}
+
+.matchup{
+    color:#aab1bd;
+    margin-top:5px;
+}
+
+.meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin:13px 0;
+}
+
+.tag{
+    background:#202630;
+    color:#cbd1da;
+    padding:5px 8px;
+    border-radius:4px;
+    font-size:11px;
+}
+
+.stats-row{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:5px;
+    margin-top:14px;
+}
+
+.small-stat{
+    background:#0b0e14;
+    padding:8px 5px;
+    text-align:center;
+    border-radius:5px;
+}
+
+.small-stat strong{
+    display:block;
+    font-size:15px;
+}
+
+.small-stat span{
+    color:#7f8794;
+    font-size:10px;
+}
+
+.card-footer{
+    display:flex;
+    gap:7px;
+    margin-top:15px;
+}
+
+.card-footer button{
+    flex:1;
+    font-size:12px;
+}
+
+.empty{
+    text-align:center;
+    padding:60px 20px;
+    color:#737b88;
+    grid-column:1/-1;
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.84);
+    z-index:1000;
+    overflow:auto;
+    padding:30px;
+}
+
+.modal.active{
+    display:block;
+}
+
+.modal-box{
+    max-width:1100px;
+    margin:auto;
+    background:#11151d;
+    border:1px solid #303744;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 22px;
+    border-bottom:1px solid #252b35;
+}
+
+.close{
+    background:none;
+    border:0;
+    color:#aaa;
+    font-size:27px;
+    cursor:pointer;
+}
+
+/* PLAYER */
+
+.player{
+    aspect-ratio:16/9;
+    background:#000;
+}
+
+.player iframe{
+    width:100%;
+    height:100%;
+    border:0;
+}
+
+/* INFORMACION */
+
+.modal-info{
+    padding:22px;
+}
+
+.modal-info-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.info-box{
+    background:#0b0e14;
+    border:1px solid #202630;
+    border-radius:7px;
+    padding:12px;
+}
+
+.info-box span{
+    display:block;
+    color:#7f8794;
+    font-size:11px;
+    margin-bottom:5px;
+}
+
+.info-box strong{
+    font-size:14px;
+}
+
+/* FORMULARIO */
+
+.form-modal .modal-box{
+    max-width:1050px;
+}
+
+.form{
+    padding:22px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    color:#aeb5c0;
+    font-size:12px;
+    font-weight:700;
+}
+
+.section-title{
+    grid-column:1/-1;
+    color:#ff4655;
+    font-size:14px;
+    font-weight:800;
+    margin-top:5px;
+}
+
+.help{
+    color:#777f8b;
+    font-size:11px;
+    line-height:1.4;
+}
+
+.detected{
+    background:#0b0e14;
+    border:1px solid #252b35;
+    border-radius:6px;
+    padding:10px;
+    color:#8d95a3;
+    font-size:12px;
+}
+
+.detected strong{
+    color:#fff;
+}
+
+.form-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+    padding-top:18px;
+    border-top:1px solid #252b35;
+}
+
+@media(max-width:1000px){
+
+    .grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .filters{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .form-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .modal-info-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:650px){
+
+    .grid,
+    .form-grid,
+    .modal-info-grid,
+    .stats,
+    .filters{
+        grid-template-columns:1fr;
+    }
+
+    header{
+        padding:20px;
+    }
+
+    .header-content{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    main{
+        padding:15px;
+    }
+
+    .modal{
+        padding:10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="header-content">
+
+<div>
+    <div class="logo">
+        VCT <span>VOD HUB</span>
+    </div>
+
+    <div class="subtitle">
+        Biblioteca de VODs competitivos de VALORANT
+    </div>
+</div>
+
+<button class="btn btn-primary" onclick="abrirFormulario()">
+    + AGREGAR VOD
+</button>
+
+</div>
+
+</header>
+
+
+<main>
+
+<section class="stats">
+
+<div class="stat">
+    <div class="stat-title">VODs</div>
+    <div class="stat-value" id="statVods">0</div>
+</div>
+
+<div class="stat">
+    <div class="stat-title">JUGADORES</div>
+    <div class="stat-value" id="statPlayers">0</div>
+</div>
+
+<div class="stat">
+    <div class="stat-title">AGENTES</div>
+    <div class="stat-value" id="statAgents">0</div>
+</div>
+
+<div class="stat">
+    <div class="stat-title">MAPAS</div>
+    <div class="stat-value" id="statMaps">0</div>
+</div>
+
+</section>
+
+
+<section class="toolbar">
+
+<div class="filters">
+
+<input
+    id="search"
+    type="text"
+    placeholder="🔎 Buscar jugador, equipo, rival, torneo..."
+    oninput="render()"
+>
+
+<select id="filterAgent" onchange="render()">
+    <option value="">Todos los agentes</option>
+</select>
+
+<select id="filterMap" onchange="render()">
+    <option value="">Todos los mapas</option>
+</select>
+
+<select id="filterRegion" onchange="render()">
+    <option value="">Todas las regiones</option>
+</select>
+
+<select id="sortBy" onchange="render()">
+    <option value="recent">Más recientes</option>
+    <option value="rating">Rating</option>
+    <option value="acs">ACS</option>
+    <option value="kills">Kills</option>
+</select>
+
+</div>
+
+</section>
+
+
+<section id="vodGrid" class="grid"></section>
+
+</main>
+
+
+<!-- =====================================
+     MODAL REPRODUCTOR
+===================================== -->
+
+<div id="vodModal" class="modal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2 id="modalTitle">VOD</h2>
+
+<button class="close" onclick="cerrarModal('vodModal')">
+    ×
+</button>
+
+</div>
+
+
+<div class="player">
+
+<iframe
+    id="youtubePlayer"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+    referrerpolicy="strict-origin-when-cross-origin">
+</iframe>
+
+</div>
+
+
+<div class="modal-info">
+
+<div class="modal-info-grid">
+
+<div class="info-box">
+<span>JUGADOR</span>
+<strong id="infoPlayer">-</strong>
+</div>
+
+<div class="info-box">
+<span>EQUIPO</span>
+<strong id="infoTeam">-</strong>
+</div>
+
+<div class="info-box">
+<span>RIVAL</span>
+<strong id="infoOpponent">-</strong>
+</div>
+
+<div class="info-box">
+<span>AGENTE</span>
+<strong id="infoAgent">-</strong>
+</div>
+
+<div class="info-box">
+<span>MAPA</span>
+<strong id="infoMap">-</strong>
+</div>
+
+<div class="info-box">
+<span>TORNEO</span>
+<strong id="infoTournament">-</strong>
+</div>
+
+<div class="info-box">
+<span>INICIO DEL MAPA</span>
+<strong id="infoStart">-</strong>
+</div>
+
+<div class="info-box">
+<span>FECHA</span>
+<strong id="infoDate">-</strong>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================
+     MODAL FORMULARIO
+===================================== -->
+
+<div id="formModal" class="modal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2 id="formTitle">
+    Agregar VOD
+</h2>
+
+<button class="close" onclick="cerrarModal('formModal')">
+    ×
+</button>
+
+</div>
+
+
+<form class="form" onsubmit="guardarFormulario(event)">
+
+<input
+    type="hidden"
+    id="editId"
+>
+
+
+<div class="form-grid">
+
+<div class="section-title">
+    INFORMACIÓN DEL VOD
+</div>
+
+
+<div class="form-group full">
+
+<label>
+    LINK DEL VOD DE YOUTUBE *
+</label>
+
+<input
+    id="url"
+    type="url"
+    placeholder="https://www.youtube.com/watch?t=3369&v=GZ1IZEPHgzs"
+    required
+    oninput="detectarTiempo()"
+>
+
+<div class="help">
+    Pega el enlace que ya contiene el tiempo del mapa mediante <b>t=</b>.
+</div>
+
+</div>
+
+
+<div class="detected full" id="detectedTime">
+    Tiempo detectado: <strong>00:00:00</strong>
+</div>
+
+
+<div class="form-group">
+<label>JUGADOR *</label>
+<input id="player" required>
+</div>
+
+
+<div class="form-group">
+<label>EQUIPO</label>
+<input id="team">
+</div>
+
+
+<div class="form-group">
+<label>RIVAL</label>
+<input id="opponent">
+</div>
+
+
+<div class="form-group">
+<label>REGIÓN</label>
+
+<select id="region">
+
+<option value="">Seleccionar</option>
+<option>Americas</option>
+<option>EMEA</option>
+<option>Pacific</option>
+<option>China</option>
+<option>Game Changers</option>
+<option>Challengers</option>
+<option>Ascension</option>
+<option>Otros</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+<label>AGENTE *</label>
+
+<select id="agent" required>
+
+<option value="">Seleccionar agente</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+<label>MAPA *</label>
+
+<select id="map" required>
+
+<option value="">Seleccionar mapa</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+<label>TORNEO</label>
+<input id="tournament">
+</div>
+
+
+<div class="form-group">
+<label>FECHA</label>
+<input id="date" type="date">
+</div>
+
+
+<div class="form-group">
+<label>INICIO DETECTADO</label>
+
+<input
+    id="startTime"
+    type="text"
+    readonly
+>
+
+<div class="help">
+    Este valor se obtiene automáticamente del enlace.
+</div>
+
+</div>
+
+
+<div class="section-title">
+    ESTADÍSTICAS DEL JUGADOR
+</div>
+
+
+<div class="form-group">
+<label>KILLS</label>
+<input id="kills" type="number" min="0" value="0">
+</div>
+
+
+<div class="form-group">
+<label>DEATHS</label>
+<input id="deaths" type="number" min="0" value="0">
+</div>
+
+
+<div class="form-group">
+<label>ASSISTS</label>
+<input id="assists" type="number" min="0" value="0">
+</div>
+
+
+<div class="form-group">
+<label>ACS</label>
+<input id="acs" type="number" min="0" value="0">
+</div>
+
+
+<div class="form-group">
+<label>RATING</label>
+<input
+    id="rating"
+    type="number"
+    min="0"
+    step="0.01"
+    value="0"
+>
+</div>
+
+
+<div class="form-group">
+<label>KAST %</label>
+<input
+    id="kast"
+    type="number"
+    min="0"
+    max="100"
+    value="0"
+>
+</div>
+
+</div>
+
+
+<div class="form-actions">
+
+<button
+    type="button"
+    class="btn btn-secondary"
+    onclick="cerrarModal('formModal')">
+    CANCELAR
+</button>
+
+<button
+    type="submit"
+    class="btn btn-primary">
+    GUARDAR
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   CONFIGURACIÓN
+========================================== */
+
+const DB_NAME = "VCTVodHubDB";
+const DB_VERSION = 1;
+const STORE_NAME = "vods";
+
+const AGENTS = [
+"Astra",
+"Breach",
+"Brimstone",
+"Chamber",
+"Clove",
+"Cypher",
+"Deadlock",
+"Fade",
+"Gekko",
+"Harbor",
+"Jett",
+"KAY/O",
+"Killjoy",
+"Neon",
+"Omen",
+"Phoenix",
+"Raze",
+"Reyna",
+"Sage",
+"Skye",
+"Sova",
+"Tejo",
+"Viper",
+"Vyse",
+"Waylay",
+"Yoru"
+];
+
+const MAPS = [
+"Abyss",
+"Ascent",
+"Bind",
+"Breeze",
+"Corrode",
+"Fracture",
+"Haven",
+"Icebox",
+"Lotus",
+"Pearl",
+"Split",
+"Sunset"
+];
+
+let db;
+let vods = [];
+
+
+/* ==========================================
+   INICIAR
+========================================== */
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+    llenarSelectsFormulario();
+
+    iniciarDB();
+
+});
+
+
+/* ==========================================
+   INDEXED DB
+========================================== */
+
+function iniciarDB(){
+
+    const request =
+        indexedDB.open(DB_NAME,DB_VERSION);
+
+
+    request.onupgradeneeded = function(event){
+
+        const database =
+            event.target.result;
+
+        if(
+            !database.objectStoreNames
+            .contains(STORE_NAME)
+        ){
+
+            database.createObjectStore(
+                STORE_NAME,
+                {
+                    keyPath:"id",
+                    autoIncrement:true
+                }
+            );
+
+        }
+
+    };
+
+
+    request.onsuccess = function(event){
+
+        db =
+            event.target.result;
+
+        cargarVods();
+
+    };
+
+
+    request.onerror = function(){
+
+        console.error(
+            "Error IndexedDB:",
+            request.error
+        );
+
+    };
+
+}
+
+
+/* ==========================================
+   CARGAR VODS
+========================================== */
+
+function cargarVods(){
+
+    if(!db) return;
+
+
+    const transaction =
+        db.transaction(
+            STORE_NAME,
+            "readonly"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            STORE_NAME
+        );
+
+
+    const request =
+        store.getAll();
+
+
+    request.onsuccess = function(){
+
+        vods =
+            request.result || [];
+
+        actualizarFiltros();
+
+        actualizarStats();
+
+        render();
+
+    };
+
+}
+
+
+/* ==========================================
+   EXTRAER ID Y TIEMPO DE YOUTUBE
+========================================== */
+
+function analizarYoutube(url){
+
+    let resultado = {
+        id:"",
+        segundos:0
+    };
+
+
+    if(!url)
+        return resultado;
+
+
+    try{
+
+        const parsed =
+            new URL(url);
+
+
+        /* TIEMPO */
+
+        let segundos = 0;
+
+        const t =
+            parsed.searchParams.get("t");
+
+
+        if(t){
+
+            segundos =
+                convertirTiempoYoutube(t);
+
+        }
+
+
+        /* ID */
+
+        let id = "";
+
+
+        if(
+            parsed.hostname.includes(
+                "youtu.be"
+            )
+        ){
+
+            id =
+                parsed.pathname
+                .substring(1)
+                .split("/")[0];
+
+        }
+
+
+        else if(
+            parsed.hostname.includes(
+                "youtube.com"
+            )
+        ){
+
+            id =
+                parsed.searchParams.get("v")
+                || "";
+
+            if(!id){
+
+                const partes =
+                    parsed.pathname
+                    .split("/")
+                    .filter(Boolean);
+
+
+                if(
+                    partes[0] === "shorts" ||
+                    partes[0] === "embed" ||
+                    partes[0] === "live"
+                ){
+
+                    id =
+                        partes[1] || "";
+
+                }
+
+            }
+
+        }
+
+
+        resultado.id = id;
+
+        resultado.segundos = segundos;
+
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+
+    return resultado;
+
+}
+
+
+/* ==========================================
+   CONVERTIR t DE YOUTUBE
+========================================== */
+
+function convertirTiempoYoutube(valor){
+
+    if(!valor)
+        return 0;
+
+
+    valor =
+        String(valor)
+        .trim()
+        .toLowerCase();
+
+
+    /*
+       Caso:
+       t=3369
+    */
+
+    if(/^\d+$/.test(valor)){
+
+        return Number(valor);
+
+    }
+
+
+    /*
+       Caso:
+       t=56m9s
+       t=1h20m30s
+    */
+
+    let total = 0;
+
+    const horas =
+        valor.match(/(\d+)h/);
+
+    const minutos =
+        valor.match(/(\d+)m/);
+
+    const segundos =
+        valor.match(/(\d+)s/);
+
+
+    if(horas)
+        total +=
+            Number(horas[1]) * 3600;
+
+
+    if(minutos)
+        total +=
+            Number(minutos[1]) * 60;
+
+
+    if(segundos)
+        total +=
+            Number(segundos[1]);
+
+
+    /*
+       También acepta:
+       01:23:45
+    */
+
+    if(
+        total === 0 &&
+        valor.includes(":")
+    ){
+
+        total =
+            tiempoASegundos(valor);
+
+    }
+
+
+    return total;
+
+}
+
+
+/* ==========================================
+   TIEMPO A SEGUNDOS
+========================================== */
+
+function tiempoASegundos(tiempo){
+
+    if(!tiempo)
+        return 0;
+
+
+    const partes =
+        String(tiempo)
+        .trim()
+        .split(":")
+        .map(Number);
+
+
+    if(
+        partes.length === 3
+    ){
+
+        return (
+            partes[0] * 3600 +
+            partes[1] * 60 +
+            partes[2]
+        );
+
+    }
+
+
+    if(
+        partes.length === 2
+    ){
+
+        return (
+            partes[0] * 60 +
+            partes[1]
+        );
+
+    }
+
+
+    return Number(partes[0]) || 0;
+
+}
+
+
+/* ==========================================
+   SEGUNDOS A HH:MM:SS
+========================================== */
+
+function segundosATiempo(segundos){
+
+    segundos =
+        Number(segundos) || 0;
+
+
+    const h =
+        Math.floor(
+            segundos / 3600
+        );
+
+
+    const m =
+        Math.floor(
+            (segundos % 3600) / 60
+        );
+
+
+    const s =
+        Math.floor(
+            segundos % 60
+        );
+
+
+    return [
+
+        String(h).padStart(2,"0"),
+
+        String(m).padStart(2,"0"),
+
+        String(s).padStart(2,"0")
+
+    ].join(":");
+
+}
+
+
+/* ==========================================
+   FORMULARIO
+========================================== */
+
+function llenarSelectsFormulario(){
+
+    const agent =
+        document.getElementById("agent");
+
+
+    AGENTS.forEach(nombre=>{
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            nombre;
+
+        option.textContent =
+            nombre;
+
+        agent.appendChild(option);
+
+    });
+
+
+    const map =
+        document.getElementById("map");
+
+
+    MAPS.forEach(nombre=>{
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            nombre;
+
+        option.textContent =
+            nombre;
+
+        map.appendChild(option);
+
+    });
+
+}
+
+
+/* ==========================================
+   DETECTAR TIEMPO
+========================================== */
+
+function detectarTiempo(){
+
+    const url =
+        document.getElementById("url")
+        .value
+        .trim();
+
+
+    const analisis =
+        analizarYoutube(url);
+
+
+    const tiempo =
+        segundosATiempo(
+            analisis.segundos
+        );
+
+
+    document.getElementById(
+        "startTime"
+    ).value = tiempo;
+
+
+    document.getElementById(
+        "detectedTime"
+    ).innerHTML =
+        `Tiempo detectado:
+        <strong>${tiempo}</strong>
+        (${analisis.segundos} segundos)`;
+
+}
+
+
+/* ==========================================
+   ABRIR FORMULARIO
+========================================== */
+
+function abrirFormulario(){
+
+    limpiarFormulario();
+
+
+    document.getElementById(
+        "formModal"
+    ).classList.add("active");
+
+}
+
+
+/* ==========================================
+   LIMPIAR FORMULARIO
+========================================== */
+
+function limpiarFormulario(){
+
+    document.getElementById(
+        "editId"
+    ).value = "";
+
+
+    document.getElementById(
+        "url"
+    ).value = "";
+
+
+    document.getElementById(
+        "player"
+    ).value = "";
+
+
+    document.getElementById(
+        "team"
+    ).value = "";
+
+
+    document.getElementById(
+        "opponent"
+    ).value = "";
+
+
+    document.getElementById(
+        "region"
+    ).value = "";
+
+
+    document.getElementById(
+        "agent"
+    ).value = "";
+
+
+    document.getElementById(
+        "map"
+    ).value = "";
+
+
+    document.getElementById(
+        "tournament"
+    ).value = "";
+
+
+    document.getElementById(
+        "date"
+    ).value = "";
+
+
+    document.getElementById(
+        "startTime"
+    ).value = "00:00:00";
+
+
+    document.getElementById(
+        "detectedTime"
+    ).innerHTML =
+        `Tiempo detectado:
+        <strong>00:00:00</strong>
+        (0 segundos)`;
+
+
+    document.getElementById(
+        "kills"
+    ).value = 0;
+
+
+    document.getElementById(
+        "deaths"
+    ).value = 0;
+
+
+    document.getElementById(
+        "assists"
+    ).value = 0;
+
+
+    document.getElementById(
+        "acs"
+    ).value = 0;
+
+
+    document.getElementById(
+        "rating"
+    ).value = 0;
+
+
+    document.getElementById(
+        "kast"
+    ).value = 0;
+
+
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "Agregar VOD";
+
+}
+
+
+/* ==========================================
+   EDITAR
+========================================== */
+
+function editarVod(id){
+
+    const vod =
+        vods.find(
+            v=>v.id === id
+        );
+
+
+    if(!vod)
+        return;
+
+
+    document.getElementById(
+        "editId"
+    ).value =
+        vod.id;
+
+
+    document.getElementById(
+        "url"
+    ).value =
+        vod.url || "";
+
+
+    document.getElementById(
+        "player"
+    ).value =
+        vod.player || "";
+
+
+    document.getElementById(
+        "team"
+    ).value =
+        vod.team || "";
+
+
+    document.getElementById(
+        "opponent"
+    ).value =
+        vod.opponent || "";
+
+
+    document.getElementById(
+        "region"
+    ).value =
+        vod.region || "";
+
+
+    document.getElementById(
+        "agent"
+    ).value =
+        vod.agent || "";
+
+
+    document.getElementById(
+        "map"
+    ).value =
+        vod.map || "";
+
+
+    document.getElementById(
+        "tournament"
+    ).value =
+        vod.tournament || "";
+
+
+    document.getElementById(
+        "date"
+    ).value =
+        vod.date || "";
+
+
+    const tiempo =
+        segundosATiempo(
+            vod.startSeconds || 0
+        );
+
+
+    document.getElementById(
+        "startTime"
+    ).value =
+        tiempo;
+
+
+    document.getElementById(
+        "detectedTime"
+    ).innerHTML =
+        `Tiempo detectado:
+        <strong>${tiempo}</strong>
+        (${vod.startSeconds || 0} segundos)`;
+
+
+    document.getElementById(
+        "kills"
+    ).value =
+        vod.kills || 0;
+
+
+    document.getElementById(
+        "deaths"
+    ).value =
+        vod.deaths || 0;
+
+
+    document.getElementById(
+        "assists"
+    ).value =
+        vod.assists || 0;
+
+
+    document.getElementById(
+        "acs"
+    ).value =
+        vod.acs || 0;
+
+
+    document.getElementById(
+        "rating"
+    ).value =
+        vod.rating || 0;
+
+
+    document.getElementById(
+        "kast"
+    ).value =
+        vod.kast || 0;
+
+
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "Editar VOD";
+
+
+    document.getElementById(
+        "formModal"
+    ).classList.add("active");
+
+}
+
+
+/* ==========================================
+   GUARDAR
+========================================== */
+
+function guardarFormulario(event){
+
+    event.preventDefault();
+
+
+    const url =
+        document.getElementById(
+            "url"
+        ).value.trim();
+
+
+    const analisis =
+        analizarYoutube(url);
+
+
+    if(!analisis.id){
+
+        alert(
+            "El enlace de YouTube no es válido."
+        );
+
+        return;
+
+    }
+
+
+    const objeto = {
+
+        url:url,
+
+        youtubeId:
+            analisis.id,
+
+        startSeconds:
+            analisis.segundos,
+
+        startTime:
+            segundosATiempo(
+                analisis.segundos
+            ),
+
+        player:
+            document.getElementById(
+                "player"
+            ).value.trim(),
+
+        team:
+            document.getElementById(
+                "team"
+            ).value.trim(),
+
+        opponent:
+            document.getElementById(
+                "opponent"
+            ).value.trim(),
+
+        region:
+            document.getElementById(
+                "region"
+            ).value,
+
+        agent:
+            document.getElementById(
+                "agent"
+            ).value,
+
+        map:
+            document.getElementById(
+                "map"
+            ).value,
+
+        tournament:
+            document.getElementById(
+                "tournament"
+            ).value.trim(),
+
+        date:
+            document.getElementById(
+                "date"
+            ).value,
+
+        kills:
+            Number(
+                document.getElementById(
+                    "kills"
+                ).value
+            ) || 0,
+
+        deaths:
+            Number(
+                document.getElementById(
+                    "deaths"
+                ).value
+            ) || 0,
+
+        assists:
+            Number(
+                document.getElementById(
+                    "assists"
+                ).value
+            ) || 0,
+
+        acs:
+            Number(
+                document.getElementById(
+                    "acs"
+                ).value
+            ) || 0,
+
+        rating:
+            Number(
+                document.getElementById(
+                    "rating"
+                ).value
+            ) || 0,
+
+        kast:
+            Number(
+                document.getElementById(
+                    "kast"
+                ).value
+            ) || 0,
+
+        createdAt:
+            Date.now()
+
+    };
+
+
+    const editId =
+        document.getElementById(
+            "editId"
+        ).value;
+
+
+    const transaction =
+        db.transaction(
+            STORE_NAME,
+            "readwrite"
+        );
+
+
+    const store =
+        transaction.objectStore(
+            STORE_NAME
+        );
+
+
+    if(editId){
+
+        objeto.id =
+            Number(editId);
+
+        store.put(objeto);
+
+    }else{
+
+        store.add(objeto);
+
+    }
+
+
+    transaction.oncomplete = function(){
+
+        cerrarModal(
+            "formModal"
+        );
+
+        cargarVods();
+
+    };
+
+
+    transaction.onerror = function(){
+
+        alert(
+            "No se pudo guardar el VOD."
+        );
+
+    };
+
+}
+
+
+/* ==========================================
+   REPRODUCIR
+========================================== */
+
+function reproducirVod(id){
+
+    const vod =
+        vods.find(
+            v=>v.id === id
+        );
+
+
+    if(!vod)
+        return;
+
+
+    const segundos =
+        Number(
+            vod.startSeconds
+        ) || 0;
+
+
+    const origen =
+        window.location.origin !== "null"
+            ? window.location.origin
+            : "https://vct-vod-hub.jorgejl2004.workers.dev";
+
+
+    const iframe =
+        document.getElementById(
+            "youtubePlayer"
+        );
+
+
+    /*
+       El parámetro start hace que
+       YouTube comience directamente
+       en el mapa.
+    */
+
+    iframe.src =
+        "https://www.youtube.com/embed/" +
+        encodeURIComponent(vod.youtubeId) +
+        "?autoplay=1" +
+        "&rel=0" +
+        "&start=" +
+        segundos +
+        "&enablejsapi=1" +
+        "&origin=" +
+        encodeURIComponent(origen);
+
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        `${vod.map || "VOD"} — ${vod.player || ""}`;
+
+
+    document.getElementById(
+        "infoPlayer"
+    ).textContent =
+        vod.player || "-";
+
+
+    document.getElementById(
+        "infoTeam"
+    ).textContent =
+        vod.team || "-";
+
+
+    document.getElementById(
+        "infoOpponent"
+    ).textContent =
+        vod.opponent || "-";
+
+
+    document.getElementById(
+        "infoAgent"
+    ).textContent =
+        vod.agent || "-";
+
+
+    document.getElementById(
+        "infoMap"
+    ).textContent =
+        vod.map || "-";
+
+
+    document.getElementById(
+        "infoTournament"
+    ).textContent =
+        vod.tournament || "-";
+
+
+    document.getElementById(
+        "infoStart"
+    ).textContent =
+        segundosATiempo(
+            segundos
+        );
+
+
+    document.getElementById(
+        "infoDate"
+    ).textContent =
+        vod.date || "-";
+
+
+    document.getElementById(
+        "vodModal"
+    ).classList.add("active");
+
+}
+
+
+/* ==========================================
+   ELIMINAR
+========================================== */
+
+function eliminarVod(id){
+
+    const vod =
+        vods.find(
+            v=>v.id === id
+        );
+
+
+    if(!vod)
+        return;
+
+
+    const confirmar =
+        confirm(
+            `¿Quieres eliminar el VOD de ${vod.player || "este jugador"} en ${vod.map || "este mapa"}?`
+        );
+
+
+    if(!confirmar)
+        return;
+
+
+    const transaction =
+        db.transaction(
+            STORE_NAME,
+            "readwrite"
+        );
+
+
+    transaction
+        .objectStore(STORE_NAME)
+        .delete(id);
+
+
+    transaction.oncomplete =
+        function(){
+
+            cargarVods();
+
+        };
+
+}
+
+
+/* ==========================================
+   RENDER
+========================================== */
+
+function render(){
+
+    const grid =
+        document.getElementById(
+            "vodGrid"
+        );
+
+
+    const search =
+        document.getElementById(
+            "search"
+        ).value
+        .toLowerCase()
+        .trim();
+
+
+    const agent =
+        document.getElementById(
+            "filterAgent"
+        ).value;
+
+
+    const map =
+        document.getElementById(
+            "filterMap"
+        ).value;
+
+
+    const region =
+        document.getElementById(
+            "filterRegion"
+        ).value;
+
+
+    const sort =
+        document.getElementById(
+            "sortBy"
+        ).value;
+
+
+    let resultado =
+        vods.filter(vod=>{
+
+            const texto = [
+
+                vod.player,
+                vod.team,
+                vod.opponent,
+                vod.agent,
+                vod.map,
+                vod.region,
+                vod.tournament
+
+            ]
+            .join(" ")
+            .toLowerCase();
+
+
+            return (
+
+                (!search ||
+                    texto.includes(search)
+                )
+
+                &&
+
+                (!agent ||
+                    vod.agent === agent
+                )
+
+                &&
+
+                (!map ||
+                    vod.map === map
+                )
+
+                &&
+
+                (!region ||
+                    vod.region === region
+                )
+
+            );
+
+        });
+
+
+    resultado.sort((a,b)=>{
+
+        if(sort === "rating"){
+
+            return (
+                Number(b.rating || 0) -
+                Number(a.rating || 0)
+            );
+
+        }
+
+
+        if(sort === "acs"){
+
+            return (
+                Number(b.acs || 0) -
+                Number(a.acs || 0)
+            );
+
+        }
+
+
+        if(sort === "kills"){
+
+            return (
+                Number(b.kills || 0) -
+                Number(a.kills || 0)
+            );
+
+        }
+
+
+        return (
+            Number(b.createdAt || 0) -
+            Number(a.createdAt || 0)
+        );
+
+    });
+
+
+    grid.innerHTML = "";
+
+
+    if(!resultado.length){
+
+        grid.innerHTML = `
+            <div class="empty">
+                <h3>No hay VODs</h3>
+                <p>
+                    Agrega un VOD de YouTube para comenzar.
+                </p>
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    resultado.forEach(vod=>{
+
+        const card =
+            document.createElement(
+                "article"
+            );
+
+
+        const thumbnail =
+            vod.youtubeId
+                ? `https://img.youtube.com/vi/${encodeURIComponent(vod.youtubeId)}/hqdefault.jpg`
+                : "";
+
+
+        const inicio =
+            segundosATiempo(
+                vod.startSeconds || 0
+            );
+
+
+        card.className =
+            "card";
+
+
+        card.innerHTML = `
+
+            <div class="thumbnail">
+
+                <img
+                    src="${thumbnail}"
+                    alt="Miniatura VOD"
+                    onerror="this.style.display='none'"
+                >
+
+                <div class="agent-badge">
+                    ${escapeHtml(vod.agent || "Agente")}
+                </div>
+
+                <div class="start-badge">
+                    ▶ ${inicio}
+                </div>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="card-title">
+                    ${escapeHtml(vod.map || "Mapa")}
+                </div>
+
+                <div class="matchup">
+                    ${escapeHtml(vod.player || "Jugador")}
+                    ${vod.team ? " — " + escapeHtml(vod.team) : ""}
+                </div>
+
+
+                <div class="meta">
+
+                    ${
+                        vod.opponent
+                        ? `<span class="tag">
+                            VS ${escapeHtml(vod.opponent)}
+                           </span>`
+                        : ""
+                    }
+
+                    ${
+                        vod.region
+                        ? `<span class="tag">
+                            ${escapeHtml(vod.region)}
+                           </span>`
+                        : ""
+                    }
+
+                    ${
+                        vod.tournament
+                        ? `<span class="tag">
+                            ${escapeHtml(vod.tournament)}
+                           </span>`
+                        : ""
+                    }
+
+                </div>
+
+
+                <div class="stats-row">
+
+                    <div class="small-stat">
+                        <strong>
+                            ${vod.kills || 0}
+                        </strong>
+                        <span>K</span>
+                    </div>
+
+                    <div class="small-stat">
+                        <strong>
+                            ${vod.deaths || 0}
+                        </strong>
+                        <span>D</span>
+                    </div>
+
+                    <div class="small-stat">
+                        <strong>
+                            ${vod.assists || 0}
+                        </strong>
+                        <span>A</span>
+                    </div>
+
+                    <div class="small-stat">
+                        <strong>
+                            ${vod.acs || 0}
+                        </strong>
+                        <span>ACS</span>
+                    </div>
+
+                </div>
+
+
+                <div class="card-footer">
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="reproducirVod(${vod.id})">
+
+                        ▶ VER VOD
+
+                    </button>
+
+
+                    <button
+                        class="btn btn-edit"
+                        onclick="editarVod(${vod.id})">
+
+                        ✏️ EDITAR
+
+                    </button>
+
+
+                    <button
+                        class="btn btn-danger"
+                        onclick="eliminarVod(${vod.id})">
+
+                        🗑️
+
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+
+        grid.appendChild(card);
+
+    });
+
+}
+
+
+/* ==========================================
+   FILTROS
+========================================== */
+
+function llenarFiltro(id,values,texto){
+
+    const select =
+        document.getElementById(id);
+
+
+    select.innerHTML =
+        `<option value="">${texto}</option>`;
+
+
+    [...new Set(values)]
+        .filter(Boolean)
+        .sort()
+        .forEach(value=>{
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                value;
+
+            option.textContent =
+                value;
+
+            select.appendChild(
+                option
+            );
+
+        });
+
+}
+
+
+function actualizarFiltros(){
+
+    llenarFiltro(
+        "filterAgent",
+        vods.map(v=>v.agent),
+        "Todos los agentes"
+    );
+
+
+    llenarFiltro(
+        "filterMap",
+        vods.map(v=>v.map),
+        "Todos los mapas"
+    );
+
+
+    llenarFiltro(
+        "filterRegion",
+        vods.map(v=>v.region),
+        "Todas las regiones"
+    );
+
+}
+
+
+/* ==========================================
+   ESTADÍSTICAS
+========================================== */
+
+function actualizarStats(){
+
+    document.getElementById(
+        "statVods"
+    ).textContent =
+        vods.length;
+
+
+    document.getElementById(
+        "statPlayers"
+    ).textContent =
+        new Set(
+            vods
+            .map(v=>v.player)
+            .filter(Boolean)
+        ).size;
+
+
+    document.getElementById(
+        "statAgents"
+    ).textContent =
+        new Set(
+            vods
+            .map(v=>v.agent)
+            .filter(Boolean)
+        ).size;
+
+
+    document.getElementById(
+        "statMaps"
+    ).textContent =
+        new Set(
+            vods
+            .map(v=>v.map)
+            .filter(Boolean)
+        ).size;
+
+}
+
+
+/* ==========================================
+   CERRAR MODALES
+========================================== */
+
+function cerrarModal(id){
+
+    const modal =
+        document.getElementById(id);
+
+
+    modal.classList.remove(
+        "active"
+    );
+
+
+    if(id === "vodModal"){
+
+        document.getElementById(
+            "youtubePlayer"
+        ).src = "";
+
+    }
+
+}
+
+
+/* ==========================================
+   CERRAR AL HACER CLIC FUERA
+========================================== */
+
+window.addEventListener(
+    "click",
+    function(event){
+
+        if(
+            event.target.classList.contains(
+                "modal"
+            )
+        ){
+
+            cerrarModal(
+                event.target.id
+            );
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   ESCAPE HTML
+========================================== */
+
+function escapeHtml(valor){
+
+    return String(valor ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+</script>
+
+</body>
+</html>
