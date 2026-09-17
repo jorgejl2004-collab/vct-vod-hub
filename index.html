@@ -1301,6 +1301,16 @@ const MAPS = [
 let vods = [];
 let usuarioActual = null;
 
+const ADMIN_UID =
+    "73c614eb-585f-47b6-88ed-cbf2e95d66fe";
+
+function esAdministrador(){
+
+    return !!usuarioActual &&
+        usuarioActual.id === ADMIN_UID;
+
+}
+
 
 /* ==========================================
    MINIATURA ACTUAL DEL FORMULARIO
@@ -1407,7 +1417,7 @@ function actualizarInterfazAdmin(usuario){
         );
 
 
-    if(usuario){
+    if(esAdministrador()){
 
         loginButton.style.display =
             "none";
@@ -1716,9 +1726,6 @@ function convertirVod(v){
         rating:Number(v.rating) || 0,
 
         kast:Number(v.kast) || 0,
-
-        thumbnailUrl:
-            v.thumbnail_url || "",
 
         createdAt:
             v.created_at
