@@ -2378,69 +2378,58 @@ async function cargarVods(){
 
 function actualizarInterfaz(){
 
+    console.log("VODs cargados:", vods.length);
+
     const totalVods =
         document.getElementById("homeVodsCount");
+
+    if (totalVods) {
+        totalVods.textContent = vods.length;
+    }
+
+    const players = [
+        ...new Set(
+            vods
+                .map(v => String(v.player || "").trim())
+                .filter(Boolean)
+        )
+    ];
+
+    const agents = [
+        ...new Set(
+            vods
+                .map(v => String(v.agent || "").trim())
+                .filter(Boolean)
+        )
+    ];
+
+    const maps = [
+        ...new Set(
+            vods
+                .map(v => String(v.map || "").trim())
+                .filter(Boolean)
+        )
+    ];
 
     const totalPlayers =
         document.getElementById("homePlayers");
 
+    if (totalPlayers) {
+        totalPlayers.textContent = players.length;
+    }
+
     const totalAgents =
         document.getElementById("homeAgents");
+
+    if (totalAgents) {
+        totalAgents.textContent = agents.length;
+    }
 
     const totalMaps =
         document.getElementById("homeMaps");
 
-
-    /* VODS */
-
-    if (totalVods) {
-        totalVods.textContent =
-            vods.length;
-    }
-
-
-    /* JUGADORES */
-
-    const players =
-        [...new Set(
-            vods
-                .map(v => String(v.player || "").trim())
-                .filter(Boolean)
-        )];
-
-    if (totalPlayers) {
-        totalPlayers.textContent =
-            players.length;
-    }
-
-
-    /* AGENTES */
-
-    const agents =
-        [...new Set(
-            vods
-                .map(v => String(v.agent || "").trim())
-                .filter(Boolean)
-        )];
-
-    if (totalAgents) {
-        totalAgents.textContent =
-            agents.length;
-    }
-
-
-    /* MAPAS */
-
-    const maps =
-        [...new Set(
-            vods
-                .map(v => String(v.map || "").trim())
-                .filter(Boolean)
-        )];
-
     if (totalMaps) {
-        totalMaps.textContent =
-            maps.length;
+        totalMaps.textContent = maps.length;
     }
 
 
@@ -2449,13 +2438,12 @@ function actualizarInterfaz(){
     llenarFiltros();
 
 
-    /* INICIO */
+    /* ÚLTIMO VOD */
 
-    renderHomeVods();
     renderLastVod();
 
 
-    /* VODS */
+    /* LISTADO DE VODS */
 
     renderVods();
 
@@ -2490,13 +2478,11 @@ function actualizarInterfaz(){
     renderStatistics();
 
 
-    /* PERFORMANCE HUB */
+    /* PERFORMANCE */
 
     renderPerformance();
 
 }
-
-
 /* =========================================================
    FILTROS
 ========================================================= */
@@ -2725,7 +2711,7 @@ function vodCard(vod){
    HOME
 ========================================================= */
 
-function renderHomeVods() {
+function renderHomeVods(){
 
     const contador =
         document.getElementById("homeVodsCount");
