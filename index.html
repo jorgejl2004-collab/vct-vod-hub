@@ -1673,40 +1673,67 @@ async function cerrarSesion(){
 
 async function cargarVods(){
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .from("vods")
-            .select("*")
-            .order("created_at", {
-                ascending:false
-            });
+    console.log("INICIANDO CARGA DE VODS...");
 
-    if(error){
+    const resultado = await supabaseClient
+        .from("vods")
+        .select("*")
+        .order("created_at", {
+            ascending: false
+        });
 
-    console.error("ERROR COMPLETO SUPABASE:", error);
+    console.log("RESPUESTA SUPABASE:", resultado);
 
-    document.getElementById("vodGrid").innerHTML =
-        `<div class="empty">
-            <h3>Error cargando los VODs</h3>
-            <p>${escapeHtml(error.message || "Error desconocido")}</p>
-            <p>Código: ${escapeHtml(error.code || "sin código")}</p>
-        </div>`;
+    if(resultado.error){
 
-    return;
-}
+        console.error(
+            "ERROR SUPABASE:",
+            resultado.error
+        );
+
+        document.getElementById("vodGrid").innerHTML = `
+            <div class="empty">
+                <h3>Error cargando los VODs</h3>
+
+                <p>
+                    <strong>Mensaje:</strong>
+                    ${resultado.error.message || "Sin mensaje"}
+                </p>
+
+                <p>
+                    <strong>Código:</strong>
+                    ${resultado.error.code || "Sin código"}
+                </p>
+
+                <p>
+                    <strong>Detalles:</strong>
+                    ${resultado.error.details || "Sin detalles"}
+                </p>
+
+                <p>
+                    <strong>Hint:</strong>
+                    ${resultado.error.hint || "Sin información adicional"}
+                </p>
+            </div>
+        `;
+
+        return;
+    }
+
+    console.log(
+        "VODS CARGADOS:",
+        resultado.data
+    );
 
     vods =
-        (data || []).map(convertirVod);
+        (resultado.data || [])
+        .map(convertirVod);
 
     actualizarFiltros();
 
     actualizarEstadisticas();
 
     render();
-
 }
 
 /* =========================================================
