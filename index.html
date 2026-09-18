@@ -9,7 +9,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 *{
     box-sizing:border-box;
 }
@@ -18,22 +17,22 @@
     --red:#ff4655;
     --red-dark:#d93645;
     --bg:#080a0f;
-    --bg2:#0d1017;
-    --card:#11151d;
-    --card2:#171c25;
-    --border:#252c38;
-    --text:#f2f3f5;
-    --muted:#8d96a6;
-    --green:#4ade80;
-    --yellow:#facc15;
-    --blue:#60a5fa;
+    --bg2:#0d1118;
+    --card:#111722;
+    --card2:#151c28;
+    --border:#242d3a;
+    --text:#f4f5f7;
+    --muted:#8e98a8;
+    --green:#35d07f;
+    --blue:#4da3ff;
+    --yellow:#ffd166;
 }
 
 body{
     margin:0;
     background:
-        radial-gradient(circle at top right,rgba(255,70,85,.08),transparent 35%),
-        linear-gradient(180deg,#080a0f,#0a0d13);
+        radial-gradient(circle at top right,rgba(255,70,85,.08),transparent 30%),
+        linear-gradient(180deg,#080a0f,#0b0e14 45%,#080a0f);
     color:var(--text);
     font-family:"Segoe UI",Arial,sans-serif;
     min-height:100vh;
@@ -49,13 +48,21 @@ button{
     cursor:pointer;
 }
 
+.hidden{
+    display:none !important;
+}
+
+/* =========================
+   HEADER
+========================= */
+
 header{
     border-bottom:1px solid var(--border);
     background:rgba(8,10,15,.94);
-    backdrop-filter:blur(15px);
+    backdrop-filter:blur(12px);
     position:sticky;
     top:0;
-    z-index:100;
+    z-index:50;
 }
 
 .header-inner{
@@ -63,60 +70,90 @@ header{
     margin:auto;
     padding:18px 24px;
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
     gap:20px;
 }
 
-.logo{
-    font-size:25px;
-    font-weight:900;
-    letter-spacing:-1px;
+.brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
 }
 
-.logo span{
+.brand-mark{
+    width:46px;
+    height:46px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--red);
+    color:white;
+    font-weight:900;
+    font-size:19px;
+    clip-path:polygon(0 0,100% 0,82% 100%,0 100%);
+}
+
+.brand h1{
+    margin:0;
+    font-size:24px;
+    letter-spacing:1px;
+}
+
+.brand h1 span{
     color:var(--red);
 }
 
-.subtitle{
+.brand p{
+    margin:3px 0 0;
     color:var(--muted);
     font-size:12px;
-    margin-top:3px;
 }
 
 .header-actions{
     display:flex;
-    gap:8px;
     align-items:center;
+    gap:9px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+}
+
+.status{
+    color:var(--muted);
+    font-size:12px;
+    margin-right:4px;
 }
 
 .btn{
     border:1px solid var(--border);
-    background:#151a22;
-    color:white;
-    border-radius:8px;
-    padding:9px 14px;
-    font-weight:700;
-    transition:.15s;
+    background:#141a24;
+    color:var(--text);
+    padding:10px 14px;
+    border-radius:7px;
+    transition:.2s;
 }
 
 .btn:hover{
-    background:#202631;
+    border-color:#3a4658;
+    background:#1a2230;
 }
 
-.btn-red{
+.btn-primary{
     background:var(--red);
     border-color:var(--red);
+    color:white;
+    font-weight:700;
 }
 
-.btn-red:hover{
+.btn-primary:hover{
     background:var(--red-dark);
+    border-color:var(--red-dark);
 }
 
 .btn-danger{
-    background:#35151a;
-    border-color:#61232b;
-    color:#ff8992;
+    background:#291318;
+    border-color:#63252e;
+    color:#ff8993;
 }
 
 .btn-small{
@@ -124,161 +161,145 @@ header{
     font-size:12px;
 }
 
-.admin-status{
-    color:var(--muted);
-    font-size:12px;
-    margin-right:5px;
-}
+/* =========================
+   MAIN
+========================= */
 
 main{
     max-width:1500px;
     margin:auto;
-    padding:28px 24px 60px;
+    padding:26px 24px 60px;
 }
 
-.hero{
-    min-height:260px;
-    border:1px solid var(--border);
-    border-radius:16px;
-    overflow:hidden;
-    position:relative;
-    background:
-        linear-gradient(90deg,rgba(8,10,15,.98),rgba(8,10,15,.7),rgba(8,10,15,.25)),
-        #121722;
-    margin-bottom:25px;
-}
-
-.hero-bg{
-    position:absolute;
-    inset:0;
-    background-position:center;
-    background-size:cover;
-    opacity:.38;
-    filter:saturate(.8);
-}
-
-.hero-content{
-    position:relative;
-    z-index:1;
-    padding:38px;
-    max-width:750px;
-}
-
-.hero-label{
-    color:var(--red);
-    font-weight:900;
-    font-size:12px;
-    letter-spacing:1.5px;
-    margin-bottom:12px;
-}
-
-.hero-title{
-    font-size:36px;
-    line-height:1.05;
-    margin:0 0 10px;
-    font-weight:900;
-}
-
-.hero-meta{
-    color:#b6bdc9;
-    margin-bottom:20px;
-}
-
-.stats-grid{
+.stats{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:12px;
+    gap:14px;
     margin-bottom:22px;
 }
 
 .stat{
-    background:var(--card);
+    background:linear-gradient(145deg,#111722,#0e131c);
     border:1px solid var(--border);
-    border-radius:12px;
-    padding:17px;
+    border-radius:10px;
+    padding:18px;
+    position:relative;
+    overflow:hidden;
+}
+
+.stat:after{
+    content:"";
+    position:absolute;
+    right:-25px;
+    bottom:-35px;
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:rgba(255,70,85,.05);
 }
 
 .stat-label{
     color:var(--muted);
     font-size:11px;
     text-transform:uppercase;
-    font-weight:800;
+    letter-spacing:1px;
 }
 
 .stat-value{
-    font-size:28px;
-    font-weight:900;
+    font-size:29px;
+    font-weight:800;
     margin-top:5px;
 }
 
+/* =========================
+   NAV
+========================= */
+
+.main-nav{
+    display:flex;
+    gap:5px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:20px;
+}
+
+.nav-btn{
+    border:0;
+    background:transparent;
+    color:var(--muted);
+    padding:13px 18px;
+    border-bottom:2px solid transparent;
+    font-weight:700;
+}
+
+.nav-btn:hover{
+    color:white;
+}
+
+.nav-btn.active{
+    color:white;
+    border-bottom-color:var(--red);
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+
 .toolbar{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:14px;
     display:grid;
-    grid-template-columns:2fr repeat(6,1fr);
-    gap:9px;
+    grid-template-columns:2fr repeat(4,1fr) 1fr;
+    gap:10px;
     margin-bottom:22px;
 }
 
-.field{
-    width:100%;
-    background:#0b0f15;
+.control{
+    background:#111722;
     border:1px solid var(--border);
     color:white;
-    border-radius:8px;
-    padding:10px 11px;
+    border-radius:7px;
+    padding:11px 12px;
     outline:none;
+    min-width:0;
 }
 
-.field:focus{
-    border-color:#566173;
+.control:focus{
+    border-color:#56667b;
 }
 
-.section-head{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:15px;
+input::placeholder{
+    color:#697587;
 }
 
-.section-title{
-    font-size:20px;
-    font-weight:900;
-}
-
-.section-sub{
-    color:var(--muted);
-    font-size:12px;
-}
+/* =========================
+   VOD GRID
+========================= */
 
 .vod-grid{
     display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
-    gap:16px;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:17px;
 }
 
 .card{
-    background:var(--card);
+    background:linear-gradient(145deg,#111722,#0e131b);
     border:1px solid var(--border);
-    border-radius:13px;
+    border-radius:10px;
     overflow:hidden;
     display:flex;
     flex-direction:column;
     min-width:0;
-    transition:.18s;
+    transition:.2s;
 }
 
 .card:hover{
     transform:translateY(-2px);
-    border-color:#394352;
+    border-color:#394656;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
 }
 
 .thumbnail{
-    height:185px;
-    background:#080a0f;
+    height:190px;
     position:relative;
+    background:#090c11;
     overflow:hidden;
 }
 
@@ -289,135 +310,168 @@ main{
     display:block;
 }
 
-.thumbnail-overlay{
+.thumbnail:after{
+    content:"";
     position:absolute;
     inset:0;
-    background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.78));
+    background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.8));
+    pointer-events:none;
 }
 
 .play-badge{
     position:absolute;
-    left:14px;
-    bottom:12px;
-    width:40px;
-    height:40px;
+    z-index:2;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:54px;
+    height:54px;
     border-radius:50%;
-    background:var(--red);
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:17px;
-    box-shadow:0 4px 15px rgba(0,0,0,.4);
+    background:rgba(255,70,85,.94);
+    color:white;
+    font-size:20px;
+    padding-left:3px;
+    box-shadow:0 8px 30px rgba(0,0,0,.4);
 }
 
 .time-badge{
     position:absolute;
+    z-index:3;
     right:10px;
-    bottom:10px;
+    bottom:9px;
     background:rgba(0,0,0,.78);
     padding:4px 7px;
-    border-radius:5px;
+    border-radius:4px;
     font-size:11px;
 }
 
 .card-body{
-    padding:15px;
+    padding:16px;
     display:flex;
     flex-direction:column;
     flex:1;
-    min-height:290px;
+    min-height:315px;
 }
 
-.map-tag{
-    display:inline-flex;
-    width:max-content;
-    background:#202631;
-    color:#d8dde6;
-    padding:4px 7px;
-    border-radius:5px;
-    font-size:10px;
-    font-weight:800;
-    text-transform:uppercase;
-    margin-bottom:11px;
-}
-
-.player-name{
-    font-size:18px;
-    font-weight:900;
-    cursor:pointer;
-    width:max-content;
-    max-width:100%;
-}
-
-.player-name:hover{
-    color:var(--red);
-}
-
-.team-line{
-    color:#aeb6c3;
-    font-size:12px;
-    margin-top:3px;
-}
-
-.vs{
-    margin-top:8px;
-    font-size:13px;
-    font-weight:800;
-}
-
-.vs span{
-    color:var(--red);
-}
-
-.tournament{
-    color:var(--muted);
-    font-size:11px;
-    margin-top:7px;
-    min-height:31px;
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-}
-
-.performance{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:5px;
-    margin-top:15px;
-}
-
-.performance-item{
-    background:#0b0f15;
-    border:1px solid #1e2530;
-    border-radius:6px;
-    padding:7px 3px;
-    text-align:center;
-}
-
-.performance-item strong{
-    display:block;
-    font-size:13px;
-}
-
-.performance-item span{
-    color:var(--muted);
-    font-size:8px;
-    text-transform:uppercase;
-}
-
-.card-bottom{
-    margin-top:auto;
-    padding-top:14px;
+.card-top{
     display:flex;
     justify-content:space-between;
     align-items:center;
     gap:10px;
+    margin-bottom:10px;
+}
+
+.map-tag{
+    color:#cbd3df;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+    font-weight:700;
+}
+
+.region-tag{
+    color:var(--red);
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
+.matchup{
+    font-size:20px;
+    font-weight:800;
+    line-height:1.15;
+    margin-bottom:7px;
+}
+
+.matchup .vs{
+    color:var(--muted);
+    font-size:13px;
+    margin:0 4px;
+}
+
+.player-link{
+    color:white;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.player-link:hover{
+    color:var(--red);
+}
+
+.team-line{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:12px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.tournament{
+    min-height:35px;
+    color:#d6dbe4;
+    font-size:12px;
+    line-height:1.4;
+    margin-bottom:12px;
+}
+
+.tournament span{
+    color:var(--muted);
+}
+
+.stats-row{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:6px;
+    margin-top:auto;
+    margin-bottom:14px;
+}
+
+.stat-mini{
+    background:#0a0e14;
+    border:1px solid #1d2531;
+    border-radius:6px;
+    padding:8px 5px;
+    text-align:center;
+}
+
+.stat-mini b{
+    display:block;
+    font-size:14px;
+}
+
+.stat-mini span{
+    color:var(--muted);
+    font-size:9px;
+    text-transform:uppercase;
+}
+
+.card-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    border-top:1px solid var(--border);
+    padding-top:12px;
 }
 
 .agent-map{
-    color:#aeb6c3;
-    font-size:11px;
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+}
+
+.pill{
+    background:#19202c;
+    border:1px solid #293341;
+    border-radius:5px;
+    padding:5px 8px;
+    color:#cbd3df;
+    font-size:10px;
 }
 
 .card-actions{
@@ -427,170 +481,217 @@ main{
 
 .empty{
     grid-column:1/-1;
+    border:1px dashed #303a48;
+    padding:55px 20px;
+    border-radius:10px;
     text-align:center;
-    padding:70px 20px;
-    color:var(--muted);
-    border:1px dashed var(--border);
-    border-radius:12px;
-}
-
-.loading{
-    grid-column:1/-1;
-    text-align:center;
-    padding:70px;
     color:var(--muted);
 }
 
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.78);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:500;
-    padding:20px;
-}
+/* =========================
+   PROFILE
+========================= */
 
-.modal.active{
-    display:flex;
-}
-
-.modal-box{
-    width:min(950px,100%);
-    max-height:90vh;
-    overflow:auto;
-    background:#10141c;
+.profile-header{
+    background:
+        radial-gradient(circle at 90% 20%,rgba(255,70,85,.12),transparent 30%),
+        linear-gradient(145deg,#111722,#0d121a);
     border:1px solid var(--border);
-    border-radius:14px;
-    box-shadow:0 25px 80px rgba(0,0,0,.55);
+    border-radius:12px;
+    padding:25px;
+    margin-bottom:18px;
 }
 
-.modal-large{
-    width:min(1150px,100%);
-}
-
-.modal-header{
-    padding:17px 20px;
-    border-bottom:1px solid var(--border);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    position:sticky;
-    top:0;
-    background:#10141c;
-    z-index:2;
-}
-
-.modal-header h2{
-    margin:0;
-    font-size:20px;
-}
-
-.close{
-    border:0;
-    background:transparent;
-    color:#aeb6c3;
-    font-size:27px;
-    line-height:1;
-}
-
-.modal-content{
-    padding:20px;
-}
-
-.player-profile-top{
-    display:grid;
-    grid-template-columns:1.3fr repeat(4,1fr);
-    gap:10px;
-    margin-bottom:20px;
+.back-row{
+    margin-bottom:22px;
 }
 
 .profile-main{
-    background:#151a22;
-    border:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.avatar{
+    width:82px;
+    height:82px;
+    flex:none;
     border-radius:10px;
-    padding:18px;
+    background:linear-gradient(145deg,#202938,#111722);
+    border:1px solid #394656;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:29px;
+    font-weight:900;
+    color:white;
 }
 
 .profile-name{
-    font-size:25px;
-    font-weight:900;
+    margin:0;
+    font-size:31px;
 }
 
-.profile-team{
-    color:var(--red);
-    font-weight:800;
-    margin-top:3px;
-}
-
-.profile-stat{
-    background:#151a22;
-    border:1px solid var(--border);
-    border-radius:10px;
-    padding:13px;
-}
-
-.profile-stat span{
-    display:block;
+.profile-meta{
     color:var(--muted);
-    font-size:9px;
-    font-weight:800;
+    margin-top:6px;
+    font-size:13px;
 }
 
-.profile-stat strong{
+.profile-counters{
+    margin-left:auto;
+    display:flex;
+    gap:25px;
+}
+
+.profile-counter{
+    text-align:center;
+}
+
+.profile-counter strong{
     display:block;
-    margin-top:5px;
-    font-size:21px;
+    font-size:24px;
 }
 
-.profile-sections{
+.profile-counter span{
+    color:var(--muted);
+    font-size:10px;
+    text-transform:uppercase;
+}
+
+.profile-stats{
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
     margin-bottom:20px;
 }
 
-.profile-box{
-    background:#0b0f15;
+.profile-stat{
+    background:#111722;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:18px;
+}
+
+.profile-stat-label{
+    color:var(--muted);
+    text-transform:uppercase;
+    font-size:10px;
+    letter-spacing:1px;
+}
+
+.profile-stat-value{
+    font-size:25px;
+    font-weight:800;
+    margin-top:5px;
+}
+
+.profile-section{
+    background:#111722;
     border:1px solid var(--border);
     border-radius:10px;
-    padding:15px;
+    padding:18px;
+    margin-bottom:18px;
 }
 
-.profile-box-title{
+.section-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.section-title h3{
+    margin:0;
+    font-size:16px;
+}
+
+.section-title span{
     color:var(--muted);
-    font-size:10px;
-    font-weight:900;
-    text-transform:uppercase;
-    margin-bottom:8px;
+    font-size:11px;
 }
 
-.profile-box-value{
-    font-size:18px;
-    font-weight:900;
+.table-wrap{
+    overflow-x:auto;
+}
+
+.data-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+
+.data-table th{
+    text-align:left;
+    color:#7e8999;
+    text-transform:uppercase;
+    font-size:9px;
+    letter-spacing:.8px;
+    padding:9px 10px;
+    border-bottom:1px solid var(--border);
+}
+
+.data-table td{
+    padding:11px 10px;
+    border-bottom:1px solid #1c2430;
+    font-size:12px;
+}
+
+.data-table tr:last-child td{
+    border-bottom:0;
+}
+
+.agent-name,
+.map-name{
+    font-weight:700;
+}
+
+.tournament-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.tournament-chip{
+    background:#171e29;
+    border:1px solid #2a3543;
+    border-radius:20px;
+    padding:7px 11px;
+    font-size:11px;
+    color:#d4dae3;
 }
 
 .profile-vods{
     display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:15px;
 }
 
 .profile-vod{
+    background:#0d121a;
     border:1px solid var(--border);
-    background:#151a22;
-    border-radius:9px;
-    padding:12px;
+    border-radius:8px;
+    overflow:hidden;
     cursor:pointer;
 }
 
 .profile-vod:hover{
-    border-color:#4a5362;
+    border-color:#435064;
+}
+
+.profile-vod-img{
+    width:100%;
+    height:125px;
+    object-fit:cover;
+    display:block;
+}
+
+.profile-vod-body{
+    padding:11px;
 }
 
 .profile-vod-title{
-    font-weight:800;
+    font-weight:700;
     font-size:13px;
 }
 
@@ -600,36 +701,107 @@ main{
     margin-top:5px;
 }
 
+/* =========================
+   MODALS
+========================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    background:rgba(0,0,0,.82);
+    backdrop-filter:blur(8px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal-box{
+    width:min(1050px,100%);
+    max-height:94vh;
+    overflow:auto;
+    background:#0d121a;
+    border:1px solid #303a49;
+    border-radius:12px;
+    box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+
+.modal-header{
+    padding:17px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.modal-header h2{
+    margin:0;
+    font-size:17px;
+}
+
+.close{
+    border:0;
+    background:transparent;
+    color:#9aa5b5;
+    font-size:26px;
+}
+
+.close:hover{
+    color:white;
+}
+
+.modal-content{
+    padding:20px;
+}
+
 .video-container{
-    background:#000;
     aspect-ratio:16/9;
+    background:#000;
+    border-radius:7px;
+    overflow:hidden;
 }
 
 .video-container iframe{
     width:100%;
     height:100%;
     border:0;
+}
+
+.vod-detail-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:15px;
+}
+
+.vod-detail{
+    background:#111822;
+    border:1px solid var(--border);
+    border-radius:7px;
+    padding:11px;
+}
+
+.vod-detail label{
     display:block;
-}
-
-.player-info{
-    padding:18px;
-}
-
-.player-title{
-    font-size:22px;
-    font-weight:900;
-}
-
-.player-meta{
     color:var(--muted);
-    margin-top:6px;
-    font-size:13px;
+    text-transform:uppercase;
+    font-size:9px;
+    margin-bottom:4px;
 }
+
+.vod-detail strong{
+    font-size:12px;
+}
+
+/* =========================
+   FORM
+========================= */
 
 .form-grid{
     display:grid;
-    grid-template-columns:repeat(2,1fr);
+    grid-template-columns:repeat(3,1fr);
     gap:13px;
 }
 
@@ -644,140 +816,142 @@ main{
 }
 
 .form-group label{
-    color:#aeb6c3;
+    color:#a9b2c0;
     font-size:11px;
-    font-weight:800;
     text-transform:uppercase;
 }
 
-.form-actions{
-    display:flex;
-    justify-content:flex-end;
-    gap:8px;
-    margin-top:20px;
+.form-group input,
+.form-group select{
+    background:#090d13;
+    color:white;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:10px;
+    outline:none;
 }
 
-.thumb-preview{
+.form-group input:focus,
+.form-group select:focus{
+    border-color:#526174;
+}
+
+.detected{
+    color:var(--green);
+    font-size:11px;
+    min-height:15px;
+}
+
+.thumbnail-tools{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.thumbnail-preview{
     width:100%;
-    max-height:220px;
+    height:180px;
     object-fit:cover;
-    border-radius:8px;
+    border-radius:7px;
     border:1px solid var(--border);
-    display:none;
+    background:#080b10;
     margin-top:8px;
 }
 
-.login-box{
-    width:min(420px,100%);
+.modal-footer{
+    padding:15px 20px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
 }
 
-.login-content{
-    padding:20px;
+/* =========================
+   LOADING
+========================= */
+
+.loading{
+    color:var(--muted);
+    padding:55px;
+    text-align:center;
 }
 
-.login-content .form-group{
-    margin-bottom:14px;
+.spinner{
+    width:30px;
+    height:30px;
+    border:3px solid #27303d;
+    border-top-color:var(--red);
+    border-radius:50%;
+    margin:0 auto 13px;
+    animation:spin .8s linear infinite;
 }
 
-.error{
-    color:#ff8790;
-    background:#2b1115;
-    border:1px solid #542027;
-    padding:10px;
-    border-radius:7px;
-    font-size:12px;
-    margin-bottom:12px;
-    display:none;
+@keyframes spin{
+    to{transform:rotate(360deg);}
 }
 
-.toast{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    background:#151a22;
-    border:1px solid var(--border);
-    color:white;
-    padding:12px 15px;
-    border-radius:8px;
-    box-shadow:0 10px 30px rgba(0,0,0,.35);
-    display:none;
-    z-index:1000;
-}
+/* =========================
+   RESPONSIVE
+========================= */
 
-.toast.show{
-    display:block;
-}
-
-.hidden{
-    display:none!important;
-}
-
-@media(max-width:1200px){
-
-    .vod-grid{
-        grid-template-columns:repeat(3,1fr);
+@media(max-width:1100px){
+    .vod-grid,
+    .profile-vods{
+        grid-template-columns:repeat(2,minmax(0,1fr));
     }
 
     .toolbar{
-        grid-template-columns:repeat(4,1fr);
+        grid-template-columns:2fr repeat(2,1fr);
     }
 
-    .toolbar input{
-        grid-column:1/-1;
+    .stats,
+    .profile-stats{
+        grid-template-columns:repeat(2,1fr);
     }
-
 }
 
-@media(max-width:850px){
-
+@media(max-width:700px){
     .header-inner{
-        flex-direction:column;
         align-items:flex-start;
+        flex-direction:column;
     }
 
     .header-actions{
         width:100%;
-        flex-wrap:wrap;
+        justify-content:flex-start;
     }
-
-    .stats-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .vod-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .player-profile-top{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .profile-main{
-        grid-column:1/-1;
-    }
-
-}
-
-@media(max-width:600px){
 
     main{
         padding:18px 12px 40px;
     }
 
-    .hero-content{
-        padding:25px 20px;
+    .stats,
+    .profile-stats{
+        grid-template-columns:repeat(2,1fr);
     }
 
-    .hero-title{
-        font-size:27px;
+    .vod-grid,
+    .profile-vods{
+        grid-template-columns:1fr;
     }
 
     .toolbar{
-        grid-template-columns:1fr 1fr;
+        grid-template-columns:1fr;
     }
 
-    .vod-grid{
-        grid-template-columns:1fr;
+    .profile-main{
+        align-items:flex-start;
+        flex-wrap:wrap;
+    }
+
+    .profile-counters{
+        margin-left:0;
+        width:100%;
+        justify-content:space-between;
+    }
+
+    .profile-name{
+        font-size:25px;
     }
 
     .form-grid{
@@ -788,264 +962,231 @@ main{
         grid-column:auto;
     }
 
-    .profile-vods{
-        grid-template-columns:1fr;
+    .vod-detail-grid{
+        grid-template-columns:repeat(2,1fr);
     }
-
-    .profile-sections{
-        grid-template-columns:1fr;
-    }
-
 }
-
 </style>
 </head>
 
 <body>
 
 <header>
-
     <div class="header-inner">
 
-        <div>
-            <div class="logo">
-                VCT <span>VOD HUB</span>
-            </div>
+        <div class="brand">
+            <div class="brand-mark">V</div>
 
-            <div class="subtitle">
-                Biblioteca de VODs competitivos de VALORANT
+            <div>
+                <h1>VCT <span>VOD HUB</span></h1>
+                <p>Biblioteca de VODs competitivos de VALORANT</p>
             </div>
         </div>
 
         <div class="header-actions">
 
-            <span
-                id="adminStatus"
-                class="admin-status">
+            <span class="status" id="authStatus">
                 Visitante
             </span>
 
             <button
-                id="loginBtn"
-                class="btn btn-small"
-                onclick="abrirLogin()">
-                ADMIN
-            </button>
-
-            <button
-                id="logoutBtn"
-                class="btn btn-small hidden"
-                onclick="cerrarSesion()">
-                CERRAR SESIÓN
-            </button>
-
-            <button
+                class="btn btn-primary hidden"
                 id="addVodBtn"
-                class="btn btn-red btn-small hidden"
                 onclick="abrirFormulario()">
-                + AGREGAR VOD
+                + Agregar VOD
+            </button>
+
+            <button
+                class="btn hidden"
+                id="logoutBtn"
+                onclick="cerrarSesion()">
+                Cerrar sesión
+            </button>
+
+            <button
+                class="btn"
+                id="loginBtn"
+                onclick="abrirLogin()">
+                Administrador
             </button>
 
         </div>
 
     </div>
-
 </header>
+
 
 <main>
 
-    <section
-        class="hero"
-        id="hero">
+    <!-- ESTADÍSTICAS GENERALES -->
 
-        <div
-            id="heroBg"
-            class="hero-bg">
-        </div>
-
-        <div class="hero-content">
-
-            <div class="hero-label">
-                VCT VOD HUB V3
-            </div>
-
-            <h1
-                id="heroTitle"
-                class="hero-title">
-                Biblioteca competitiva de VALORANT
-            </h1>
-
-            <div
-                id="heroMeta"
-                class="hero-meta">
-                Explora partidas, jugadores, agentes y mapas.
-            </div>
-
-            <button
-                class="btn btn-red"
-                id="heroButton"
-                onclick="abrirVodDestacado()">
-                VER VOD DESTACADO
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <section class="stats-grid">
+    <section class="stats">
 
         <div class="stat">
             <div class="stat-label">VODs</div>
-            <div
-                id="statVods"
-                class="stat-value">
-                0
-            </div>
+            <div class="stat-value" id="statVods">0</div>
         </div>
 
         <div class="stat">
             <div class="stat-label">Jugadores</div>
-            <div
-                id="statPlayers"
-                class="stat-value">
-                0
-            </div>
+            <div class="stat-value" id="statPlayers">0</div>
         </div>
 
         <div class="stat">
             <div class="stat-label">Agentes</div>
-            <div
-                id="statAgents"
-                class="stat-value">
-                0
-            </div>
+            <div class="stat-value" id="statAgents">0</div>
         </div>
 
         <div class="stat">
             <div class="stat-label">Mapas</div>
-            <div
-                id="statMaps"
-                class="stat-value">
-                0
-            </div>
+            <div class="stat-value" id="statMaps">0</div>
         </div>
 
     </section>
 
 
-    <section class="toolbar">
+    <!-- NAVEGACIÓN -->
 
-        <input
-            id="search"
-            class="field"
-            type="text"
-            placeholder="Buscar jugador, equipo, rival, torneo, agente o mapa..."
-            oninput="render()">
+    <nav class="main-nav">
 
-        <select
-            id="filterAgent"
-            class="field"
-            onchange="render()">
-            <option value="">Todos los agentes</option>
-        </select>
+        <button
+            class="nav-btn active"
+            id="navVods"
+            onclick="mostrarVods()">
+            VODs
+        </button>
 
-        <select
-            id="filterMap"
-            class="field"
-            onchange="render()">
-            <option value="">Todos los mapas</option>
-        </select>
+        <button
+            class="nav-btn"
+            id="navPlayers"
+            onclick="mostrarJugadores()">
+            Jugadores
+        </button>
 
-        <select
-            id="filterRegion"
-            class="field"
-            onchange="render()">
-            <option value="">Todas las regiones</option>
-        </select>
+    </nav>
 
-        <select
-            id="filterTeam"
-            class="field"
-            onchange="render()">
-            <option value="">Todos los equipos</option>
-        </select>
 
-        <select
-            id="filterTournament"
-            class="field"
-            onchange="render()">
-            <option value="">Todos los torneos</option>
-        </select>
+    <!-- =========================
+         VISTA VODS
+    ========================== -->
 
-        <select
-            id="sortBy"
-            class="field"
-            onchange="render()">
+    <section id="vodView">
 
-            <option value="recent">
-                Más recientes
-            </option>
+        <div class="toolbar">
 
-            <option value="rating">
-                Rating
-            </option>
+            <input
+                id="search"
+                class="control"
+                type="text"
+                placeholder="Buscar jugador, equipo, torneo, mapa..."
+                oninput="render()">
 
-            <option value="acs">
-                ACS
-            </option>
+            <select
+                id="filterAgent"
+                class="control"
+                onchange="render()">
+                <option value="">Todos los agentes</option>
+            </select>
 
-            <option value="kills">
-                Kills
-            </option>
+            <select
+                id="filterMap"
+                class="control"
+                onchange="render()">
+                <option value="">Todos los mapas</option>
+            </select>
 
-        </select>
+            <select
+                id="filterRegion"
+                class="control"
+                onchange="render()">
+                <option value="">Todas las regiones</option>
+            </select>
+
+            <select
+                id="sortBy"
+                class="control"
+                onchange="render()">
+                <option value="recent">Más recientes</option>
+                <option value="rating">Rating</option>
+                <option value="acs">ACS</option>
+                <option value="kills">Kills</option>
+            </select>
+
+            <button
+                class="btn"
+                onclick="limpiarFiltros()">
+                Limpiar
+            </button>
+
+        </div>
+
+
+        <div
+            id="vodGrid"
+            class="vod-grid">
+
+            <div class="empty">
+                <div class="spinner"></div>
+                Cargando VODs...
+            </div>
+
+        </div>
 
     </section>
 
 
-    <div class="section-head">
+    <!-- =========================
+         VISTA JUGADORES
+    ========================== -->
 
-        <div>
+    <section id="playersView" class="hidden">
+
+        <div class="profile-section">
+
             <div class="section-title">
-                VODs
+                <h3>Jugadores registrados</h3>
+                <span id="playersCountText"></span>
             </div>
 
             <div
-                id="resultsText"
-                class="section-sub">
-                Cargando...
+                id="playersTable"
+                class="table-wrap">
             </div>
+
         </div>
 
-    </div>
+    </section>
 
+
+    <!-- =========================
+         PERFIL JUGADOR
+    ========================== -->
 
     <section
-        id="vodGrid"
-        class="vod-grid">
+        id="profileView"
+        class="hidden">
 
-        <div class="loading">
-            Cargando VODs...
-        </div>
+        <div id="profileContent"></div>
 
     </section>
 
 </main>
 
 
-<!-- MODAL VOD -->
+<!-- =========================
+     MODAL VOD
+========================= -->
 
 <div
     id="vodModal"
-    class="modal"
-    onclick="cerrarModalFondo(event,'vodModal')">
+    class="modal hidden"
+    onclick="cerrarModalOverlay(event,'vodModal')">
 
-    <div class="modal-box modal-large">
+    <div class="modal-box">
 
         <div class="modal-header">
 
-            <h2>
+            <h2 id="vodModalTitle">
                 VOD
             </h2>
 
@@ -1057,167 +1198,19 @@ main{
 
         </div>
 
-        <div class="video-container">
-
-            <iframe
-                id="vodIframe"
-                allow="autoplay; encrypted-media"
-                allowfullscreen>
-            </iframe>
-
-        </div>
-
-        <div class="player-info">
-
-            <div
-                id="playerTitle"
-                class="player-title">
-                -
-            </div>
-
-            <div
-                id="playerMeta"
-                class="player-meta">
-                -
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- PERFIL JUGADOR -->
-
-<div
-    id="playerModal"
-    class="modal"
-    onclick="cerrarModalFondo(event,'playerModal')">
-
-    <div class="modal-box modal-large">
-
-        <div class="modal-header">
-
-            <h2>
-                PERFIL DE JUGADOR
-            </h2>
-
-            <button
-                class="close"
-                onclick="cerrarModal('playerModal')">
-                ×
-            </button>
-
-        </div>
-
         <div class="modal-content">
 
-            <div class="player-profile-top">
-
-                <div class="profile-main">
-
-                    <div
-                        id="profileName"
-                        class="profile-name">
-                        Jugador
-                    </div>
-
-                    <div
-                        id="profileTeam"
-                        class="profile-team">
-                        -
-                    </div>
-
-                </div>
-
-                <div class="profile-stat">
-
-                    <span>VODS</span>
-
-                    <strong id="profileVods">
-                        0
-                    </strong>
-
-                </div>
-
-                <div class="profile-stat">
-
-                    <span>ACS PROMEDIO</span>
-
-                    <strong id="profileAcs">
-                        0
-                    </strong>
-
-                </div>
-
-                <div class="profile-stat">
-
-                    <span>RATING</span>
-
-                    <strong id="profileRating">
-                        0
-                    </strong>
-
-                </div>
-
-                <div class="profile-stat">
-
-                    <span>KILLS PROMEDIO</span>
-
-                    <strong id="profileKills">
-                        0
-                    </strong>
-
-                </div>
-
+            <div class="video-container">
+                <iframe
+                    id="vodFrame"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
             </div>
 
-
-            <div class="profile-sections">
-
-                <div class="profile-box">
-
-                    <div class="profile-box-title">
-                        Agente más usado
-                    </div>
-
-                    <div
-                        id="profileAgent"
-                        class="profile-box-value">
-                        -
-                    </div>
-
-                </div>
-
-                <div class="profile-box">
-
-                    <div class="profile-box-title">
-                        Mapa más jugado
-                    </div>
-
-                    <div
-                        id="profileMap"
-                        class="profile-box-value">
-                        -
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="profile-box">
-
-                <div class="profile-box-title">
-                    VODs del jugador
-                </div>
-
-                <div
-                    id="playerVodList"
-                    class="profile-vods">
-                </div>
-
+            <div
+                id="vodDetails"
+                class="vod-detail-grid">
             </div>
 
         </div>
@@ -1227,20 +1220,20 @@ main{
 </div>
 
 
-<!-- LOGIN -->
+<!-- =========================
+     LOGIN
+========================= -->
 
 <div
     id="loginModal"
-    class="modal"
-    onclick="cerrarModalFondo(event,'loginModal')">
+    class="modal hidden"
+    onclick="cerrarModalOverlay(event,'loginModal')">
 
-    <div class="modal-box login-box">
+    <div class="modal-box" style="max-width:430px">
 
         <div class="modal-header">
 
-            <h2>
-                Administrador
-            </h2>
+            <h2>Acceso de administrador</h2>
 
             <button
                 class="close"
@@ -1250,71 +1243,69 @@ main{
 
         </div>
 
-        <div class="login-content">
+        <form onsubmit="iniciarSesion(event)">
 
-            <div
-                id="loginError"
-                class="error">
-            </div>
+            <div class="modal-content">
 
-            <div class="form-group">
+                <div class="form-group" style="margin-bottom:14px">
+                    <label>Correo</label>
+                    <input
+                        id="loginEmail"
+                        type="email"
+                        required
+                        autocomplete="username">
+                </div>
 
-                <label>
-                    Correo
-                </label>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input
+                        id="loginPassword"
+                        type="password"
+                        required
+                        autocomplete="current-password">
+                </div>
 
-                <input
-                    id="loginEmail"
-                    class="field"
-                    type="email"
-                    autocomplete="username">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>
-                    Contraseña
-                </label>
-
-                <input
-                    id="loginPassword"
-                    class="field"
-                    type="password"
-                    autocomplete="current-password">
+                <div
+                    id="loginError"
+                    style="color:#ff8993;font-size:12px;margin-top:12px">
+                </div>
 
             </div>
 
-            <div class="form-actions">
+            <div class="modal-footer">
 
                 <button
+                    type="button"
                     class="btn"
                     onclick="cerrarModal('loginModal')">
-                    CANCELAR
+                    Cancelar
                 </button>
 
                 <button
-                    class="btn btn-red"
-                    onclick="iniciarSesion()">
-                    INICIAR SESIÓN
+                    type="submit"
+                    class="btn btn-primary">
+                    Iniciar sesión
                 </button>
 
             </div>
 
-        </div>
+        </form>
 
     </div>
 
 </div>
 
 
-<!-- FORMULARIO VOD -->
+<!-- =========================
+     FORMULARIO VOD
+========================= -->
 
 <div
     id="formModal"
-    class="modal">
+    class="modal hidden"
+    onclick="cerrarModalOverlay(event,'formModal')">
 
-    <div class="modal-box modal-large">
+    <div class="modal-box">
 
         <div class="modal-header">
 
@@ -1330,15 +1321,15 @@ main{
 
         </div>
 
-        <div class="modal-content">
 
-            <form
-                id="vodForm"
-                onsubmit="guardarFormulario(event)">
+        <form onsubmit="guardarFormulario(event)">
+
+            <div class="modal-content">
 
                 <input
-                    id="editId"
-                    type="hidden">
+                    type="hidden"
+                    id="editId">
+
 
                 <div class="form-grid">
 
@@ -1350,295 +1341,167 @@ main{
 
                         <input
                             id="vodUrl"
-                            class="field"
+                            type="url"
                             required
                             placeholder="https://www.youtube.com/watch?v=..."
                             oninput="detectarTiempo()">
 
+                        <div
+                            id="detectedTime"
+                            class="detected">
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Jugador</label>
+                        <input id="vodPlayer" required>
                     </div>
 
                     <div class="form-group">
-
-                        <label>
-                            Tiempo de inicio detectado
-                        </label>
-
-                        <input
-                            id="startTime"
-                            class="field"
-                            readonly>
-
+                        <label>Equipo</label>
+                        <input id="vodTeam">
                     </div>
 
                     <div class="form-group">
+                        <label>Rival</label>
+                        <input id="vodOpponent">
+                    </div>
 
-                        <label>
-                            Jugador
-                        </label>
 
-                        <input
-                            id="player"
-                            class="field"
-                            required>
-
+                    <div class="form-group">
+                        <label>Región</label>
+                        <input id="vodRegion" placeholder="AMERICAS">
                     </div>
 
                     <div class="form-group">
-
-                        <label>
-                            Equipo
-                        </label>
-
-                        <input
-                            id="team"
-                            class="field">
-
+                        <label>Agente</label>
+                        <select id="vodAgent" required></select>
                     </div>
 
                     <div class="form-group">
+                        <label>Mapa</label>
+                        <select id="vodMap" required></select>
+                    </div>
 
-                        <label>
-                            Rival
-                        </label>
 
-                        <input
-                            id="opponent"
-                            class="field">
+                    <div class="form-group full">
+                        <label>Torneo / Evento</label>
+                        <input id="vodTournament">
+                    </div>
 
+
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input id="vodDate" type="date">
                     </div>
 
                     <div class="form-group">
-
-                        <label>
-                            Región
-                        </label>
-
-                        <input
-                            id="region"
-                            class="field"
-                            placeholder="AMERICAS, EMEA, PACIFIC, CHINA...">
-
+                        <label>Hora inicio</label>
+                        <input id="vodStartTime" type="text">
                     </div>
 
                     <div class="form-group">
+                        <label>Segundos inicio</label>
+                        <input id="vodStartSeconds" type="number" min="0" value="0">
+                    </div>
 
-                        <label>
-                            Agente
-                        </label>
 
-                        <select
-                            id="agent"
-                            class="field">
-                        </select>
-
+                    <div class="form-group">
+                        <label>Kills</label>
+                        <input id="vodKills" type="number" min="0">
                     </div>
 
                     <div class="form-group">
-
-                        <label>
-                            Mapa
-                        </label>
-
-                        <select
-                            id="map"
-                            class="field">
-                        </select>
-
+                        <label>Deaths</label>
+                        <input id="vodDeaths" type="number" min="0">
                     </div>
+
+                    <div class="form-group">
+                        <label>Assists</label>
+                        <input id="vodAssists" type="number" min="0">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>ACS</label>
+                        <input id="vodAcs" type="number" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <input id="vodRating" type="number" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label>KAST</label>
+                        <input id="vodKast" type="number" step="0.01">
+                    </div>
+
 
                     <div class="form-group full">
 
-                        <label>
-                            Torneo
-                        </label>
+                        <label>Miniatura</label>
 
-                        <input
-                            id="tournament"
-                            class="field">
+                        <div class="thumbnail-tools">
 
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            Fecha
-                        </label>
-
-                        <input
-                            id="date"
-                            class="field"
-                            type="date">
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            Hora / inicio
-                        </label>
-
-                        <input
-                            id="matchStartTime"
-                            class="field"
-                            placeholder="19:00">
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            Kills
-                        </label>
-
-                        <input
-                            id="kills"
-                            class="field"
-                            type="number"
-                            min="0">
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            Deaths
-                        </label>
-
-                        <input
-                            id="deaths"
-                            class="field"
-                            type="number"
-                            min="0">
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            Assists
-                        </label>
-
-                        <input
-                            id="assists"
-                            class="field"
-                            type="number"
-                            min="0">
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            ACS
-                        </label>
-
-                        <input
-                            id="acs"
-                            class="field"
-                            type="number"
-                            step="0.1"
-                            min="0">
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            Rating
-                        </label>
-
-                        <input
-                            id="rating"
-                            class="field"
-                            type="number"
-                            step="0.01"
-                            min="0">
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            KAST
-                        </label>
-
-                        <input
-                            id="kast"
-                            class="field"
-                            type="number"
-                            step="0.1"
-                            min="0">
-
-                    </div>
-
-                    <div class="form-group full">
-
-                        <label>
-                            Miniatura personalizada
-                        </label>
-
-                        <input
-                            id="thumbnailFile"
-                            class="field"
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp,image/gif"
-                            onchange="previsualizarMiniatura()">
-
-                        <img
-                            id="thumbnailPreview"
-                            class="thumb-preview">
-
-                        <div style="display:flex;gap:7px;margin-top:8px;flex-wrap:wrap">
+                            <input
+                                id="thumbnailFile"
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp,image/gif"
+                                onchange="previsualizarMiniatura(event)">
 
                             <button
                                 type="button"
                                 class="btn btn-small"
                                 onclick="usarMiniaturaYoutube()">
-                                USAR MINIATURA YOUTUBE
+                                Usar miniatura YouTube
                             </button>
 
                             <button
                                 type="button"
-                                class="btn btn-danger btn-small"
-                                onclick="eliminarMiniatura()">
-                                QUITAR MINIATURA
+                                class="btn btn-small btn-danger"
+                                onclick="quitarMiniatura()">
+                                Quitar
                             </button>
 
                         </div>
+
+                        <img
+                            id="thumbnailPreview"
+                            class="thumbnail-preview hidden"
+                            alt="Vista previa">
 
                     </div>
 
                 </div>
 
-                <div class="form-actions">
+            </div>
 
-                    <button
-                        type="button"
-                        class="btn"
-                        onclick="cerrarModal('formModal')">
-                        CANCELAR
-                    </button>
 
-                    <button
-                        type="submit"
-                        class="btn btn-red">
-                        GUARDAR VOD
-                    </button>
+            <div class="modal-footer">
 
-                </div>
+                <button
+                    type="button"
+                    class="btn"
+                    onclick="cerrarModal('formModal')">
+                    Cancelar
+                </button>
 
-            </form>
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="saveVodBtn">
+                    Guardar VOD
+                </button>
 
-        </div>
+            </div>
+
+        </form>
 
     </div>
 
-</div>
-
-
-<div
-    id="toast"
-    class="toast">
 </div>
 
 
@@ -1652,7 +1515,7 @@ const SUPABASE_URL =
     "https://czjxjnbxnxbpesnolffo.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_KA61VPthbWblSrsB3sXzQQ_2RFPQa9T";
+    "sb_publishable_KA61VPthbWlSrsB3sXzQQ_2RFPQa9T";
 
 const supabaseClient =
     window.supabase.createClient(
@@ -1670,6 +1533,7 @@ const THUMBNAIL_BUCKET =
 
 const ADMIN_UID =
     "73c614eb-585f-47b6-88ed-cbf2e95d66fe";
+
 
 const AGENTS = [
     "Astra",
@@ -1700,6 +1564,7 @@ const AGENTS = [
     "Yoru"
 ];
 
+
 const MAPS = [
     "Abyss",
     "Ascent",
@@ -1715,13 +1580,21 @@ const MAPS = [
     "Sunset"
 ];
 
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
 let vods = [];
 let usuarioActual = null;
-let vodDestacado = null;
+let vistaActual = "vods";
+let jugadorPerfilActual = null;
+let miniaturaActual = "";
+let miniaturaArchivo = null;
 
 
 /* =========================================================
-   INICIO
+   INIT
 ========================================================= */
 
 window.addEventListener(
@@ -1739,7 +1612,7 @@ window.addEventListener(
 
 
 /* =========================================================
-   UTILIDADES
+   AUTH
 ========================================================= */
 
 function esAdministrador(){
@@ -1749,77 +1622,6 @@ function esAdministrador(){
 
 }
 
-
-function escapeHtml(valor){
-
-    return String(valor ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-function numero(valor){
-
-    if(
-        valor === null ||
-        valor === undefined ||
-        valor === ""
-    ){
-        return 0;
-    }
-
-    const n =
-        Number(
-            String(valor)
-            .replace(",",".")
-        );
-
-    return Number.isFinite(n) ? n : 0;
-
-}
-
-
-function escaparAtributo(valor){
-
-    return String(valor ?? "")
-        .replace(/\\/g,"\\\\")
-        .replace(/'/g,"\\'")
-        .replace(/"/g,'&quot;');
-
-}
-
-
-function mostrarToast(mensaje){
-
-    const toast =
-        document.getElementById("toast");
-
-    toast.textContent = mensaje;
-
-    toast.classList.add("show");
-
-    clearTimeout(
-        window.toastTimer
-    );
-
-    window.toastTimer =
-        setTimeout(
-            ()=>{
-                toast.classList.remove("show");
-            },
-            2500
-        );
-
-}
-
-
-/* =========================================================
-   AUTENTICACIÓN
-========================================================= */
 
 async function comprobarSesion(){
 
@@ -1831,20 +1633,22 @@ async function comprobarSesion(){
             .getSession();
 
     usuarioActual =
-        data?.session?.user || null;
+        data.session
+            ? data.session.user
+            : null;
 
     actualizarInterfazAdmin();
+
 
     supabaseClient
         .auth
         .onAuthStateChange(
-            function(
-                event,
-                session
-            ){
+            function(event, session){
 
                 usuarioActual =
-                    session?.user || null;
+                    session
+                        ? session.user
+                        : null;
 
                 actualizarInterfazAdmin();
 
@@ -1856,67 +1660,36 @@ async function comprobarSesion(){
 
 function actualizarInterfazAdmin(){
 
-    const loginBtn =
-        document.getElementById(
-            "loginBtn"
-        );
+    const add =
+        document.getElementById("addVodBtn");
 
-    const logoutBtn =
-        document.getElementById(
-            "logoutBtn"
-        );
+    const logout =
+        document.getElementById("logoutBtn");
 
-    const addBtn =
-        document.getElementById(
-            "addVodBtn"
-        );
+    const login =
+        document.getElementById("loginBtn");
 
     const status =
-        document.getElementById(
-            "adminStatus"
-        );
+        document.getElementById("authStatus");
+
 
     if(esAdministrador()){
+
+        add.classList.remove("hidden");
+        logout.classList.remove("hidden");
+        login.classList.add("hidden");
 
         status.textContent =
             "Administrador";
 
-        status.style.color =
-            "var(--green)";
-
-        loginBtn.classList.add(
-            "hidden"
-        );
-
-        logoutBtn.classList.remove(
-            "hidden"
-        );
-
-        addBtn.classList.remove(
-            "hidden"
-        );
-
     }else{
 
+        add.classList.add("hidden");
+        logout.classList.add("hidden");
+        login.classList.remove("hidden");
+
         status.textContent =
-            usuarioActual
-                ? "Usuario"
-                : "Visitante";
-
-        status.style.color =
-            "";
-
-        loginBtn.classList.remove(
-            "hidden"
-        );
-
-        logoutBtn.classList.add(
-            "hidden"
-        );
-
-        addBtn.classList.add(
-            "hidden"
-        );
+            "Visitante";
 
     }
 
@@ -1927,7 +1700,7 @@ function abrirLogin(){
 
     document
         .getElementById("loginModal")
-        .classList.add("active");
+        .classList.remove("hidden");
 
     document
         .getElementById("loginEmail")
@@ -1936,7 +1709,9 @@ function abrirLogin(){
 }
 
 
-async function iniciarSesion(){
+async function iniciarSesion(event){
+
+    event.preventDefault();
 
     const email =
         document
@@ -1953,20 +1728,9 @@ async function iniciarSesion(){
         document
             .getElementById("loginError");
 
-    errorBox.style.display =
-        "none";
+    errorBox.textContent =
+        "Iniciando sesión...";
 
-    if(!email || !password){
-
-        errorBox.textContent =
-            "Ingresa correo y contraseña.";
-
-        errorBox.style.display =
-            "block";
-
-        return;
-
-    }
 
     const {
         data,
@@ -1979,17 +1743,16 @@ async function iniciarSesion(){
                 password
             });
 
+
     if(error){
 
         errorBox.textContent =
             error.message;
 
-        errorBox.style.display =
-            "block";
-
         return;
 
     }
+
 
     if(
         !data.user ||
@@ -2003,26 +1766,12 @@ async function iniciarSesion(){
         errorBox.textContent =
             "Este usuario no tiene permisos de administrador.";
 
-        errorBox.style.display =
-            "block";
-
         return;
 
     }
 
+
     cerrarModal("loginModal");
-
-    document
-        .getElementById("loginEmail")
-        .value = "";
-
-    document
-        .getElementById("loginPassword")
-        .value = "";
-
-    mostrarToast(
-        "Sesión iniciada correctamente."
-    );
 
 }
 
@@ -2033,10 +1782,6 @@ async function cerrarSesion(){
         .auth
         .signOut();
 
-    mostrarToast(
-        "Sesión cerrada."
-    );
-
 }
 
 
@@ -2046,9 +1791,16 @@ async function cerrarSesion(){
 
 async function cargarVods(){
 
-    console.log(
-        "Cargando VODs..."
-    );
+    const grid =
+        document.getElementById("vodGrid");
+
+    grid.innerHTML = `
+        <div class="empty">
+            <div class="spinner"></div>
+            Cargando VODs...
+        </div>
+    `;
+
 
     const {
         data,
@@ -2064,6 +1816,7 @@ async function cargarVods(){
                 }
             );
 
+
     if(error){
 
         console.error(
@@ -2071,35 +1824,27 @@ async function cargarVods(){
             error
         );
 
-        document
-            .getElementById("vodGrid")
-            .innerHTML = `
-                <div class="empty">
-                    <h3>
-                        Error cargando los VODs
-                    </h3>
-                    <p>
-                        ${escapeHtml(
-                            error.message ||
-                            "Error desconocido"
-                        )}
-                    </p>
-                </div>
-            `;
+        grid.innerHTML = `
+            <div class="empty">
+                <strong>Error cargando los VODs.</strong>
+                <br><br>
+                ${escapeHtml(error.message || "Error desconocido")}
+            </div>
+        `;
 
         return;
 
     }
 
+
     vods =
         (data || [])
-        .map(convertirVod);
+            .map(convertirVod);
+
 
     actualizarFiltros();
 
     actualizarEstadisticas();
-
-    seleccionarDestacado();
 
     render();
 
@@ -2115,10 +1860,11 @@ function convertirVod(v){
         url:v.url || "",
 
         youtubeId:
-            v.youtube_id || "",
+            v.youtube_id ||
+            extraerYoutubeId(v.url || ""),
 
         startSeconds:
-            numero(v.start_seconds),
+            Number(v.start_seconds) || 0,
 
         startTime:
             v.start_time || "",
@@ -2176,6 +1922,28 @@ function convertirVod(v){
 }
 
 
+function numero(valor){
+
+    if(
+        valor === null ||
+        valor === undefined ||
+        valor === ""
+    ){
+
+        return null;
+
+    }
+
+    const n =
+        Number(valor);
+
+    return Number.isFinite(n)
+        ? n
+        : null;
+
+}
+
+
 /* =========================================================
    ESTADÍSTICAS
 ========================================================= */
@@ -2185,34 +1953,47 @@ function actualizarEstadisticas(){
     document
         .getElementById("statVods")
         .textContent =
-        vods.length;
+            vods.length;
+
+
+    const players =
+        new Set();
+
+    const agents =
+        new Set();
+
+    const maps =
+        new Set();
+
+
+    vods.forEach(v => {
+
+        if(v.player)
+            players.add(normalizar(v.player));
+
+        if(v.agent)
+            agents.add(normalizar(v.agent));
+
+        if(v.map)
+            maps.add(normalizar(v.map));
+
+    });
+
 
     document
         .getElementById("statPlayers")
         .textContent =
-        new Set(
-            vods
-            .map(v=>v.player)
-            .filter(Boolean)
-        ).size;
+            players.size;
 
     document
         .getElementById("statAgents")
         .textContent =
-        new Set(
-            vods
-            .map(v=>v.agent)
-            .filter(Boolean)
-        ).size;
+            agents.size;
 
     document
         .getElementById("statMaps")
         .textContent =
-        new Set(
-            vods
-            .map(v=>v.map)
-            .filter(Boolean)
-        ).size;
+            maps.size;
 
 }
 
@@ -2221,43 +2002,82 @@ function actualizarEstadisticas(){
    FILTROS
 ========================================================= */
 
-function llenarFiltro(id, valores){
+function actualizarFiltros(){
+
+    llenarFiltro(
+        "filterAgent",
+        obtenerValoresUnicos("agent"),
+        "Todos los agentes"
+    );
+
+    llenarFiltro(
+        "filterMap",
+        obtenerValoresUnicos("map"),
+        "Todos los mapas"
+    );
+
+    llenarFiltro(
+        "filterRegion",
+        obtenerValoresUnicos("region"),
+        "Todas las regiones"
+    );
+
+}
+
+
+function obtenerValoresUnicos(campo){
+
+    const mapa =
+        new Map();
+
+    vods.forEach(v => {
+
+        const valor =
+            String(v[campo] || "").trim();
+
+        if(!valor)
+            return;
+
+        const key =
+            normalizar(valor);
+
+        if(!mapa.has(key))
+            mapa.set(key,valor);
+
+    });
+
+    return Array.from(
+        mapa.values()
+    ).sort(
+        (a,b) =>
+            a.localeCompare(
+                b,
+                "es",
+                {sensitivity:"base"}
+            )
+    );
+
+}
+
+
+function llenarFiltro(
+    id,
+    valores,
+    placeholder
+){
 
     const select =
         document.getElementById(id);
 
-    if(!select) return;
-
-    const actual =
+    const anterior =
         select.value;
 
-    const primerOption =
-        select.options[0];
 
-    select.innerHTML = "";
+    select.innerHTML =
+        `<option value="">${escapeHtml(placeholder)}</option>`;
 
-    select.appendChild(
-        primerOption
-    );
 
-    const unicos =
-        [...new Set(
-            valores
-            .filter(Boolean)
-            .map(v=>String(v).trim())
-        )]
-        .sort(
-            (a,b)=>
-                a.localeCompare(
-                    b,
-                    "es",
-                    {
-                        sensitivity:"base"
-                    }
-                )
-        );
-
-    unicos.forEach(valor=>{
+    valores.forEach(valor => {
 
         const option =
             document.createElement("option");
@@ -2268,199 +2088,181 @@ function llenarFiltro(id, valores){
         option.textContent =
             valor;
 
-        select.appendChild(
-            option
-        );
+        select.appendChild(option);
 
     });
 
+
     if(
-        unicos.includes(actual)
+        valores.includes(anterior)
     ){
 
         select.value =
-            actual;
+            anterior;
 
     }
 
 }
 
 
-function actualizarFiltros(){
+function limpiarFiltros(){
 
-    llenarFiltro(
-        "filterAgent",
-        vods.map(v=>v.agent)
-    );
+    document
+        .getElementById("search")
+        .value = "";
 
-    llenarFiltro(
-        "filterMap",
-        vods.map(v=>v.map)
-    );
+    document
+        .getElementById("filterAgent")
+        .value = "";
 
-    llenarFiltro(
-        "filterRegion",
-        vods.map(v=>v.region)
-    );
+    document
+        .getElementById("filterMap")
+        .value = "";
 
-    llenarFiltro(
-        "filterTeam",
-        vods.map(v=>v.team)
-    );
+    document
+        .getElementById("filterRegion")
+        .value = "";
 
-    llenarFiltro(
-        "filterTournament",
-        vods.map(v=>v.tournament)
-    );
+    document
+        .getElementById("sortBy")
+        .value = "recent";
 
-}
-
-
-function obtenerFiltrados(){
-
-    const texto =
-        document
-            .getElementById("search")
-            .value
-            .trim()
-            .toLowerCase();
-
-    const agent =
-        document
-            .getElementById("filterAgent")
-            .value;
-
-    const map =
-        document
-            .getElementById("filterMap")
-            .value;
-
-    const region =
-        document
-            .getElementById("filterRegion")
-            .value;
-
-    const team =
-        document
-            .getElementById("filterTeam")
-            .value;
-
-    const tournament =
-        document
-            .getElementById("filterTournament")
-            .value;
-
-    const sortBy =
-        document
-            .getElementById("sortBy")
-            .value;
-
-    let resultado =
-        vods.filter(v=>{
-
-            const contenido = [
-                v.player,
-                v.team,
-                v.opponent,
-                v.region,
-                v.agent,
-                v.map,
-                v.tournament
-            ]
-            .join(" ")
-            .toLowerCase();
-
-            return (
-
-                (!texto ||
-                    contenido.includes(texto)
-                ) &&
-
-                (!agent ||
-                    v.agent === agent
-                ) &&
-
-                (!map ||
-                    v.map === map
-                ) &&
-
-                (!region ||
-                    v.region === region
-                ) &&
-
-                (!team ||
-                    v.team === team
-                ) &&
-
-                (!tournament ||
-                    v.tournament === tournament
-                )
-
-            );
-
-        });
-
-    if(sortBy === "rating"){
-
-        resultado.sort(
-            (a,b)=>
-                b.rating-a.rating
-        );
-
-    }else if(sortBy === "acs"){
-
-        resultado.sort(
-            (a,b)=>
-                b.acs-a.acs
-        );
-
-    }else if(sortBy === "kills"){
-
-        resultado.sort(
-            (a,b)=>
-                b.kills-a.kills
-        );
-
-    }else{
-
-        resultado.sort(
-            (a,b)=>
-                new Date(b.createdAt || b.date || 0)
-                -
-                new Date(a.createdAt || a.date || 0)
-        );
-
-    }
-
-    return resultado;
+    render();
 
 }
 
 
 /* =========================================================
-   RENDER
+   RENDER VODS
 ========================================================= */
 
 function render(){
 
+    if(vistaActual !== "vods")
+        return;
+
+
     const grid =
-        document.getElementById(
-            "vodGrid"
+        document.getElementById("vodGrid");
+
+    const search =
+        normalizar(
+            document
+                .getElementById("search")
+                .value
         );
 
-    const lista =
-        obtenerFiltrados();
 
-    document
-        .getElementById("resultsText")
-        .textContent =
-        `${lista.length} VOD${lista.length === 1 ? "" : "s"} encontrados`;
+    const agent =
+        normalizar(
+            document
+                .getElementById("filterAgent")
+                .value
+        );
+
+    const map =
+        normalizar(
+            document
+                .getElementById("filterMap")
+                .value
+        );
+
+    const region =
+        normalizar(
+            document
+                .getElementById("filterRegion")
+                .value
+        );
+
+
+    let lista =
+        vods.filter(v => {
+
+            const texto =
+                normalizar(
+                    [
+                        v.player,
+                        v.team,
+                        v.opponent,
+                        v.region,
+                        v.agent,
+                        v.map,
+                        v.tournament
+                    ].join(" ")
+                );
+
+
+            return (
+
+                (!search ||
+                    texto.includes(search))
+
+                &&
+
+                (!agent ||
+                    normalizar(v.agent) === agent)
+
+                &&
+
+                (!map ||
+                    normalizar(v.map) === map)
+
+                &&
+
+                (!region ||
+                    normalizar(v.region) === region)
+
+            );
+
+        });
+
+
+    const sort =
+        document
+            .getElementById("sortBy")
+            .value;
+
+
+    if(sort === "rating"){
+
+        lista.sort(
+            (a,b) =>
+                (b.rating ?? -Infinity) -
+                (a.rating ?? -Infinity)
+        );
+
+    }else if(sort === "acs"){
+
+        lista.sort(
+            (a,b) =>
+                (b.acs ?? -Infinity) -
+                (a.acs ?? -Infinity)
+        );
+
+    }else if(sort === "kills"){
+
+        lista.sort(
+            (a,b) =>
+                (b.kills ?? -Infinity) -
+                (a.kills ?? -Infinity)
+        );
+
+    }else{
+
+        lista.sort(
+            (a,b) =>
+                new Date(b.createdAt || b.date || 0) -
+                new Date(a.createdAt || a.date || 0)
+        );
+
+    }
+
 
     if(!lista.length){
 
         grid.innerHTML = `
             <div class="empty">
-                No se encontraron VODs con esos filtros.
+                No se encontraron VODs con los filtros actuales.
             </div>
         `;
 
@@ -2468,71 +2270,76 @@ function render(){
 
     }
 
+
     grid.innerHTML =
         lista
-        .map(crearCard)
-        .join("");
+            .map(crearCardVod)
+            .join("");
 
 }
 
 
-function crearCard(vod){
+function crearCardVod(v){
 
-    const thumbnail =
-        vod.thumbnailUrl ||
+    const thumb =
+        v.thumbnailUrl ||
         (
-            vod.youtubeId
-            ? `https://img.youtube.com/vi/${encodeURIComponent(vod.youtubeId)}/hqdefault.jpg`
-            : ""
+            v.youtubeId
+                ? `https://img.youtube.com/vi/${encodeURIComponent(v.youtubeId)}/hqdefault.jpg`
+                : ""
         );
 
-    const player =
-        escapeHtml(
-            vod.player ||
-            "Jugador"
-        );
 
-    const playerClick =
-        escaparAtributo(
-            vod.player ||
-            ""
-        );
+    const kd =
+        [
+            v.kills,
+            v.deaths,
+            v.assists
+        ]
+        .map(
+            x =>
+                x === null
+                    ? "-"
+                    : formatearNumero(x)
+        )
+        .join(" / ");
+
+
+    const fecha =
+        formatearFecha(v.date);
+
 
     return `
-
         <article class="card">
 
             <div
                 class="thumbnail"
-                onclick="reproducirVod('${escaparAtributo(vod.id)}')"
-                style="cursor:pointer">
+                onclick="abrirVod('${escapeJs(v.id)}')">
 
                 ${
-                    thumbnail
-                    ?
-                    `<img
-                        src="${escapeHtml(thumbnail)}"
-                        alt="${player}"
-                        loading="lazy"
-                        onerror="this.style.display='none'">`
-                    :
-                    ""
+                    thumb
+                    ? `
+                        <img
+                            src="${escapeHtml(thumb)}"
+                            alt=""
+                            loading="lazy"
+                            onerror="this.style.display='none'">
+                    `
+                    : ""
                 }
-
-                <div class="thumbnail-overlay"></div>
 
                 <div class="play-badge">
                     ▶
                 </div>
 
                 ${
-                    vod.startTime
-                    ?
-                    `<div class="time-badge">
-                        ${escapeHtml(vod.startTime)}
-                    </div>`
-                    :
-                    ""
+                    v.startSeconds > 0
+                    ? `
+                        <div class="time-badge">
+                            Inicio ${escapeHtml(segundosATiempo(v.startSeconds))}
+                        </div>
+                    `
+                    : ""
                 }
 
             </div>
@@ -2540,119 +2347,78 @@ function crearCard(vod){
 
             <div class="card-body">
 
-                <div class="map-tag">
-                    ${escapeHtml(vod.map || "MAPA")}
+                <div class="card-top">
+
+                    <div class="map-tag">
+                        ${escapeHtml(v.map || "MAPA")}
+                    </div>
+
+                    <div class="region-tag">
+                        ${escapeHtml(v.region || "")}
+                    </div>
+
                 </div>
 
 
-                <div
-                    class="player-name"
-                    onclick="abrirPerfilJugador('${playerClick}')">
+                <div class="matchup">
 
-                    ${player}
+                    <span
+                        class="player-link"
+                        onclick="event.stopPropagation();abrirPerfilJugador('${escapeJs(v.player)}')">
+                        ${escapeHtml(v.player || "Jugador")}
+                    </span>
+
+                    <span class="vs">VS</span>
+
+                    <span>
+                        ${escapeHtml(v.opponent || "Rival")}
+                    </span>
 
                 </div>
 
 
                 <div class="team-line">
-
-                    ${escapeHtml(vod.team || "-")}
-
-                </div>
-
-
-                <div class="vs">
-
-                    VS
-                    <span>
-                        ${escapeHtml(vod.opponent || "-")}
-                    </span>
-
+                    ${escapeHtml(v.team || "Equipo no especificado")}
                 </div>
 
 
                 <div class="tournament">
 
                     ${
-                        vod.region
-                        ?
-                        escapeHtml(vod.region) +
-                        " · "
-                        :
-                        ""
+                        v.tournament
+                        ? escapeHtml(v.tournament)
+                        : "Torneo no especificado"
                     }
 
-                    ${escapeHtml(
-                        vod.tournament ||
-                        "Sin torneo"
-                    )}
+                    ${
+                        fecha
+                        ? `<br><span>${escapeHtml(fecha)}</span>`
+                        : ""
+                    }
 
                 </div>
 
 
-                <div class="performance">
+                <div class="stats-row">
 
-                    <div class="performance-item">
-                        <strong>
-                            ${vod.kills}
-                        </strong>
-                        <span>K</span>
+                    <div class="stat-mini">
+                        <b>${kd}</b>
+                        <span>K / D / A</span>
                     </div>
 
-                    <div class="performance-item">
-                        <strong>
-                            ${vod.deaths}
-                        </strong>
-                        <span>D</span>
-                    </div>
-
-                    <div class="performance-item">
-                        <strong>
-                            ${vod.assists}
-                        </strong>
-                        <span>A</span>
-                    </div>
-
-                    <div class="performance-item">
-                        <strong>
-                            ${vod.acs}
-                        </strong>
+                    <div class="stat-mini">
+                        <b>${mostrarNumero(v.acs)}</b>
                         <span>ACS</span>
                     </div>
 
-                </div>
-
-
-                <div
-                    class="performance"
-                    style="grid-template-columns:repeat(2,1fr)">
-
-                    <div class="performance-item">
-
-                        <strong>
-                            ${vod.rating
-                                ? vod.rating.toFixed(2)
-                                : "0.00"}
-                        </strong>
-
-                        <span>
-                            Rating
-                        </span>
-
+                    <div class="stat-mini">
+                        <b>${mostrarNumero(v.rating)}</b>
+                        <span>Rating</span>
                     </div>
 
-                    <div class="performance-item">
-
-                        <strong>
-                            ${vod.kast
-                                ? vod.kast + "%"
-                                : "0%"}
-                        </strong>
-
-                        <span>
-                            KAST
-                        </span>
-
+                    <div class="stat-mini">
+                        <b>${mostrarKast(v.kast)}</b>
+                        <span>KAST</span>
                     </div>
 
                 </div>
@@ -2662,9 +2428,17 @@ function crearCard(vod){
 
                     <div class="agent-map">
 
-                        ${escapeHtml(vod.agent || "-")}
-                        ·
-                        ${escapeHtml(vod.map || "-")}
+                        ${
+                            v.agent
+                            ? `<span class="pill">${escapeHtml(v.agent)}</span>`
+                            : ""
+                        }
+
+                        ${
+                            v.map
+                            ? `<span class="pill">${escapeHtml(v.map)}</span>`
+                            : ""
+                        }
 
                     </div>
 
@@ -2672,31 +2446,27 @@ function crearCard(vod){
                     <div class="card-actions">
 
                         <button
-                            class="btn btn-red btn-small"
-                            onclick="reproducirVod('${escaparAtributo(vod.id)}')">
-
+                            class="btn btn-small btn-primary"
+                            onclick="abrirVod('${escapeJs(v.id)}')">
                             VER VOD
-
                         </button>
 
                         ${
                             esAdministrador()
-                            ?
-                            `
-                            <button
-                                class="btn btn-small"
-                                onclick="editarVod('${escaparAtributo(vod.id)}')">
-                                EDITAR
-                            </button>
+                            ? `
+                                <button
+                                    class="btn btn-small"
+                                    onclick="editarVod('${escapeJs(v.id)}')">
+                                    Editar
+                                </button>
 
-                            <button
-                                class="btn btn-danger btn-small"
-                                onclick="eliminarVod('${escaparAtributo(vod.id)}')">
-                                ×
-                            </button>
+                                <button
+                                    class="btn btn-small btn-danger"
+                                    onclick="eliminarVod('${escapeJs(v.id)}')">
+                                    Eliminar
+                                </button>
                             `
-                            :
-                            ""
+                            : ""
                         }
 
                     </div>
@@ -2706,7 +2476,6 @@ function crearCard(vod){
             </div>
 
         </article>
-
     `;
 
 }
@@ -2718,270 +2487,1745 @@ function crearCard(vod){
 
 function abrirPerfilJugador(nombre){
 
-    if(!nombre) return;
+    if(!nombre)
+        return;
 
-    const lista =
-        vods.filter(
-            v =>
-                String(v.player)
-                .toLowerCase()
-                ===
-                String(nombre)
-                .toLowerCase()
-        );
 
-    if(!lista.length) return;
+    const jugador =
+        String(nombre).trim();
 
-    const total =
-        lista.length;
 
-    const promedioACS =
-        lista.reduce(
-            (sum,v)=>
-                sum + numero(v.acs),
-            0
-        ) / total;
+    jugadorPerfilActual =
+        jugador;
 
-    const promedioRating =
-        lista.reduce(
-            (sum,v)=>
-                sum + numero(v.rating),
-            0
-        ) / total;
-
-    const promedioKills =
-        lista.reduce(
-            (sum,v)=>
-                sum + numero(v.kills),
-            0
-        ) / total;
+    vistaActual =
+        "perfil";
 
 
     document
-        .getElementById("profileName")
-        .textContent =
-        lista[0].player || "Jugador";
+        .getElementById("vodView")
+        .classList.add("hidden");
 
     document
-        .getElementById("profileTeam")
-        .textContent =
-        lista[0].team || "-";
+        .getElementById("playersView")
+        .classList.add("hidden");
 
     document
-        .getElementById("profileVods")
-        .textContent =
-        total;
-
-    document
-        .getElementById("profileAcs")
-        .textContent =
-        promedioACS.toFixed(0);
-
-    document
-        .getElementById("profileRating")
-        .textContent =
-        promedioRating.toFixed(2);
-
-    document
-        .getElementById("profileKills")
-        .textContent =
-        promedioKills.toFixed(1);
+        .getElementById("profileView")
+        .classList.remove("hidden");
 
 
     document
-        .getElementById("profileAgent")
-        .textContent =
-        obtenerMasUsado(
-            lista,
-            "agent"
-        );
+        .getElementById("navVods")
+        .classList.remove("active");
 
     document
-        .getElementById("profileMap")
-        .textContent =
-        obtenerMasUsado(
-            lista,
-            "map"
-        );
+        .getElementById("navPlayers")
+        .classList.remove("active");
 
 
-    const contenedor =
-        document
-            .getElementById("playerVodList");
+    renderPerfilJugador(jugador);
 
-
-    contenedor.innerHTML =
-        lista
-        .slice(0,20)
-        .map(v=>`
-
-            <div
-                class="profile-vod"
-                onclick="reproducirVod('${escaparAtributo(v.id)}')">
-
-                <div class="profile-vod-title">
-
-                    ${escapeHtml(
-                        v.team || "-"
-                    )}
-
-                    VS
-
-                    ${escapeHtml(
-                        v.opponent || "-"
-                    )}
-
-                </div>
-
-                <div class="profile-vod-meta">
-
-                    ${escapeHtml(
-                        v.tournament || "Sin torneo"
-                    )}
-
-                    ·
-
-                    ${escapeHtml(
-                        v.map || "-"
-                    )}
-
-                    ·
-
-                    ${escapeHtml(
-                        v.agent || "-"
-                    )}
-
-                </div>
-
-                <div class="profile-vod-meta">
-
-                    K/D/A:
-                    ${v.kills}/${v.deaths}/${v.assists}
-
-                    ·
-
-                    ACS:
-                    ${v.acs}
-
-                    ·
-
-                    Rating:
-                    ${v.rating.toFixed(2)}
-
-                </div>
-
-            </div>
-
-        `)
-        .join("");
-
-
-    document
-        .getElementById("playerModal")
-        .classList.add("active");
-
-}
-
-
-function obtenerMasUsado(lista,campo){
-
-    const contador = {};
-
-    lista.forEach(v=>{
-
-        const valor =
-            v[campo];
-
-        if(!valor) return;
-
-        contador[valor] =
-            (contador[valor] || 0) + 1;
-
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
     });
 
-    const valores =
-        Object.keys(contador);
-
-    if(!valores.length)
-        return "-";
-
-    valores.sort(
-        (a,b)=>
-            contador[b] -
-            contador[a]
-    );
-
-    return valores[0];
-
 }
 
 
-/* =========================================================
-   VOD DESTACADO
-========================================================= */
+function renderPerfilJugador(nombre){
 
-function seleccionarDestacado(){
+    const jugadores =
+        vods.filter(
+            v =>
+                normalizar(v.player) ===
+                normalizar(nombre)
+        );
 
-    if(!vods.length){
 
-        vodDestacado = null;
+    if(!jugadores.length){
+
+        document
+            .getElementById("profileContent")
+            .innerHTML = `
+                <div class="empty">
+                    No se encontraron VODs para este jugador.
+                </div>
+            `;
 
         return;
 
     }
 
-    const ordenados =
-        [...vods]
-        .sort(
-            (a,b)=>
-                b.rating-a.rating
+
+    const nombreMostrar =
+        obtenerNombreCanonico(
+            jugadores,
+            nombre
         );
 
-    vodDestacado =
-        ordenados[0];
 
-    const titulo =
-        document
-            .getElementById("heroTitle");
+    const equipo =
+        obtenerValorMasComun(
+            jugadores.map(v => v.team)
+        );
 
-    const meta =
-        document
-            .getElementById("heroMeta");
 
-    const bg =
-        document
-            .getElementById("heroBg");
+    const region =
+        obtenerValorMasComun(
+            jugadores.map(v => v.region)
+        );
 
-    titulo.textContent =
-        `${vodDestacado.player || "Jugador"} · ${vodDestacado.map || "VOD"}`;
 
-    meta.textContent =
-        `${vodDestacado.team || "-"} VS ${vodDestacado.opponent || "-"} · ${vodDestacado.tournament || "VOD destacado"}`;
+    const total =
+        jugadores.length;
 
-    if(vodDestacado.thumbnailUrl){
 
-        bg.style.backgroundImage =
-            `url("${vodDestacado.thumbnailUrl}")`;
+    const torneos =
+        valoresUnicos(
+            jugadores.map(v => v.tournament)
+        );
 
-    }else if(vodDestacado.youtubeId){
 
-        bg.style.backgroundImage =
-            `url("https://img.youtube.com/vi/${encodeURIComponent(vodDestacado.youtubeId)}/maxresdefault.jpg")`;
+    const resumen =
+        calcularResumen(
+            jugadores
+        );
+
+
+    const agentes =
+        agruparPorCampo(
+            jugadores,
+            "agent"
+        );
+
+
+    const mapas =
+        agruparPorCampo(
+            jugadores,
+            "map"
+        );
+
+
+    const iniciales =
+        obtenerIniciales(
+            nombreMostrar
+        );
+
+
+    document
+        .getElementById("profileContent")
+        .innerHTML = `
+
+            <div class="profile-header">
+
+                <div class="back-row">
+
+                    <button
+                        class="btn btn-small"
+                        onclick="mostrarVods()">
+                        ← Volver a VODs
+                    </button>
+
+                </div>
+
+
+                <div class="profile-main">
+
+                    <div class="avatar">
+                        ${escapeHtml(iniciales)}
+                    </div>
+
+
+                    <div>
+
+                        <h2 class="profile-name">
+                            ${escapeHtml(nombreMostrar)}
+                        </h2>
+
+                        <div class="profile-meta">
+
+                            ${escapeHtml(equipo || "Equipo no especificado")}
+
+                            ${
+                                region
+                                ? ` · ${escapeHtml(region)}`
+                                : ""
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="profile-counters">
+
+                        <div class="profile-counter">
+                            <strong>${total}</strong>
+                            <span>VODs</span>
+                        </div>
+
+                        <div class="profile-counter">
+                            <strong>${torneos.length}</strong>
+                            <span>Torneos</span>
+                        </div>
+
+                        <div class="profile-counter">
+                            <strong>${agentes.length}</strong>
+                            <span>Agentes</span>
+                        </div>
+
+                        <div class="profile-counter">
+                            <strong>${mapas.length}</strong>
+                            <span>Mapas</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-stats">
+
+                <div class="profile-stat">
+
+                    <div class="profile-stat-label">
+                        K / D / A
+                    </div>
+
+                    <div class="profile-stat-value">
+                        ${resumen.kills}
+                        /
+                        ${resumen.deaths}
+                        /
+                        ${resumen.assists}
+                    </div>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <div class="profile-stat-label">
+                        ACS promedio
+                    </div>
+
+                    <div class="profile-stat-value">
+                        ${mostrarNumero(resumen.acs)}
+                    </div>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <div class="profile-stat-label">
+                        Rating promedio
+                    </div>
+
+                    <div class="profile-stat-value">
+                        ${mostrarNumero(resumen.rating)}
+                    </div>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <div class="profile-stat-label">
+                        KAST promedio
+                    </div>
+
+                    <div class="profile-stat-value">
+                        ${mostrarKast(resumen.kast)}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-section">
+
+                <div class="section-title">
+
+                    <h3>
+                        Agentes utilizados
+                    </h3>
+
+                    <span>
+                        Estadísticas por agente
+                    </span>
+
+                </div>
+
+
+                <div class="table-wrap">
+
+                    ${crearTablaAgrupacion(agentes,"Agente")}
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-section">
+
+                <div class="section-title">
+
+                    <h3>
+                        Mapas jugados
+                    </h3>
+
+                    <span>
+                        Estadísticas por mapa
+                    </span>
+
+                </div>
+
+
+                <div class="table-wrap">
+
+                    ${crearTablaAgrupacion(mapas,"Mapa")}
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-section">
+
+                <div class="section-title">
+
+                    <h3>
+                        Torneos
+                    </h3>
+
+                    <span>
+                        Eventos representados en los VODs
+                    </span>
+
+                </div>
+
+
+                <div class="tournament-list">
+
+                    ${
+                        torneos.length
+                        ? torneos
+                            .map(
+                                t =>
+                                `<span class="tournament-chip">
+                                    ${escapeHtml(t)}
+                                </span>`
+                            )
+                            .join("")
+                        : `
+                            <span class="tournament-chip">
+                                Sin torneo registrado
+                            </span>
+                        `
+                    }
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-section">
+
+                <div class="section-title">
+
+                    <h3>
+                        VODs de ${escapeHtml(nombreMostrar)}
+                    </h3>
+
+                    <span>
+                        ${total} registrados
+                    </span>
+
+                </div>
+
+
+                <div class="profile-vods">
+
+                    ${
+                        jugadores
+                            .slice()
+                            .sort(
+                                (a,b) =>
+                                    new Date(
+                                        b.createdAt ||
+                                        b.date ||
+                                        0
+                                    ) -
+                                    new Date(
+                                        a.createdAt ||
+                                        a.date ||
+                                        0
+                                    )
+                            )
+                            .map(crearPerfilVod)
+                            .join("")
+                    }
+
+                </div>
+
+            </div>
+
+        `;
+
+}
+
+
+function crearTablaAgrupacion(grupos,nombreCampo){
+
+    if(!grupos.length){
+
+        return `
+            <div class="empty">
+                No hay datos registrados.
+            </div>
+        `;
+
+    }
+
+
+    return `
+
+        <table class="data-table">
+
+            <thead>
+
+                <tr>
+                    <th>${escapeHtml(nombreCampo)}</th>
+                    <th>VODs</th>
+                    <th>K / D / A</th>
+                    <th>ACS</th>
+                    <th>Rating</th>
+                    <th>KAST</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                ${
+
+                    grupos
+                        .map(g => `
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        ${escapeHtml(g.nombre)}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    ${g.vods.length}
+                                </td>
+
+                                <td>
+                                    ${g.resumen.kills}
+                                    /
+                                    ${g.resumen.deaths}
+                                    /
+                                    ${g.resumen.assists}
+                                </td>
+
+                                <td>
+                                    ${mostrarNumero(g.resumen.acs)}
+                                </td>
+
+                                <td>
+                                    ${mostrarNumero(g.resumen.rating)}
+                                </td>
+
+                                <td>
+                                    ${mostrarKast(g.resumen.kast)}
+                                </td>
+
+                            </tr>
+
+                        `)
+                        .join("")
+
+                }
+
+            </tbody>
+
+        </table>
+
+    `;
+
+}
+
+
+function agruparPorCampo(lista,campo){
+
+    const grupos =
+        new Map();
+
+
+    lista.forEach(v => {
+
+        const nombre =
+            String(v[campo] || "").trim() ||
+            "Sin especificar";
+
+
+        const key =
+            normalizar(nombre);
+
+
+        if(!grupos.has(key)){
+
+            grupos.set(
+                key,
+                {
+                    nombre,
+                    vods:[]
+                }
+            );
+
+        }
+
+
+        grupos
+            .get(key)
+            .vods
+            .push(v);
+
+    });
+
+
+    return Array.from(
+        grupos.values()
+    )
+    .sort(
+        (a,b) =>
+            b.vods.length -
+            a.vods.length
+    )
+    .map(g => {
+
+        g.resumen =
+            calcularResumen(g.vods);
+
+        return g;
+
+    });
+
+}
+
+
+function calcularResumen(lista){
+
+    let kills = 0;
+    let deaths = 0;
+    let assists = 0;
+
+    let acsTotal = 0;
+    let acsCount = 0;
+
+    let ratingTotal = 0;
+    let ratingCount = 0;
+
+    let kastTotal = 0;
+    let kastCount = 0;
+
+
+    lista.forEach(v => {
+
+        if(v.kills !== null)
+            kills += v.kills;
+
+        if(v.deaths !== null)
+            deaths += v.deaths;
+
+        if(v.assists !== null)
+            assists += v.assists;
+
+
+        if(v.acs !== null){
+
+            acsTotal += v.acs;
+            acsCount++;
+
+        }
+
+
+        if(v.rating !== null){
+
+            ratingTotal += v.rating;
+            ratingCount++;
+
+        }
+
+
+        if(v.kast !== null){
+
+            kastTotal += v.kast;
+            kastCount++;
+
+        }
+
+    });
+
+
+    return {
+
+        kills,
+
+        deaths,
+
+        assists,
+
+        acs:
+            acsCount
+                ? acsTotal / acsCount
+                : null,
+
+        rating:
+            ratingCount
+                ? ratingTotal / ratingCount
+                : null,
+
+        kast:
+            kastCount
+                ? kastTotal / kastCount
+                : null
+
+    };
+
+}
+
+
+function crearPerfilVod(v){
+
+    const thumb =
+        v.thumbnailUrl ||
+        (
+            v.youtubeId
+            ? `https://img.youtube.com/vi/${encodeURIComponent(v.youtubeId)}/mqdefault.jpg`
+            : ""
+        );
+
+
+    return `
+
+        <div
+            class="profile-vod"
+            onclick="abrirVod('${escapeJs(v.id)}')">
+
+            ${
+                thumb
+                ? `
+                    <img
+                        class="profile-vod-img"
+                        src="${escapeHtml(thumb)}"
+                        alt=""
+                        loading="lazy">
+                `
+                : `
+                    <div
+                        class="profile-vod-img"
+                        style="display:flex;align-items:center;justify-content:center;color:#657184">
+                        VOD
+                    </div>
+                `
+            }
+
+
+            <div class="profile-vod-body">
+
+                <div class="profile-vod-title">
+
+                    VS
+                    ${escapeHtml(v.opponent || "Rival")}
+
+                </div>
+
+
+                <div class="profile-vod-meta">
+
+                    ${escapeHtml(v.map || "Mapa")}
+
+                    ·
+
+                    ${escapeHtml(v.agent || "Agente")}
+
+                    ${
+                        v.tournament
+                        ? ` · ${escapeHtml(v.tournament)}`
+                        : ""
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   VISTA JUGADORES
+========================================================= */
+
+function mostrarJugadores(){
+
+    vistaActual =
+        "jugadores";
+
+
+    document
+        .getElementById("vodView")
+        .classList.add("hidden");
+
+    document
+        .getElementById("profileView")
+        .classList.add("hidden");
+
+    document
+        .getElementById("playersView")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("navVods")
+        .classList.remove("active");
+
+    document
+        .getElementById("navPlayers")
+        .classList.add("active");
+
+
+    renderJugadores();
+
+}
+
+
+function renderJugadores(){
+
+    const grupos =
+        new Map();
+
+
+    vods.forEach(v => {
+
+        const nombre =
+            String(v.player || "").trim();
+
+        if(!nombre)
+            return;
+
+
+        const key =
+            normalizar(nombre);
+
+
+        if(!grupos.has(key)){
+
+            grupos.set(
+                key,
+                {
+                    nombre,
+                    vods:[]
+                }
+            );
+
+        }
+
+
+        grupos
+            .get(key)
+            .vods
+            .push(v);
+
+    });
+
+
+    const jugadores =
+        Array.from(
+            grupos.values()
+        )
+        .sort(
+            (a,b) =>
+                a.nombre.localeCompare(
+                    b.nombre,
+                    "es",
+                    {sensitivity:"base"}
+                )
+        );
+
+
+    document
+        .getElementById("playersCountText")
+        .textContent =
+            `${jugadores.length} jugadores`;
+
+
+    document
+        .getElementById("playersTable")
+        .innerHTML = `
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Jugador</th>
+                        <th>Equipo</th>
+                        <th>Región</th>
+                        <th>VODs</th>
+                        <th>ACS</th>
+                        <th>Rating</th>
+                        <th></th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${
+                        jugadores
+                            .map(j => {
+
+                                const resumen =
+                                    calcularResumen(j.vods);
+
+                                const equipo =
+                                    obtenerValorMasComun(
+                                        j.vods.map(
+                                            v => v.team
+                                        )
+                                    );
+
+                                const region =
+                                    obtenerValorMasComun(
+                                        j.vods.map(
+                                            v => v.region
+                                        )
+                                    );
+
+
+                                return `
+
+                                    <tr>
+
+                                        <td>
+                                            <span
+                                                class="player-link"
+                                                onclick="abrirPerfilJugador('${escapeJs(j.nombre)}')">
+                                                <strong>
+                                                    ${escapeHtml(j.nombre)}
+                                                </strong>
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            ${escapeHtml(equipo || "-")}
+                                        </td>
+
+                                        <td>
+                                            ${escapeHtml(region || "-")}
+                                        </td>
+
+                                        <td>
+                                            ${j.vods.length}
+                                        </td>
+
+                                        <td>
+                                            ${mostrarNumero(resumen.acs)}
+                                        </td>
+
+                                        <td>
+                                            ${mostrarNumero(resumen.rating)}
+                                        </td>
+
+                                        <td>
+                                            <button
+                                                class="btn btn-small"
+                                                onclick="abrirPerfilJugador('${escapeJs(j.nombre)}')">
+                                                Ver perfil
+                                            </button>
+                                        </td>
+
+                                    </tr>
+
+                                `;
+
+                            })
+                            .join("")
+
+                    }
+
+                </tbody>
+
+            </table>
+
+        `;
+
+}
+
+
+function mostrarVods(){
+
+    vistaActual =
+        "vods";
+
+
+    jugadorPerfilActual =
+        null;
+
+
+    document
+        .getElementById("vodView")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("playersView")
+        .classList.add("hidden");
+
+    document
+        .getElementById("profileView")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("navVods")
+        .classList.add("active");
+
+    document
+        .getElementById("navPlayers")
+        .classList.remove("active");
+
+
+    render();
+
+}
+
+
+/* =========================================================
+   VOD PLAYER
+========================================================= */
+
+function abrirVod(id){
+
+    const vod =
+        vods.find(
+            v =>
+                String(v.id) ===
+                String(id)
+        );
+
+
+    if(!vod)
+        return;
+
+
+    if(!vod.youtubeId){
+
+        alert(
+            "No se pudo identificar el video de YouTube."
+        );
+
+        return;
+
+    }
+
+
+    const origin =
+        window.location.origin;
+
+
+    const segundos =
+        Math.max(
+            0,
+            Number(vod.startSeconds) || 0
+        );
+
+
+    const src =
+        "https://www.youtube.com/embed/" +
+        encodeURIComponent(vod.youtubeId) +
+        "?autoplay=1" +
+        "&rel=0" +
+        "&start=" +
+        segundos +
+        "&enablejsapi=1" +
+        "&origin=" +
+        encodeURIComponent(origin);
+
+
+    document
+        .getElementById("vodModalTitle")
+        .textContent =
+            `${vod.player || "Jugador"} VS ${vod.opponent || "Rival"}`;
+
+
+    document
+        .getElementById("vodFrame")
+        .src =
+            src;
+
+
+    document
+        .getElementById("vodDetails")
+        .innerHTML = `
+
+            <div class="vod-detail">
+                <label>Jugador</label>
+                <strong>${escapeHtml(vod.player || "-")}</strong>
+            </div>
+
+            <div class="vod-detail">
+                <label>Equipo</label>
+                <strong>${escapeHtml(vod.team || "-")}</strong>
+            </div>
+
+            <div class="vod-detail">
+                <label>Rival</label>
+                <strong>${escapeHtml(vod.opponent || "-")}</strong>
+            </div>
+
+            <div class="vod-detail">
+                <label>Región</label>
+                <strong>${escapeHtml(vod.region || "-")}</strong>
+            </div>
+
+            <div class="vod-detail">
+                <label>Agente</label>
+                <strong>${escapeHtml(vod.agent || "-")}</strong>
+            </div>
+
+            <div class="vod-detail">
+                <label>Mapa</label>
+                <strong>${escapeHtml(vod.map || "-")}</strong>
+            </div>
+
+            <div class="vod-detail">
+                <label>Torneo</label>
+                <strong>${escapeHtml(vod.tournament || "-")}</strong>
+            </div>
+
+            <div class="vod-detail">
+                <label>Inicio</label>
+                <strong>${escapeHtml(segundosATiempo(segundos))}</strong>
+            </div>
+
+        `;
+
+
+    document
+        .getElementById("vodModal")
+        .classList.remove("hidden");
+
+}
+
+
+function cerrarVod(){
+
+    document
+        .getElementById("vodFrame")
+        .src = "";
+
+}
+
+
+function cerrarModal(id){
+
+    if(id === "vodModal"){
+
+        cerrarVod();
+
+    }
+
+
+    document
+        .getElementById(id)
+        .classList.add("hidden");
+
+}
+
+
+function cerrarModalOverlay(event,id){
+
+    if(event.target === event.currentTarget){
+
+        cerrarModal(id);
 
     }
 
 }
 
 
-function abrirVodDestacado(){
+document.addEventListener(
+    "keydown",
+    function(event){
 
-    if(vodDestacado){
+        if(event.key === "Escape"){
 
-        reproducirVod(
-            vodDestacado.id
+            [
+                "vodModal",
+                "loginModal",
+                "formModal"
+            ]
+            .forEach(id => {
+
+                if(
+                    !document
+                        .getElementById(id)
+                        .classList
+                        .contains("hidden")
+                ){
+
+                    cerrarModal(id);
+
+                }
+
+            });
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   FORMULARIO
+========================================================= */
+
+function llenarSelectsFormulario(){
+
+    const agent =
+        document.getElementById("vodAgent");
+
+    const map =
+        document.getElementById("vodMap");
+
+
+    agent.innerHTML =
+        `<option value="">Seleccionar agente</option>` +
+        AGENTS
+            .map(
+                a =>
+                    `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`
+            )
+            .join("");
+
+
+    map.innerHTML =
+        `<option value="">Seleccionar mapa</option>` +
+        MAPS
+            .map(
+                m =>
+                    `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`
+            )
+            .join("");
+
+}
+
+
+function abrirFormulario(){
+
+    if(!esAdministrador()){
+
+        abrirLogin();
+
+        return;
+
+    }
+
+
+    limpiarFormulario();
+
+
+    document
+        .getElementById("formTitle")
+        .textContent =
+            "Agregar VOD";
+
+
+    document
+        .getElementById("formModal")
+        .classList
+        .remove("hidden");
+
+}
+
+
+function limpiarFormulario(){
+
+    document
+        .getElementById("editId")
+        .value = "";
+
+    document
+        .getElementById("vodUrl")
+        .value = "";
+
+    document
+        .getElementById("vodPlayer")
+        .value = "";
+
+    document
+        .getElementById("vodTeam")
+        .value = "";
+
+    document
+        .getElementById("vodOpponent")
+        .value = "";
+
+    document
+        .getElementById("vodRegion")
+        .value = "";
+
+    document
+        .getElementById("vodAgent")
+        .value = "";
+
+    document
+        .getElementById("vodMap")
+        .value = "";
+
+    document
+        .getElementById("vodTournament")
+        .value = "";
+
+    document
+        .getElementById("vodDate")
+        .value = "";
+
+    document
+        .getElementById("vodStartTime")
+        .value = "";
+
+    document
+        .getElementById("vodStartSeconds")
+        .value = 0;
+
+    document
+        .getElementById("vodKills")
+        .value = "";
+
+    document
+        .getElementById("vodDeaths")
+        .value = "";
+
+    document
+        .getElementById("vodAssists")
+        .value = "";
+
+    document
+        .getElementById("vodAcs")
+        .value = "";
+
+    document
+        .getElementById("vodRating")
+        .value = "";
+
+    document
+        .getElementById("vodKast")
+        .value = "";
+
+    document
+        .getElementById("thumbnailFile")
+        .value = "";
+
+    document
+        .getElementById("detectedTime")
+        .textContent = "";
+
+    miniaturaActual =
+        "";
+
+    miniaturaArchivo =
+        null;
+
+
+    const preview =
+        document.getElementById(
+            "thumbnailPreview"
+        );
+
+    preview.src = "";
+
+    preview.classList.add(
+        "hidden"
+    );
+
+}
+
+
+function editarVod(id){
+
+    if(!esAdministrador()){
+
+        alert(
+            "Debes iniciar sesión como administrador."
+        );
+
+        return;
+
+    }
+
+
+    const vod =
+        vods.find(
+            v =>
+                String(v.id) ===
+                String(id)
+        );
+
+
+    if(!vod)
+        return;
+
+
+    document
+        .getElementById("editId")
+        .value =
+            vod.id;
+
+    document
+        .getElementById("vodUrl")
+        .value =
+            vod.url;
+
+    document
+        .getElementById("vodPlayer")
+        .value =
+            vod.player;
+
+    document
+        .getElementById("vodTeam")
+        .value =
+            vod.team;
+
+    document
+        .getElementById("vodOpponent")
+        .value =
+            vod.opponent;
+
+    document
+        .getElementById("vodRegion")
+        .value =
+            vod.region;
+
+    document
+        .getElementById("vodAgent")
+        .value =
+            vod.agent;
+
+    document
+        .getElementById("vodMap")
+        .value =
+            vod.map;
+
+    document
+        .getElementById("vodTournament")
+        .value =
+            vod.tournament;
+
+    document
+        .getElementById("vodDate")
+        .value =
+            vod.date;
+
+    document
+        .getElementById("vodStartTime")
+        .value =
+            vod.startTime;
+
+    document
+        .getElementById("vodStartSeconds")
+        .value =
+            vod.startSeconds;
+
+    document
+        .getElementById("vodKills")
+        .value =
+            valorFormulario(vod.kills);
+
+    document
+        .getElementById("vodDeaths")
+        .value =
+            valorFormulario(vod.deaths);
+
+    document
+        .getElementById("vodAssists")
+        .value =
+            valorFormulario(vod.assists);
+
+    document
+        .getElementById("vodAcs")
+        .value =
+            valorFormulario(vod.acs);
+
+    document
+        .getElementById("vodRating")
+        .value =
+            valorFormulario(vod.rating);
+
+    document
+        .getElementById("vodKast")
+        .value =
+            valorFormulario(vod.kast);
+
+
+    miniaturaActual =
+        vod.thumbnailUrl || "";
+
+    miniaturaArchivo =
+        null;
+
+
+    const preview =
+        document.getElementById(
+            "thumbnailPreview"
+        );
+
+
+    if(miniaturaActual){
+
+        preview.src =
+            miniaturaActual;
+
+        preview.classList.remove(
+            "hidden"
+        );
+
+    }else{
+
+        preview.src = "";
+
+        preview.classList.add(
+            "hidden"
         );
 
     }
+
+
+    detectarTiempo();
+
+
+    document
+        .getElementById("formTitle")
+        .textContent =
+            "Editar VOD";
+
+
+    document
+        .getElementById("formModal")
+        .classList
+        .remove("hidden");
+
+}
+
+
+function valorFormulario(v){
+
+    return v === null ||
+           v === undefined
+        ? ""
+        : v;
+
+}
+
+
+async function guardarFormulario(event){
+
+    event.preventDefault();
+
+
+    if(!esAdministrador()){
+
+        alert(
+            "No tienes permisos de administrador."
+        );
+
+        return;
+
+    }
+
+
+    const boton =
+        document.getElementById(
+            "saveVodBtn"
+        );
+
+
+    boton.disabled = true;
+
+    boton.textContent =
+        "Guardando...";
+
+
+    try{
+
+        const url =
+            document
+                .getElementById("vodUrl")
+                .value
+                .trim();
+
+
+        const youtubeId =
+            extraerYoutubeId(url);
+
+
+        if(!youtubeId){
+
+            alert(
+                "La URL de YouTube no es válida."
+            );
+
+            return;
+
+        }
+
+
+        const startSeconds =
+            Number(
+                document
+                    .getElementById(
+                        "vodStartSeconds"
+                    )
+                    .value
+            ) || 0;
+
+
+        let thumbnailUrl =
+            miniaturaActual;
+
+
+        if(miniaturaArchivo){
+
+            thumbnailUrl =
+                await subirMiniatura(
+                    miniaturaArchivo,
+                    youtubeId
+                );
+
+        }
+
+
+        if(
+            !thumbnailUrl
+        ){
+
+            thumbnailUrl =
+                `https://img.youtube.com/vi/${encodeURIComponent(youtubeId)}/hqdefault.jpg`;
+
+        }
+
+
+        const registro = {
+
+            url,
+
+            youtube_id:
+                youtubeId,
+
+            start_seconds:
+                startSeconds,
+
+            start_time:
+                document
+                    .getElementById(
+                        "vodStartTime"
+                    )
+                    .value
+                    .trim(),
+
+            player:
+                document
+                    .getElementById(
+                        "vodPlayer"
+                    )
+                    .value
+                    .trim(),
+
+            team:
+                document
+                    .getElementById(
+                        "vodTeam"
+                    )
+                    .value
+                    .trim(),
+
+            opponent:
+                document
+                    .getElementById(
+                        "vodOpponent"
+                    )
+                    .value
+                    .trim(),
+
+            region:
+                document
+                    .getElementById(
+                        "vodRegion"
+                    )
+                    .value
+                    .trim(),
+
+            agent:
+                document
+                    .getElementById(
+                        "vodAgent"
+                    )
+                    .value,
+
+            map:
+                document
+                    .getElementById(
+                        "vodMap"
+                    )
+                    .value,
+
+            tournament:
+                document
+                    .getElementById(
+                        "vodTournament"
+                    )
+                    .value
+                    .trim(),
+
+            date:
+                document
+                    .getElementById(
+                        "vodDate"
+                    )
+                    .value || null,
+
+            kills:
+                numeroCampo("vodKills"),
+
+            deaths:
+                numeroCampo("vodDeaths"),
+
+            assists:
+                numeroCampo("vodAssists"),
+
+            acs:
+                numeroCampo("vodAcs"),
+
+            rating:
+                numeroCampo("vodRating"),
+
+            kast:
+                numeroCampo("vodKast"),
+
+            thumbnail_url:
+                thumbnailUrl
+
+        };
+
+
+        const editId =
+            document
+                .getElementById("editId")
+                .value;
+
+
+        let resultado;
+
+
+        if(editId){
+
+            resultado =
+                await supabaseClient
+                    .from("vods")
+                    .update(registro)
+                    .eq("id",editId);
+
+        }else{
+
+            resultado =
+                await supabaseClient
+                    .from("vods")
+                    .insert([registro]);
+
+        }
+
+
+        if(resultado.error){
+
+            console.error(
+                resultado.error
+            );
+
+            if(
+                resultado.error.code ===
+                "42501"
+            ){
+
+                alert(
+                    "Supabase rechazó la operación por permisos RLS."
+                );
+
+            }else{
+
+                alert(
+                    "Error guardando el VOD:\n" +
+                    resultado.error.message
+                );
+
+            }
+
+            return;
+
+        }
+
+
+        cerrarModal("formModal");
+
+        await cargarVods();
+
+
+    }finally{
+
+        boton.disabled = false;
+
+        boton.textContent =
+            "Guardar VOD";
+
+    }
+
+}
+
+
+function numeroCampo(id){
+
+    const valor =
+        document
+            .getElementById(id)
+            .value
+            .trim();
+
+
+    if(valor === "")
+        return null;
+
+
+    const n =
+        Number(valor);
+
+
+    return Number.isFinite(n)
+        ? n
+        : null;
 
 }
 
@@ -2990,27 +4234,32 @@ function abrirVodDestacado(){
    YOUTUBE
 ========================================================= */
 
-function obtenerYoutubeId(url){
+function extraerYoutubeId(url){
 
-    if(!url) return "";
+    if(!url)
+        return "";
+
 
     try{
 
         const u =
             new URL(url);
 
+
         const host =
             u.hostname
-            .toLowerCase()
-            .replace("www.","");
+                .replace("www.","")
+                .toLowerCase();
+
 
         if(host === "youtu.be"){
 
             return u.pathname
-                .replace("/","")
-                .split("/")[0];
+                .split("/")
+                .filter(Boolean)[0] || "";
 
         }
+
 
         if(
             host === "youtube.com" ||
@@ -3018,27 +4267,40 @@ function obtenerYoutubeId(url){
         ){
 
             if(
-                u.pathname ===
-                "/watch"
+                u.pathname === "/watch"
             ){
 
-                return u.searchParams
-                    .get("v") || "";
+                return u.searchParams.get("v") || "";
 
             }
 
-            const partes =
-                u.pathname
-                .split("/")
-                .filter(Boolean);
 
             if(
-                partes[0] === "shorts" ||
-                partes[0] === "embed" ||
-                partes[0] === "live"
+                u.pathname.startsWith("/shorts/")
             ){
 
-                return partes[1] || "";
+                return u.pathname
+                    .split("/")[2] || "";
+
+            }
+
+
+            if(
+                u.pathname.startsWith("/embed/")
+            ){
+
+                return u.pathname
+                    .split("/")[2] || "";
+
+            }
+
+
+            if(
+                u.pathname.startsWith("/live/")
+            ){
+
+                return u.pathname
+                    .split("/")[2] || "";
 
             }
 
@@ -3046,19 +4308,77 @@ function obtenerYoutubeId(url){
 
     }catch(e){
 
-        const match =
-            String(url)
-            .match(
-                /(?:v=|youtu\.be\/|shorts\/|embed\/|live\/)([A-Za-z0-9_-]{6,})/
-            );
-
-        return match
-            ? match[1]
-            : "";
+        return "";
 
     }
 
+
     return "";
+
+}
+
+
+function detectarTiempo(){
+
+    const url =
+        document
+            .getElementById("vodUrl")
+            .value
+            .trim();
+
+
+    const detectado =
+        extraerTiempoUrl(url);
+
+
+    document
+        .getElementById(
+            "vodStartSeconds"
+        )
+        .value =
+            detectado;
+
+
+    document
+        .getElementById(
+            "detectedTime"
+        )
+        .textContent =
+            detectado > 0
+                ? `Tiempo detectado: ${segundosATiempo(detectado)}`
+                : "No se detectó un tiempo de inicio. Se utilizará 0 segundos.";
+
+
+}
+
+
+function extraerTiempoUrl(url){
+
+    if(!url)
+        return 0;
+
+
+    try{
+
+        const u =
+            new URL(url);
+
+
+        const t =
+            u.searchParams.get("t");
+
+
+        if(!t)
+            return 0;
+
+
+        return tiempoASegundos(t);
+
+    }catch(e){
+
+        return 0;
+
+    }
 
 }
 
@@ -3067,18 +4387,16 @@ function tiempoASegundos(valor){
 
     if(
         valor === null ||
-        valor === undefined ||
-        valor === ""
-    ){
-
+        valor === undefined
+    )
         return 0;
 
-    }
 
     const texto =
         String(valor)
-        .trim()
-        .toLowerCase();
+            .trim()
+            .toLowerCase();
+
 
     if(/^\d+$/.test(texto)){
 
@@ -3086,66 +4404,62 @@ function tiempoASegundos(valor){
 
     }
 
-    if(
-        /^\d+h\d+m\d+s$/.test(texto) ||
-        /^\d+h\d+m$/.test(texto) ||
-        /^\d+h\d+s$/.test(texto)
-    ){
 
-        let total = 0;
+    const match =
+        texto.match(
+            /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/
+        );
 
-        const h =
-            texto.match(/(\d+)h/);
 
-        const m =
-            texto.match(/(\d+)m/);
-
-        const s =
-            texto.match(/(\d+)s/);
-
-        if(h) total += Number(h[1])*3600;
-
-        if(m) total += Number(m[1])*60;
-
-        if(s) total += Number(s[1]);
-
-        return total;
-
-    }
-
-    const partes =
-        texto
-        .split(":")
-        .map(Number);
-
-    if(
-        partes.length === 3 &&
-        partes.every(
-            Number.isFinite
-        )
-    ){
+    if(match){
 
         return (
-            partes[0]*3600 +
-            partes[1]*60 +
-            partes[2]
+            Number(match[1] || 0) * 3600 +
+            Number(match[2] || 0) * 60 +
+            Number(match[3] || 0)
         );
 
     }
 
-    if(
-        partes.length === 2 &&
-        partes.every(
-            Number.isFinite
-        )
-    ){
 
-        return (
-            partes[0]*60 +
-            partes[1]
-        );
+    if(texto.includes(":")){
+
+        const partes =
+            texto
+                .split(":")
+                .map(Number);
+
+
+        if(
+            partes.every(
+                Number.isFinite
+            )
+        ){
+
+            if(partes.length === 3){
+
+                return (
+                    partes[0] * 3600 +
+                    partes[1] * 60 +
+                    partes[2]
+                );
+
+            }
+
+
+            if(partes.length === 2){
+
+                return (
+                    partes[0] * 60 +
+                    partes[1]
+                );
+
+            }
+
+        }
 
     }
+
 
     return 0;
 
@@ -3162,810 +4476,39 @@ function segundosATiempo(segundos){
             )
         );
 
+
     const h =
         Math.floor(
-            segundos/3600
+            segundos / 3600
         );
 
     const m =
         Math.floor(
-            (segundos%3600)/60
+            (segundos % 3600) / 60
         );
 
     const s =
-        segundos%60;
+        segundos % 60;
 
-    if(h){
 
-        return [
-            String(h),
-            String(m).padStart(2,"0"),
+    if(h > 0){
+
+        return (
+            String(h).padStart(2,"0") +
+            ":" +
+            String(m).padStart(2,"0") +
+            ":" +
             String(s).padStart(2,"0")
-        ].join(":");
+        );
 
     }
 
-    return [
-        String(m),
+
+    return (
+        String(m).padStart(2,"0") +
+        ":" +
         String(s).padStart(2,"0")
-    ].join(":");
-
-}
-
-
-function detectarTiempo(){
-
-    const url =
-        document
-            .getElementById("vodUrl")
-            .value
-            .trim();
-
-    const campo =
-        document
-            .getElementById("startTime");
-
-    if(!url){
-
-        campo.value = "";
-
-        return;
-
-    }
-
-    let segundos = 0;
-
-    try{
-
-        const u =
-            new URL(url);
-
-        const t =
-            u.searchParams.get("t") ||
-            u.searchParams.get("start");
-
-        if(t){
-
-            segundos =
-                tiempoASegundos(t);
-
-        }
-
-    }catch(e){
-
-        const match =
-            url.match(
-                /[?&](?:t|start)=([^&#]+)/i
-            );
-
-        if(match){
-
-            segundos =
-                tiempoASegundos(
-                    decodeURIComponent(
-                        match[1]
-                    )
-                );
-
-        }
-
-    }
-
-    campo.value =
-        segundos
-        ? segundosATiempo(segundos)
-        : "0:00";
-
-}
-
-
-/* =========================================================
-   REPRODUCTOR
-========================================================= */
-
-function reproducirVod(id){
-
-    const vod =
-        vods.find(
-            v =>
-                String(v.id) ===
-                String(id)
-        );
-
-    if(!vod || !vod.youtubeId){
-
-        mostrarToast(
-            "Este VOD no tiene un video de YouTube válido."
-        );
-
-        return;
-
-    }
-
-    const segundos =
-        Math.max(
-            0,
-            Math.floor(
-                numero(
-                    vod.startSeconds
-                )
-            )
-        );
-
-    const origin =
-        window.location.origin;
-
-    const iframe =
-        document
-            .getElementById("vodIframe");
-
-    iframe.src =
-        "https://www.youtube.com/embed/" +
-        encodeURIComponent(
-            vod.youtubeId
-        ) +
-        "?autoplay=1" +
-        "&rel=0" +
-        "&start=" +
-        segundos +
-        "&enablejsapi=1" +
-        "&origin=" +
-        encodeURIComponent(
-            origin
-        );
-
-    document
-        .getElementById("playerTitle")
-        .textContent =
-        `${vod.player || "Jugador"} · ${vod.team || "-"} VS ${vod.opponent || "-"}`;
-
-    document
-        .getElementById("playerMeta")
-        .textContent =
-        `${vod.region || ""}${vod.region ? " · " : ""}${vod.tournament || "Sin torneo"} · ${vod.map || "-"} · ${vod.agent || "-"}`;
-
-    document
-        .getElementById("vodModal")
-        .classList.add("active");
-
-}
-
-
-/* =========================================================
-   FORMULARIO
-========================================================= */
-
-function llenarSelectsFormulario(){
-
-    const agent =
-        document
-            .getElementById("agent");
-
-    const map =
-        document
-            .getElementById("map");
-
-    AGENTS.forEach(nombre=>{
-
-        const option =
-            document.createElement("option");
-
-        option.value =
-            nombre;
-
-        option.textContent =
-            nombre;
-
-        agent.appendChild(
-            option
-        );
-
-    });
-
-    MAPS.forEach(nombre=>{
-
-        const option =
-            document.createElement("option");
-
-        option.value =
-            nombre;
-
-        option.textContent =
-            nombre;
-
-        map.appendChild(
-            option
-        );
-
-    });
-
-}
-
-
-function limpiarFormulario(){
-
-    document
-        .getElementById("vodForm")
-        .reset();
-
-    document
-        .getElementById("editId")
-        .value = "";
-
-    document
-        .getElementById("startTime")
-        .value = "";
-
-    document
-        .getElementById("thumbnailPreview")
-        .style.display = "none";
-
-    document
-        .getElementById("thumbnailPreview")
-        .removeAttribute("src");
-
-}
-
-
-function abrirFormulario(){
-
-    if(!esAdministrador()){
-
-        abrirLogin();
-
-        return;
-
-    }
-
-    limpiarFormulario();
-
-    document
-        .getElementById("formTitle")
-        .textContent =
-        "Agregar VOD";
-
-    document
-        .getElementById("formModal")
-        .classList.add("active");
-
-}
-
-
-function editarVod(id){
-
-    if(!esAdministrador()) return;
-
-    const vod =
-        vods.find(
-            v =>
-                String(v.id) ===
-                String(id)
-        );
-
-    if(!vod) return;
-
-    document
-        .getElementById("editId")
-        .value =
-        vod.id;
-
-    document
-        .getElementById("vodUrl")
-        .value =
-        vod.url || "";
-
-    document
-        .getElementById("startTime")
-        .value =
-        vod.startTime ||
-        segundosATiempo(
-            vod.startSeconds
-        );
-
-    document
-        .getElementById("player")
-        .value =
-        vod.player || "";
-
-    document
-        .getElementById("team")
-        .value =
-        vod.team || "";
-
-    document
-        .getElementById("opponent")
-        .value =
-        vod.opponent || "";
-
-    document
-        .getElementById("region")
-        .value =
-        vod.region || "";
-
-    document
-        .getElementById("agent")
-        .value =
-        vod.agent || "";
-
-    document
-        .getElementById("map")
-        .value =
-        vod.map || "";
-
-    document
-        .getElementById("tournament")
-        .value =
-        vod.tournament || "";
-
-    document
-        .getElementById("date")
-        .value =
-        vod.date || "";
-
-    document
-        .getElementById("matchStartTime")
-        .value =
-        "";
-
-    document
-        .getElementById("kills")
-        .value =
-        vod.kills || 0;
-
-    document
-        .getElementById("deaths")
-        .value =
-        vod.deaths || 0;
-
-    document
-        .getElementById("assists")
-        .value =
-        vod.assists || 0;
-
-    document
-        .getElementById("acs")
-        .value =
-        vod.acs || 0;
-
-    document
-        .getElementById("rating")
-        .value =
-        vod.rating || 0;
-
-    document
-        .getElementById("kast")
-        .value =
-        vod.kast || 0;
-
-
-    const preview =
-        document
-            .getElementById("thumbnailPreview");
-
-    if(vod.thumbnailUrl){
-
-        preview.src =
-            vod.thumbnailUrl;
-
-        preview.style.display =
-            "block";
-
-    }else{
-
-        preview.style.display =
-            "none";
-
-    }
-
-
-    document
-        .getElementById("formTitle")
-        .textContent =
-        "Editar VOD";
-
-    document
-        .getElementById("formModal")
-        .classList.add("active");
-
-}
-
-
-async function guardarFormulario(event){
-
-    event.preventDefault();
-
-    if(!esAdministrador()){
-
-        mostrarToast(
-            "No tienes permisos de administrador."
-        );
-
-        return;
-
-    }
-
-    const editId =
-        document
-            .getElementById("editId")
-            .value;
-
-    const url =
-        document
-            .getElementById("vodUrl")
-            .value
-            .trim();
-
-    const youtubeId =
-        obtenerYoutubeId(url);
-
-    if(!youtubeId){
-
-        mostrarToast(
-            "La URL de YouTube no es válida."
-        );
-
-        return;
-
-    }
-
-    let startSeconds = 0;
-
-    try{
-
-        const u =
-            new URL(url);
-
-        const t =
-            u.searchParams.get("t") ||
-            u.searchParams.get("start");
-
-        if(t){
-
-            startSeconds =
-                tiempoASegundos(t);
-
-        }
-
-    }catch(e){}
-
-
-    const startTime =
-        startSeconds
-        ? segundosATiempo(
-            startSeconds
-        )
-        : "0:00";
-
-
-    let thumbnailUrl =
-        editId
-        ?
-        (
-            vods.find(
-                v =>
-                    String(v.id) ===
-                    String(editId)
-            )?.thumbnailUrl || ""
-        )
-        :
-        "";
-
-
-    const file =
-        document
-            .getElementById("thumbnailFile")
-            .files[0];
-
-
-    if(file){
-
-        if(file.size > 5 * 1024 * 1024){
-
-            mostrarToast(
-                "La miniatura no puede superar 5 MB."
-            );
-
-            return;
-
-        }
-
-        const extensiones =
-            [
-                "image/jpeg",
-                "image/png",
-                "image/webp",
-                "image/gif"
-            ];
-
-        if(
-            !extensiones.includes(
-                file.type
-            )
-        ){
-
-            mostrarToast(
-                "Formato de imagen no permitido."
-            );
-
-            return;
-
-        }
-
-        const extension =
-            file.name
-            .split(".")
-            .pop()
-            .toLowerCase();
-
-        const nombre =
-            `vods/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
-
-        const {
-            error:
-                uploadError
-        } =
-            await supabaseClient
-                .storage
-                .from(
-                    THUMBNAIL_BUCKET
-                )
-                .upload(
-                    nombre,
-                    file,
-                    {
-                        upsert:false,
-                        contentType:file.type
-                    }
-                );
-
-        if(uploadError){
-
-            console.error(
-                uploadError
-            );
-
-            mostrarToast(
-                "No se pudo subir la miniatura."
-            );
-
-            return;
-
-        }
-
-        const {
-            data:
-                publicData
-        } =
-            supabaseClient
-                .storage
-                .from(
-                    THUMBNAIL_BUCKET
-                )
-                .getPublicUrl(
-                    nombre
-                );
-
-        thumbnailUrl =
-            publicData.publicUrl;
-
-    }
-
-
-    const registro = {
-
-        url:url,
-
-        youtube_id:
-            youtubeId,
-
-        start_seconds:
-            startSeconds,
-
-        start_time:
-            startTime,
-
-        player:
-            document
-                .getElementById("player")
-                .value
-                .trim(),
-
-        team:
-            document
-                .getElementById("team")
-                .value
-                .trim(),
-
-        opponent:
-            document
-                .getElementById("opponent")
-                .value
-                .trim(),
-
-        region:
-            document
-                .getElementById("region")
-                .value
-                .trim(),
-
-        agent:
-            document
-                .getElementById("agent")
-                .value,
-
-        map:
-            document
-                .getElementById("map")
-                .value,
-
-        tournament:
-            document
-                .getElementById("tournament")
-                .value
-                .trim(),
-
-        date:
-            document
-                .getElementById("date")
-                .value || null,
-
-        kills:
-            numero(
-                document
-                    .getElementById("kills")
-                    .value
-            ),
-
-        deaths:
-            numero(
-                document
-                    .getElementById("deaths")
-                    .value
-            ),
-
-        assists:
-            numero(
-                document
-                    .getElementById("assists")
-                    .value
-            ),
-
-        acs:
-            numero(
-                document
-                    .getElementById("acs")
-                    .value
-            ),
-
-        rating:
-            numero(
-                document
-                    .getElementById("rating")
-                    .value
-            ),
-
-        kast:
-            numero(
-                document
-                    .getElementById("kast")
-                    .value
-            ),
-
-        thumbnail_url:
-            thumbnailUrl || null
-
-    };
-
-
-    let resultado;
-
-
-    if(editId){
-
-        resultado =
-            await supabaseClient
-                .from("vods")
-                .update(registro)
-                .eq(
-                    "id",
-                    editId
-                );
-
-    }else{
-
-        resultado =
-            await supabaseClient
-                .from("vods")
-                .insert(
-                    registro
-                );
-
-    }
-
-
-    if(resultado.error){
-
-        console.error(
-            resultado.error
-        );
-
-        mostrarToast(
-            resultado.error.message ||
-            "No se pudo guardar el VOD."
-        );
-
-        return;
-
-    }
-
-
-    cerrarModal("formModal");
-
-    mostrarToast(
-        editId
-        ? "VOD actualizado."
-        : "VOD agregado."
     );
-
-    await cargarVods();
-
-}
-
-
-async function eliminarVod(id){
-
-    if(!esAdministrador()) return;
-
-    const vod =
-        vods.find(
-            v =>
-                String(v.id) ===
-                String(id)
-        );
-
-    if(!vod) return;
-
-    const confirmar =
-        confirm(
-            `¿Eliminar el VOD de ${vod.player || "este jugador"}?`
-        );
-
-    if(!confirmar) return;
-
-
-    const {
-        error
-    } =
-        await supabaseClient
-            .from("vods")
-            .delete()
-            .eq(
-                "id",
-                id
-            );
-
-
-    if(error){
-
-        console.error(
-            error
-        );
-
-        mostrarToast(
-            error.message ||
-            "No se pudo eliminar."
-        );
-
-        return;
-
-    }
-
-
-    mostrarToast(
-        "VOD eliminado."
-    );
-
-    await cargarVods();
 
 }
 
@@ -3974,41 +4517,83 @@ async function eliminarVod(id){
    MINIATURAS
 ========================================================= */
 
-function previsualizarMiniatura(){
+function previsualizarMiniatura(event){
 
-    const file =
-        document
-            .getElementById("thumbnailFile")
-            .files[0];
+    const archivo =
+        event.target.files[0];
 
-    const preview =
-        document
-            .getElementById("thumbnailPreview");
 
-    if(!file){
+    if(!archivo)
+        return;
 
-        preview.style.display =
-            "none";
+
+    if(
+        ![
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/gif"
+        ].includes(
+            archivo.type
+        )
+    ){
+
+        alert(
+            "Formato no permitido. Usa JPG, PNG, WEBP o GIF."
+        );
+
+        event.target.value = "";
 
         return;
 
     }
 
+
+    if(
+        archivo.size >
+        5 * 1024 * 1024
+    ){
+
+        alert(
+            "La miniatura no puede superar 5 MB."
+        );
+
+        event.target.value = "";
+
+        return;
+
+    }
+
+
+    miniaturaArchivo =
+        archivo;
+
+
     const reader =
         new FileReader();
+
 
     reader.onload =
         function(e){
 
+            const preview =
+                document.getElementById(
+                    "thumbnailPreview"
+                );
+
             preview.src =
                 e.target.result;
 
-            preview.style.display =
-                "block";
+            preview.classList.remove(
+                "hidden"
+            );
 
         };
 
-    reader.readAsDataURL(file);
+
+    reader.readAsDataURL(
+        archivo
+    );
 
 }
 
@@ -4021,113 +4606,553 @@ function usarMiniaturaYoutube(){
             .value
             .trim();
 
+
     const id =
-        obtenerYoutubeId(url);
+        extraerYoutubeId(url);
+
 
     if(!id){
 
-        mostrarToast(
-            "Primero ingresa una URL válida de YouTube."
+        alert(
+            "Primero introduce una URL válida de YouTube."
         );
 
         return;
 
     }
 
-    const preview =
-        document
-            .getElementById("thumbnailPreview");
 
-    preview.src =
+    miniaturaArchivo =
+        null;
+
+
+    miniaturaActual =
         `https://img.youtube.com/vi/${encodeURIComponent(id)}/hqdefault.jpg`;
 
-    preview.style.display =
-        "block";
+
+    const preview =
+        document.getElementById(
+            "thumbnailPreview"
+        );
+
+
+    preview.src =
+        miniaturaActual;
+
+    preview.classList.remove(
+        "hidden"
+    );
 
 }
 
 
-function eliminarMiniatura(){
+function quitarMiniatura(){
+
+    miniaturaActual =
+        "";
+
+    miniaturaArchivo =
+        null;
+
 
     document
-        .getElementById("thumbnailFile")
+        .getElementById(
+            "thumbnailFile"
+        )
         .value = "";
 
-    const preview =
-        document
-            .getElementById("thumbnailPreview");
 
-    preview.removeAttribute(
-        "src"
+    const preview =
+        document.getElementById(
+            "thumbnailPreview"
+        );
+
+
+    preview.src = "";
+
+    preview.classList.add(
+        "hidden"
     );
 
-    preview.style.display =
-        "none";
+}
+
+
+async function subirMiniatura(
+    archivo,
+    youtubeId
+){
+
+    const extension =
+        archivo.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+    const nombre =
+        "vod-" +
+        Date.now() +
+        "-" +
+        Math.random()
+            .toString(36)
+            .substring(2) +
+        "." +
+        extension;
+
+
+    const path =
+        "vods/" +
+        nombre;
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .storage
+            .from(THUMBNAIL_BUCKET)
+            .upload(
+                path,
+                archivo,
+                {
+                    upsert:false,
+                    contentType:
+                        archivo.type
+                }
+            );
+
+
+    if(error){
+
+        throw new Error(
+            "Error subiendo miniatura: " +
+            error.message
+        );
+
+    }
+
+
+    const {
+        data
+    } =
+        supabaseClient
+            .storage
+            .from(THUMBNAIL_BUCKET)
+            .getPublicUrl(path);
+
+
+    return data.publicUrl;
 
 }
 
 
 /* =========================================================
-   MODALES
+   ELIMINAR
 ========================================================= */
 
-function cerrarModal(id){
+async function eliminarVod(id){
 
-    const modal =
-        document.getElementById(id);
+    if(!esAdministrador()){
 
-    if(!modal) return;
+        alert(
+            "Debes iniciar sesión como administrador."
+        );
 
-    modal.classList.remove(
-        "active"
-    );
-
-    if(id === "vodModal"){
-
-        document
-            .getElementById("vodIframe")
-            .src = "";
+        return;
 
     }
 
-}
+
+    const vod =
+        vods.find(
+            v =>
+                String(v.id) ===
+                String(id)
+        );
 
 
-function cerrarModalFondo(
-    event,
-    id
-){
+    if(!vod)
+        return;
+
+
+    const confirmar =
+        confirm(
+            `¿Eliminar el VOD de ${vod.player || "este jugador"}?\n\nEsta acción no se puede deshacer.`
+        );
+
+
+    if(!confirmar)
+        return;
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("vods")
+            .delete()
+            .eq("id",id);
+
+
+    if(error){
+
+        console.error(error);
+
+        alert(
+            "Error eliminando el VOD:\n" +
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    await cargarVods();
+
 
     if(
-        event.target.id === id
+        vistaActual === "perfil" &&
+        jugadorPerfilActual
     ){
 
-        cerrarModal(id);
+        renderPerfilJugador(
+            jugadorPerfilActual
+        );
 
     }
 
 }
 
 
-document.addEventListener(
-    "keydown",
-    function(event){
+/* =========================================================
+   HELPERS PERFIL
+========================================================= */
 
-        if(event.key !== "Escape")
+function obtenerNombreCanonico(
+    lista,
+    nombre
+){
+
+    const encontrado =
+        lista.find(
+            v =>
+                normalizar(v.player) ===
+                normalizar(nombre)
+        );
+
+
+    return encontrado
+        ? encontrado.player
+        : nombre;
+
+}
+
+
+function obtenerValorMasComun(
+    valores
+){
+
+    const mapa =
+        new Map();
+
+
+    valores.forEach(v => {
+
+        const texto =
+            String(v || "").trim();
+
+
+        if(!texto)
             return;
 
-        document
-            .querySelectorAll(".modal.active")
-            .forEach(modal=>{
 
-                cerrarModal(
-                    modal.id
-                );
+        const key =
+            normalizar(texto);
 
-            });
+
+        if(!mapa.has(key)){
+
+            mapa.set(
+                key,
+                {
+                    valor:texto,
+                    cantidad:0
+                }
+            );
+
+        }
+
+
+        mapa.get(key).cantidad++;
+
+    });
+
+
+    let mejor =
+        null;
+
+
+    mapa.forEach(item => {
+
+        if(
+            !mejor ||
+            item.cantidad >
+            mejor.cantidad
+        ){
+
+            mejor =
+                item;
+
+        }
+
+    });
+
+
+    return mejor
+        ? mejor.valor
+        : "";
+
+}
+
+
+function valoresUnicos(
+    valores
+){
+
+    const mapa =
+        new Map();
+
+
+    valores.forEach(v => {
+
+        const texto =
+            String(v || "").trim();
+
+
+        if(!texto)
+            return;
+
+
+        const key =
+            normalizar(texto);
+
+
+        if(!mapa.has(key)){
+
+            mapa.set(
+                key,
+                texto
+            );
+
+        }
+
+    });
+
+
+    return Array.from(
+        mapa.values()
+    )
+    .sort(
+        (a,b) =>
+            a.localeCompare(
+                b,
+                "es",
+                {
+                    sensitivity:"base"
+                }
+            )
+    );
+
+}
+
+
+function obtenerIniciales(nombre){
+
+    const partes =
+        nombre
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+
+
+    if(!partes.length)
+        return "?";
+
+
+    if(partes.length === 1){
+
+        return partes[0]
+            .substring(0,2)
+            .toUpperCase();
 
     }
-);
+
+
+    return (
+        partes[0][0] +
+        partes[partes.length - 1][0]
+    )
+    .toUpperCase();
+
+}
+
+
+/* =========================================================
+   HELPERS GENERALES
+========================================================= */
+
+function normalizar(texto){
+
+    return String(texto || "")
+        .normalize("NFD")
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+        .toLowerCase()
+        .trim();
+
+}
+
+
+function formatearNumero(n){
+
+    if(
+        n === null ||
+        n === undefined ||
+        !Number.isFinite(Number(n))
+    ){
+
+        return "-";
+
+    }
+
+
+    return Number(n)
+        .toLocaleString(
+            "es-CO",
+            {
+                maximumFractionDigits:2
+            }
+        );
+
+}
+
+
+function mostrarNumero(n){
+
+    if(n === null || n === undefined)
+        return "-";
+
+
+    return Number(n)
+        .toFixed(2);
+
+}
+
+
+function mostrarKast(n){
+
+    if(
+        n === null ||
+        n === undefined
+    ){
+
+        return "-";
+
+    }
+
+
+    const numero =
+        Number(n);
+
+
+    if(numero <= 1){
+
+        return (
+            (numero * 100)
+                .toFixed(1) +
+            "%"
+        );
+
+    }
+
+
+    return (
+        numero.toFixed(1) +
+        "%"
+    );
+
+}
+
+
+function formatearFecha(fecha){
+
+    if(!fecha)
+        return "";
+
+
+    try{
+
+        const d =
+            new Date(
+                fecha +
+                (
+                    fecha.length === 10
+                    ? "T00:00:00"
+                    : ""
+                )
+            );
+
+
+        if(
+            Number.isNaN(
+                d.getTime()
+            )
+        )
+            return fecha;
+
+
+        return d.toLocaleDateString(
+            "es-CO",
+            {
+                day:"2-digit",
+                month:"2-digit",
+                year:"numeric"
+            }
+        );
+
+    }catch(e){
+
+        return fecha;
+
+    }
+
+}
+
+
+function escapeHtml(valor){
+
+    return String(valor ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeJs(valor){
+
+    return String(valor ?? "")
+        .replace(/\\/g,"\\\\")
+        .replace(/'/g,"\\'")
+        .replace(/\r/g,"\\r")
+        .replace(/\n/g,"\\n");
+
+}
 
 </script>
 
