@@ -2378,51 +2378,122 @@ async function cargarVods(){
 
 function actualizarInterfaz(){
 
-    document.getElementById("homeVods").textContent =
-        vods.length;
+    const totalVods =
+        document.getElementById("homeVodsCount");
+
+    const totalPlayers =
+        document.getElementById("homePlayers");
+
+    const totalAgents =
+        document.getElementById("homeAgents");
+
+    const totalMaps =
+        document.getElementById("homeMaps");
+
+
+    /* VODS */
+
+    if (totalVods) {
+        totalVods.textContent =
+            vods.length;
+    }
+
+
+    /* JUGADORES */
 
     const players =
         [...new Set(
             vods
-                .map(v=>String(v.player || "").trim())
+                .map(v => String(v.player || "").trim())
                 .filter(Boolean)
         )];
+
+    if (totalPlayers) {
+        totalPlayers.textContent =
+            players.length;
+    }
+
+
+    /* AGENTES */
 
     const agents =
         [...new Set(
             vods
-                .map(v=>String(v.agent || "").trim())
+                .map(v => String(v.agent || "").trim())
                 .filter(Boolean)
         )];
+
+    if (totalAgents) {
+        totalAgents.textContent =
+            agents.length;
+    }
+
+
+    /* MAPAS */
 
     const maps =
         [...new Set(
             vods
-                .map(v=>String(v.map || "").trim())
+                .map(v => String(v.map || "").trim())
                 .filter(Boolean)
         )];
 
-    document.getElementById("homePlayers").textContent =
-        players.length;
+    if (totalMaps) {
+        totalMaps.textContent =
+            maps.length;
+    }
 
-    document.getElementById("homeAgents").textContent =
-        agents.length;
 
-    document.getElementById("homeMaps").textContent =
-        maps.length;
+    /* FILTROS */
 
     llenarFiltros();
 
-renderHomeVods();
-renderLastVod();
-renderVods();
-renderPlayers();
-renderTeams();
-renderAgents();
-renderMaps();
-renderTournaments();
-renderStatistics();
-renderPerformance();
+
+    /* INICIO */
+
+    renderHomeVods();
+    renderLastVod();
+
+
+    /* VODS */
+
+    renderVods();
+
+
+    /* JUGADORES */
+
+    renderPlayers();
+
+
+    /* EQUIPOS */
+
+    renderTeams();
+
+
+    /* AGENTES */
+
+    renderAgents();
+
+
+    /* MAPAS */
+
+    renderMaps();
+
+
+    /* TORNEOS */
+
+    renderTournaments();
+
+
+    /* ESTADÍSTICAS */
+
+    renderStatistics();
+
+
+    /* PERFORMANCE HUB */
+
+    renderPerformance();
+
 }
 
 
