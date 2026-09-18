@@ -4312,74 +4312,152 @@ function editarVod(id){
     }
 
     const vod =
-        vods.find(v=>String(v.id) === String(id));
+        vods.find(
+            v =>
+                String(v.id) ===
+                String(id)
+        );
 
     if(!vod)
         return;
 
+
+    /* GUARDAR ID DEL VOD */
+
+    document
+        .getElementById("vodId")
+        .value =
+            vod.id || "";
+
+
+    /* DATOS PRINCIPALES */
+
+    document
+        .getElementById("formUrl")
+        .value =
+            vod.url || "";
+
+
+    document
+        .getElementById("formStartSeconds")
+        .value =
+            vod.start_seconds ?? "";
+
+
+    document
+        .getElementById("formStartTime")
+        .value =
+            vod.start_time ||
+            segundosATiempo(vod.start_seconds);
+
+
+    document
+        .getElementById("formPlayer")
+        .value =
+            vod.player || "";
+
+
+    document
+        .getElementById("formTeam")
+        .value =
+            vod.team || "";
+
+
+    document
+        .getElementById("formOpponent")
+        .value =
+            vod.opponent || "";
+
+
+    document
+        .getElementById("formRegion")
+        .value =
+            vod.region || "";
+
+
+    document
+        .getElementById("formAgent")
+        .value =
+            vod.agent || "";
+
+
+    document
+        .getElementById("formMap")
+        .value =
+            vod.map || "";
+
+
+    document
+        .getElementById("formTournament")
+        .value =
+            vod.tournament || "";
+
+
+    document
+        .getElementById("formDate")
+        .value =
+            vod.date || "";
+
+
+    /* ESTADÍSTICAS */
+
+    document
+        .getElementById("formKills")
+        .value =
+            vod.kills ?? "";
+
+
+    document
+        .getElementById("formDeaths")
+        .value =
+            vod.deaths ?? "";
+
+
+    document
+        .getElementById("formAssists")
+        .value =
+            vod.assists ?? "";
+
+
+    document
+        .getElementById("formAcs")
+        .value =
+            vod.acs ?? "";
+
+
+    document
+        .getElementById("formRating")
+        .value =
+            vod.rating ?? "";
+
+
+    document
+        .getElementById("formKast")
+        .value =
+            vod.kast ?? "";
+
+
+    /* MINIATURA */
+
+    document
+        .getElementById("formThumbnail")
+        .value =
+            "";
+
+
+    /* MODO EDICIÓN */
+
     editingVod = vod;
 
-    document.getElementById("vodId").value =
-        vod.id || "";
 
-    document.getElementById("formUrl").value =
-        vod.url || "";
+    document
+        .getElementById("vodModalTitle")
+        .textContent =
+            "Editar VOD";
 
-    document.getElementById("formStartSeconds").value =
-        numero(vod.start_seconds);
-
-    document.getElementById("formStartTime").value =
-        vod.start_time ||
-        segundosATiempo(vod.start_seconds);
-
-    document.getElementById("formPlayer").value =
-        vod.player || "";
-
-    document.getElementById("formTeam").value =
-        vod.team || "";
-
-    document.getElementById("formOpponent").value =
-        vod.opponent || "";
-
-    document.getElementById("formRegion").value =
-        vod.region || "";
-
-    document.getElementById("formAgent").value =
-        vod.agent || "";
-
-    document.getElementById("formMap").value =
-        vod.map || "";
-
-    document.getElementById("formTournament").value =
-        vod.tournament || "";
-
-    document.getElementById("formDate").value =
-        vod.date || "";
-
-    document.getElementById("formKills").value =
-        vod.kills ?? "";
-
-    document.getElementById("formDeaths").value =
-        vod.deaths ?? "";
-
-    document.getElementById("formAssists").value =
-        vod.assists ?? "";
-
-    document.getElementById("formAcs").value =
-        vod.acs ?? "";
-
-    document.getElementById("formRating").value =
-        vod.rating ?? "";
-
-    document.getElementById("formKast").value =
-        vod.kast ?? "";
-
-    document.getElementById("formThumbnail").value = "";
-
-    document.getElementById("vodModalTitle").textContent =
-        "Editar VOD";
 
     abrirModal("vodModal");
+
 }
 
 
@@ -4521,35 +4599,42 @@ async function guardarVod(){
 
         };
 
-        if(editingVod){
+        const editId =
+    document
+        .getElementById("vodId")
+        .value
+        .trim();
 
-            const {
-                error
-            } =
-                await supabaseClient
-                    .from("vods")
-                    .update(registro)
-                    .eq("id",editingVod.id);
 
-            if(error)
-                throw error;
+if(editId){
 
-            mostrarToast("VOD actualizado.");
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("vods")
+            .update(registro)
+            .eq("id", editId);
 
-        }else{
+    if(error)
+        throw error;
 
-            const {
-                error
-            } =
-                await supabaseClient
-                    .from("vods")
-                    .insert(registro);
+    mostrarToast("VOD actualizado.");
 
-            if(error)
-                throw error;
+}else{
 
-            mostrarToast("VOD agregado.");
-        }
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("vods")
+            .insert([registro]);
+
+    if(error)
+        throw error;
+
+    mostrarToast("VOD agregado.");
+}
 
         cerrarModal("vodModal");
 
