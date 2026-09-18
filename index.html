@@ -1432,7 +1432,7 @@ const SUPABASE_URL =
     "https://czjxjnbxnxbpesnolffo.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_KA61VPthbWblSrsB3sXzQQ_2RFPQa9T";
+    "sb_publishable_KA61VPthbWlSrsB3sXzQQ_2RFPQa9T";
 
 const supabaseClient =
     window.supabase.createClient(
@@ -1686,16 +1686,17 @@ async function cargarVods(){
 
     if(error){
 
-        console.error(error);
+    console.error("ERROR COMPLETO SUPABASE:", error);
 
-        document.getElementById("vodGrid").innerHTML =
-            `<div class="empty">
-                Error cargando los VODs.
-            </div>`;
+    document.getElementById("vodGrid").innerHTML =
+        `<div class="empty">
+            <h3>Error cargando los VODs</h3>
+            <p>${escapeHtml(error.message || "Error desconocido")}</p>
+            <p>Código: ${escapeHtml(error.code || "sin código")}</p>
+        </div>`;
 
-        return;
-
-    }
+    return;
+}
 
     vods =
         (data || []).map(convertirVod);
