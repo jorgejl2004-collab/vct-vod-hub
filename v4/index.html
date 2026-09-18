@@ -1440,24 +1440,24 @@ footer{
 
             <div class="home-stat-card">
 
-                <div class="home-stat-icon">
-                    🎥
-                </div>
+    <div class="home-stat-icon">
+        🎥
+    </div>
 
-                <div class="home-stat-label">
-                    VODs registrados
-                </div>
+    <div class="home-stat-label">
+        VODs registrados
+    </div>
 
-                <div
-                    class="home-stat-value"
-                    id="homeVods"
-                >
-                    0
-                </div>
+    <div
+        class="home-stat-value"
+        id="homeVodsCount"
+    >
+        0
+    </div>
 
-                <div class="home-stat-line"></div>
+    <div class="home-stat-line"></div>
 
-            </div>
+</div>
 
 
             <div class="home-stat-card">
@@ -2654,27 +2654,16 @@ function vodCard(vod){
    HOME
 ========================================================= */
 
-function renderHomeVods(){
+function renderHomeVods() {
 
-    const container =
-        document.getElementById("homeVods");
+    const contador =
+        document.getElementById("homeVodsCount");
 
-    const lista =
-        vods.slice(0,4);
-
-    if(!lista.length){
-
-        container.innerHTML =
-            `<div class="empty">
-                <strong>Aún no hay VODs</strong>
-                Agrega el primer VOD desde el panel de administrador.
-            </div>`;
-
-        return;
+    if (contador) {
+        contador.textContent =
+            Array.isArray(vods) ? vods.length : 0;
     }
 
-    container.innerHTML =
-        lista.map(vodCard).join("");
 }
     function renderLastVod() {
 
